@@ -15,10 +15,56 @@
  */
 package org.intellij.images.editor.impl;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import org.intellij.images.ImagesBundle;
+import org.intellij.images.editor.ImageDocument;
+import org.intellij.images.editor.ImageEditor;
+import org.intellij.images.editor.ImageZoomModel;
+import org.intellij.images.editor.actionSystem.ImageEditorActions;
+import org.intellij.images.options.EditorOptions;
+import org.intellij.images.options.GridOptions;
+import org.intellij.images.options.Options;
+import org.intellij.images.options.OptionsManager;
+import org.intellij.images.options.TransparencyChessboardOptions;
+import org.intellij.images.options.ZoomOptions;
+import org.intellij.images.ui.ImageComponent;
+import org.intellij.images.ui.ImageComponentDecorator;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.CopyPasteSupport;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.PsiActionSupportFactory;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPopupMenu;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -28,27 +74,6 @@ import com.intellij.ui.PopupHandler;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.ui.UIUtil;
-import org.intellij.images.ImagesBundle;
-import org.intellij.images.editor.ImageDocument;
-import org.intellij.images.editor.ImageEditor;
-import org.intellij.images.editor.ImageZoomModel;
-import org.intellij.images.editor.actionSystem.ImageEditorActions;
-import org.intellij.images.options.*;
-import org.intellij.images.ui.ImageComponent;
-import org.intellij.images.ui.ImageComponentDecorator;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 
 /**
  * Image editor UI
@@ -107,7 +132,7 @@ final class ImageEditorUI extends JPanel implements DataProvider {
     view.addMouseListener(new EditorMouseAdapter());
     view.addMouseListener(new FocusRequester());
 
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(view);
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(view, true);
     scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
