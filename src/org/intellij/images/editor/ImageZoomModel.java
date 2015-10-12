@@ -21,21 +21,64 @@ package org.intellij.images.editor;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public interface ImageZoomModel {
-    int MACRO_ZOOM_LIMIT = 32;
-    int MICRO_ZOOM_LIMIT = 8;
+public interface ImageZoomModel
+{
+	int MACRO_ZOOM_LIMIT = 32;
+	int MICRO_ZOOM_LIMIT = 8;
 
-    double getZoomFactor();
+	double getZoomFactor();
 
-    void setZoomFactor(double zoomFactor);
+	void setZoomFactor(double zoomFactor);
 
-    void zoomOut();
+	void zoomOut();
 
-    void zoomIn();
+	void zoomIn();
 
-    boolean canZoomOut();
+	boolean canZoomOut();
 
-    boolean canZoomIn();
+	boolean canZoomIn();
 
-    boolean isZoomLevelChanged();
+	boolean isZoomLevelChanged();
+
+	ImageZoomModel STUB = new ImageZoomModel()
+	{
+		@Override
+		public double getZoomFactor()
+		{
+			return 1;
+		}
+
+		@Override
+		public void setZoomFactor(double zoomFactor)
+		{
+		}
+
+		@Override
+		public void zoomOut()
+		{
+		}
+
+		@Override
+		public void zoomIn()
+		{
+		}
+
+		@Override
+		public boolean canZoomOut()
+		{
+			return false;
+		}
+
+		@Override
+		public boolean canZoomIn()
+		{
+			return false;
+		}
+
+		@Override
+		public boolean isZoomLevelChanged()
+		{
+			return false;
+		}
+	};
 }

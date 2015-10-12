@@ -15,6 +15,7 @@
  */
 package org.intellij.images.ui;
 
+import org.intellij.images.editor.ImageZoomModel;
 import com.intellij.openapi.actionSystem.DataKey;
 
 /**
@@ -22,18 +23,25 @@ import com.intellij.openapi.actionSystem.DataKey;
  *
  * @author Alexey Efimov
  */
-public interface ImageComponentDecorator {
-  DataKey<ImageComponentDecorator> DATA_KEY = DataKey.create(ImageComponentDecorator.class.getName());
+public interface ImageComponentDecorator
+{
+	DataKey<ImageComponentDecorator> DATA_KEY = DataKey.create(ImageComponentDecorator.class.getName());
 
-  void setTransparencyChessboardVisible(boolean visible);
+	void setTransparencyChessboardVisible(boolean visible);
 
-  boolean isTransparencyChessboardVisible();
+	boolean isTransparencyChessboardVisible();
 
-  /**
-   * Return <code>true</code> if this decorator is enabled for this action place.
-   *
-   * @param place Action place
-   * @return <code>true</code> is decorator is enabled
-   */
-  boolean isEnabledForActionPlace(String place);
+	/**
+	 * Return <code>true</code> if this decorator is enabled for this action place.
+	 *
+	 * @param place Action place
+	 * @return <code>true</code> is decorator is enabled
+	 */
+	boolean isEnabledForActionPlace(String place);
+
+	ImageZoomModel getZoomModel();
+
+	void setGridVisible(boolean visible);
+
+	boolean isGridVisible();
 }

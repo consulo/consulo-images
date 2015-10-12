@@ -22,12 +22,19 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.Locale;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -50,21 +57,27 @@ import org.intellij.images.options.Options;
 import org.intellij.images.options.OptionsManager;
 import org.intellij.images.options.TransparencyChessboardOptions;
 import org.intellij.images.options.ZoomOptions;
+import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
 import org.intellij.images.ui.ImageComponent;
 import org.intellij.images.ui.ImageComponentDecorator;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.CopyPasteSupport;
+import com.intellij.ide.CopyProvider;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.PsiActionSupportFactory;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPopupMenu;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -73,6 +86,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBLayeredPane;
+import com.intellij.ui.components.Magnificator;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 /**
@@ -80,13 +95,14 @@ import com.intellij.util.ui.UIUtil;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-final class ImageEditorUI extends JPanel implements DataProvider
+final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, ImageComponentDecorator, Disposable
 {
 	@NonNls
 	private static final String IMAGE_PANEL = "image";
 	@NonNls
 	private static final String ERROR_PANEL = "error";
 
+	@Nullable
 	private final ImageEditor editor;
 	private final DeleteProvider deleteProvider;
 	private final CopyPasteSupport copyPasteSupport;
@@ -98,11 +114,18 @@ final class ImageEditorUI extends JPanel implements DataProvider
 	private final JPanel contentPanel;
 	private final JLabel infoLabel;
 
-	ImageEditorUI(ImageEditor editor, EditorOptions editorOptions)
+	private final PropertyChangeListener optionsChangeListener = new OptionsChangeListener();
+
+	ImageEditorUI(@Nullable ImageEditor editor)
 	{
 		this.editor = editor;
+
+		Options options = OptionsManager.getInstance().getOptions();
+		EditorOptions editorOptions = options.getEditorOptions();
+		options.addPropertyChangeListener(optionsChangeListener);
+
 		final PsiActionSupportFactory factory = PsiActionSupportFactory.getInstance();
-		if(factory != null)
+		if(factory != null && editor != null)
 		{
 			copyPasteSupport = factory.createPsiBasedCopyPasteSupport(editor.getProject(), this, new PsiActionSupportFactory.PsiElementSelector()
 			{
@@ -168,6 +191,7 @@ final class ImageEditorUI extends JPanel implements DataProvider
 		JPanel topPanel = new JPanel(new BorderLayout());
 		topPanel.add(toolbarPanel, BorderLayout.WEST);
 		infoLabel = new JLabel((String) null, SwingConstants.RIGHT);
+		infoLabel.setBorder(JBUI.Borders.empty(0, 0, 0, 2));
 		topPanel.add(infoLabel, BorderLayout.EAST);
 
 		add(topPanel, BorderLayout.NORTH);
@@ -186,13 +210,13 @@ final class ImageEditorUI extends JPanel implements DataProvider
 			String format = document.getFormat();
 			if(format == null)
 			{
-				format = ImagesBundle.message("unknown.format");
+				format = editor != null ? ImagesBundle.message("unknown.format") : "";
 			}
 			else
 			{
-				format = format.toUpperCase();
+				format = format.toUpperCase(Locale.ENGLISH);
 			}
-			VirtualFile file = editor.getFile();
+			VirtualFile file = editor != null ? editor.getFile() : null;
 			infoLabel.setText(ImagesBundle.message("image.info", image.getWidth(), image.getHeight(), format, colorModel.getPixelSize(), file != null ? StringUtil.formatFileSize(file.getLength()) :
 					""));
 		}
@@ -213,27 +237,109 @@ final class ImageEditorUI extends JPanel implements DataProvider
 		return imageComponent;
 	}
 
-	void dispose()
+	public void dispose()
 	{
+		Options options = OptionsManager.getInstance().getOptions();
+		options.removePropertyChangeListener(optionsChangeListener);
+
 		imageComponent.removeMouseWheelListener(wheelAdapter);
 		imageComponent.getDocument().removeChangeListener(changeListener);
 
 		removeAll();
 	}
 
-	ImageZoomModel getZoomModel()
+	@Override
+	public void setTransparencyChessboardVisible(boolean visible)
+	{
+		imageComponent.setTransparencyChessboardVisible(visible);
+	}
+
+	@Override
+	public boolean isTransparencyChessboardVisible()
+	{
+		return imageComponent.isTransparencyChessboardVisible();
+	}
+
+	@Override
+	public boolean isEnabledForActionPlace(String place)
+	{
+		// Disable for thumbnails action
+		return !ThumbnailViewActions.ACTION_PLACE.equals(place);
+	}
+
+
+	@Override
+	public void setGridVisible(boolean visible)
+	{
+		imageComponent.setGridVisible(visible);
+	}
+
+	@Override
+	public boolean isGridVisible()
+	{
+		return imageComponent.isGridVisible();
+	}
+
+	public ImageZoomModel getZoomModel()
 	{
 		return zoomModel;
 	}
 
-	private static final class ImageContainerPane extends JBLayeredPane
+	public void setImage(BufferedImage image, String format)
+	{
+		ImageDocument document = imageComponent.getDocument();
+		BufferedImage previousImage = document.getValue();
+		document.setValue(image);
+		if(image == null)
+		{
+			return;
+		}
+		document.setFormat(format);
+		ImageZoomModel zoomModel = getZoomModel();
+		if(previousImage == null || !zoomModel.isZoomLevelChanged())
+		{
+			// Set smart zooming behaviour on open
+			Options options = OptionsManager.getInstance().getOptions();
+			ZoomOptions zoomOptions = options.getEditorOptions().getZoomOptions();
+			// Open as actual size
+			zoomModel.setZoomFactor(1.0d);
+
+			if(zoomOptions.isSmartZooming())
+			{
+				Dimension prefferedSize = zoomOptions.getPrefferedSize();
+				if(prefferedSize.width > image.getWidth() && prefferedSize.height > image.getHeight())
+				{
+					// Resize to preffered size
+					// Calculate zoom factor
+
+					double factor = (prefferedSize.getWidth() / (double) image.getWidth() + prefferedSize.getHeight() / (double) image.getHeight()) / 2.0d;
+					zoomModel.setZoomFactor(Math.ceil(factor));
+				}
+			}
+		}
+	}
+
+	private final class ImageContainerPane extends JBLayeredPane
 	{
 		private final ImageComponent imageComponent;
 
-		public ImageContainerPane(ImageComponent imageComponent)
+		public ImageContainerPane(final ImageComponent imageComponent)
 		{
 			this.imageComponent = imageComponent;
 			add(imageComponent);
+
+			putClientProperty(Magnificator.CLIENT_PROPERTY_KEY, new Magnificator()
+			{
+				@Override
+				public Point magnify(double scale, Point at)
+				{
+					Point locationBefore = imageComponent.getLocation();
+					ImageZoomModel model = editor != null ? editor.getZoomModel() : getZoomModel();
+					double factor = model.getZoomFactor();
+					model.setZoomFactor(scale * factor);
+					return new Point(((int) ((at.x - Math.max(scale > 1.0 ? locationBefore.x : 0, 0)) * scale)), ((int) ((at.y - Math.max(scale > 1.0 ? locationBefore.y : 0, 0)) * scale)));
+				}
+			});
 		}
 
 		private void centerComponents()
@@ -257,7 +363,7 @@ final class ImageEditorUI extends JPanel implements DataProvider
 		}
 
 		@Override
-		protected void paintComponent(Graphics g)
+		protected void paintComponent(@NotNull Graphics g)
 		{
 			super.paintComponent(g);
 			if(UIUtil.isUnderDarcula())
@@ -387,7 +493,7 @@ final class ImageEditorUI extends JPanel implements DataProvider
 
 	private class DocumentChangeListener implements ChangeListener
 	{
-		public void stateChanged(ChangeEvent e)
+		public void stateChanged(@NotNull ChangeEvent e)
 		{
 			ImageDocument document = imageComponent.getDocument();
 			BufferedImage value = document.getValue();
@@ -404,7 +510,7 @@ final class ImageEditorUI extends JPanel implements DataProvider
 
 	private class FocusRequester extends MouseAdapter
 	{
-		public void mousePressed(MouseEvent e)
+		public void mousePressed(@NotNull MouseEvent e)
 		{
 			requestFocus();
 		}
@@ -432,32 +538,32 @@ final class ImageEditorUI extends JPanel implements DataProvider
 
 		if(CommonDataKeys.PROJECT.is(dataId))
 		{
-			return editor.getProject();
+			return editor != null ? editor.getProject() : null;
 		}
-		else if(PlatformDataKeys.VIRTUAL_FILE.is(dataId))
+		else if(CommonDataKeys.VIRTUAL_FILE.is(dataId))
 		{
-			return editor.getFile();
+			return editor != null ? editor.getFile() : null;
 		}
-		else if(PlatformDataKeys.VIRTUAL_FILE_ARRAY.is(dataId))
+		else if(CommonDataKeys.VIRTUAL_FILE_ARRAY.is(dataId))
 		{
-			return new VirtualFile[]{editor.getFile()};
+			return editor != null ? new VirtualFile[]{editor.getFile()} : new VirtualFile[]{};
 		}
-		else if(LangDataKeys.PSI_FILE.is(dataId))
+		else if(CommonDataKeys.PSI_FILE.is(dataId))
 		{
-			return getData(LangDataKeys.PSI_ELEMENT.getName());
+			return getData(CommonDataKeys.PSI_ELEMENT.getName());
 		}
-		else if(LangDataKeys.PSI_ELEMENT.is(dataId))
+		else if(CommonDataKeys.PSI_ELEMENT.is(dataId))
 		{
-			VirtualFile file = editor.getFile();
+			VirtualFile file = editor != null ? editor.getFile() : null;
 			return file != null && file.isValid() ? PsiManager.getInstance(editor.getProject()).findFile(file) : null;
 		}
 		else if(LangDataKeys.PSI_ELEMENT_ARRAY.is(dataId))
 		{
-			return new PsiElement[]{(PsiElement) getData(LangDataKeys.PSI_ELEMENT.getName())};
+			return editor != null ? new PsiElement[]{(PsiElement) getData(CommonDataKeys.PSI_ELEMENT.getName())} : new PsiElement[]{};
 		}
 		else if(PlatformDataKeys.COPY_PROVIDER.is(dataId) && copyPasteSupport != null)
 		{
-			return copyPasteSupport.getCopyProvider();
+			return this;
 		}
 		else if(PlatformDataKeys.CUT_PROVIDER.is(dataId) && copyPasteSupport != null)
 		{
@@ -469,9 +575,80 @@ final class ImageEditorUI extends JPanel implements DataProvider
 		}
 		else if(ImageComponentDecorator.DATA_KEY.is(dataId))
 		{
-			return editor;
+			return editor != null ? editor : this;
 		}
 
 		return null;
 	}
+
+	@Override
+	public void performCopy(@NotNull DataContext dataContext)
+	{
+		ImageDocument document = imageComponent.getDocument();
+		BufferedImage image = document.getValue();
+		CopyPasteManager.getInstance().setContents(new ImageTransferable(image));
+	}
+
+	@Override
+	public boolean isCopyEnabled(@NotNull DataContext dataContext)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean isCopyVisible(@NotNull DataContext dataContext)
+	{
+		return true;
+	}
+
+	private static class ImageTransferable implements Transferable
+	{
+		private final BufferedImage myImage;
+
+		public ImageTransferable(@NotNull BufferedImage image)
+		{
+			myImage = image;
+		}
+
+		@Override
+		public DataFlavor[] getTransferDataFlavors()
+		{
+			return new DataFlavor[]{DataFlavor.imageFlavor};
+		}
+
+		@Override
+		public boolean isDataFlavorSupported(DataFlavor dataFlavor)
+		{
+			return DataFlavor.imageFlavor.equals(dataFlavor);
+		}
+
+		@Override
+		public Object getTransferData(DataFlavor dataFlavor) throws UnsupportedFlavorException, IOException
+		{
+			if(!DataFlavor.imageFlavor.equals(dataFlavor))
+			{
+				throw new UnsupportedFlavorException(dataFlavor);
+			}
+			return myImage;
+		}
+	}
+
+	private class OptionsChangeListener implements PropertyChangeListener
+	{
+		public void propertyChange(PropertyChangeEvent evt)
+		{
+			Options options = (Options) evt.getSource();
+			EditorOptions editorOptions = options.getEditorOptions();
+			TransparencyChessboardOptions chessboardOptions = editorOptions.getTransparencyChessboardOptions();
+			GridOptions gridOptions = editorOptions.getGridOptions();
+
+			imageComponent.setTransparencyChessboardCellSize(chessboardOptions.getCellSize());
+			imageComponent.setTransparencyChessboardWhiteColor(chessboardOptions.getWhiteColor());
+			imageComponent.setTransparencyChessboardBlankColor(chessboardOptions.getBlackColor());
+			imageComponent.setGridLineZoomFactor(gridOptions.getLineZoomFactor());
+			imageComponent.setGridLineSpan(gridOptions.getLineSpan());
+			imageComponent.setGridLineColor(gridOptions.getLineColor());
+		}
+	}
+
 }

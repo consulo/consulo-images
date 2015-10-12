@@ -15,39 +15,67 @@
  */
 package org.intellij.images.editor.impl;
 
+import java.awt.image.BufferedImage;
+
+import org.intellij.images.editor.ImageEditor;
+import org.intellij.images.options.EditorOptions;
+import org.intellij.images.options.GridOptions;
+import org.intellij.images.options.Options;
+import org.intellij.images.options.OptionsManager;
+import org.intellij.images.options.TransparencyChessboardOptions;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.intellij.images.editor.ImageEditor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Image viewer manager implementation.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public final class ImageEditorManagerImpl {
-  private ImageEditorManagerImpl() {}
+public final class ImageEditorManagerImpl
+{
+	private ImageEditorManagerImpl()
+	{
+	}
 
-  /**
-   * Create image viewer editor. Don't forget release editor by {@link #releaseImageEditor(ImageEditor)} method.
-   *
-   * @param project Project
-   * @param file    File
-   * @return Image editor for file
-   */
-  @NotNull
-  public static ImageEditor createImageEditor(@NotNull Project project, @NotNull VirtualFile file) {
-    return new ImageEditorImpl(project, file);
-  }
+	/**
+	 * Create image viewer editor. Don't forget release editor by {@link #releaseImageEditor(ImageEditor)} method.
+	 *
+	 * @param project Project
+	 * @param file    File
+	 * @return Image editor for file
+	 */
+	@NotNull
+	public static ImageEditor createImageEditor(@NotNull Project project, @NotNull VirtualFile file)
+	{
+		return new ImageEditorImpl(project, file);
+	}
 
-  /**
-   * Release editor. Disposing caches and other resources allocated in creation.
-   *
-   * @param editor Editor to release.
-   */
-  public static void releaseImageEditor(@NotNull ImageEditor editor) {
-    if (!editor.isDisposed()) {
-      editor.dispose();
-    }
-  }
+	@NotNull
+	public static ImageEditorUI createImageEditorUI(BufferedImage image)
+	{
+		ImageEditorUI ui = new ImageEditorUI(null);
+		Options options = OptionsManager.getInstance().getOptions();
+		EditorOptions editorOptions = options.getEditorOptions();
+		GridOptions gridOptions = editorOptions.getGridOptions();
+		TransparencyChessboardOptions transparencyChessboardOptions = editorOptions.getTransparencyChessboardOptions();
+		ui.getImageComponent().setGridVisible(gridOptions.isShowDefault());
+		ui.getImageComponent().setTransparencyChessboardVisible(transparencyChessboardOptions.isShowDefault());
+
+		ui.setImage(image, null);
+		return ui;
+	}
+
+	/**
+	 * Release editor. Disposing caches and other resources allocated in creation.
+	 *
+	 * @param editor Editor to release.
+	 */
+	public static void releaseImageEditor(@NotNull ImageEditor editor)
+	{
+		if(!editor.isDisposed())
+		{
+			editor.dispose();
+		}
+	}
 }

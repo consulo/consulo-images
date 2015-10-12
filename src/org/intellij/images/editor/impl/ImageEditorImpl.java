@@ -15,194 +15,178 @@
  */
 package org.intellij.images.editor.impl;
 
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.*;
+import javax.swing.JComponent;
+
 import org.intellij.images.editor.ImageDocument;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
-import org.intellij.images.options.*;
 import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
-import org.intellij.images.ui.ImageComponent;
 import org.intellij.images.vfs.IfsUtil;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileAdapter;
+import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
 
 /**
  * Image viewer implementation.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-final class ImageEditorImpl extends VirtualFileAdapter implements ImageEditor {
-    private final PropertyChangeListener optionsChangeListener = new OptionsChangeListener();
-    private final Project project;
-    private final VirtualFile file;
-    private final ImageEditorUI editorUI;
-    private boolean disposed;
+final class ImageEditorImpl extends VirtualFileAdapter implements ImageEditor
+{
+	private final Project project;
+	private final VirtualFile file;
+	private final ImageEditorUI editorUI;
+	private boolean disposed;
 
-    ImageEditorImpl(@NotNull Project project, @NotNull VirtualFile file) {
-        this.project = project;
-        this.file = file;
+	ImageEditorImpl(@NotNull Project project, @NotNull VirtualFile file)
+	{
+		this.project = project;
+		this.file = file;
 
-        // Options
-        Options options = OptionsManager.getInstance().getOptions();
-        editorUI = new ImageEditorUI(this, options.getEditorOptions());
-        options.addPropertyChangeListener(optionsChangeListener);
+		editorUI = new ImageEditorUI(this);
 
-        VirtualFileManager.getInstance().addVirtualFileListener(this);
+		VirtualFileManager.getInstance().addVirtualFileListener(this);
 
-        setValue(file);
-    }
+		setValue(file);
+	}
 
-    private void setValue(VirtualFile file) {
-        ImageDocument document = editorUI.getImageComponent().getDocument();
-        try {
-            BufferedImage previousImage = document.getValue();
-            BufferedImage image = IfsUtil.getImage(file);
-            document.setValue(image);
-            document.setFormat(IfsUtil.getFormat(file));
-            ImageZoomModel zoomModel = getZoomModel();
-            if (image != null && (previousImage == null || !zoomModel.isZoomLevelChanged())) {
-                // Set smart zooming behaviour on open
-                Options options = OptionsManager.getInstance().getOptions();
-                ZoomOptions zoomOptions = options.getEditorOptions().getZoomOptions();
-                // Open as actual size
-                zoomModel.setZoomFactor(1.0d);
+	private void setValue(VirtualFile file)
+	{
+		try
+		{
+			editorUI.setImage(IfsUtil.getImage(file), IfsUtil.getFormat(file));
+		}
+		catch(Exception e)
+		{
+			//     Error loading image file
+			editorUI.setImage(null, null);
+		}
+	}
 
-                if (zoomOptions.isSmartZooming()) {
-                    Dimension prefferedSize = zoomOptions.getPrefferedSize();
-                    if (prefferedSize.width > image.getWidth() && prefferedSize.height > image.getHeight()) {
-                        // Resize to preffered size
-                        // Calculate zoom factor
+	public boolean isValid()
+	{
+		ImageDocument document = editorUI.getImageComponent().getDocument();
+		return document.getValue() != null;
+	}
 
-                        double factor = (prefferedSize.getWidth() / (double) image.getWidth() + prefferedSize.getHeight() / (double) image.getHeight()) / 2.0d;
-                        zoomModel.setZoomFactor(Math.ceil(factor));
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // Error loading image file
-            document.setValue(null);
-        }
-    }
+	public JComponent getComponent()
+	{
+		return editorUI;
+	}
 
-    public boolean isValid() {
-        ImageDocument document = editorUI.getImageComponent().getDocument();
-        return document.getValue() != null;
-    }
+	public JComponent getContentComponent()
+	{
+		return editorUI.getImageComponent();
+	}
 
-    public JComponent getComponent() {
-        return editorUI;
-    }
+	@NotNull
+	public VirtualFile getFile()
+	{
+		return file;
+	}
 
-    public JComponent getContentComponent() {
-        return editorUI.getImageComponent();
-    }
+	@NotNull
+	public Project getProject()
+	{
+		return project;
+	}
 
-    @NotNull
-    public VirtualFile getFile() {
-        return file;
-    }
+	public ImageDocument getDocument()
+	{
+		return editorUI.getImageComponent().getDocument();
+	}
 
-    @NotNull
-    public Project getProject() {
-        return project;
-    }
+	public void setTransparencyChessboardVisible(boolean visible)
+	{
+		editorUI.getImageComponent().setTransparencyChessboardVisible(visible);
+		editorUI.repaint();
+	}
 
-    public ImageDocument getDocument() {
-        return editorUI.getImageComponent().getDocument();
-    }
+	public boolean isTransparencyChessboardVisible()
+	{
+		return editorUI.getImageComponent().isTransparencyChessboardVisible();
+	}
 
-    public void setTransparencyChessboardVisible(boolean visible) {
-        editorUI.getImageComponent().setTransparencyChessboardVisible(visible);
-        editorUI.repaint();
-    }
+	public boolean isEnabledForActionPlace(String place)
+	{
+		// Disable for thumbnails action
+		return !ThumbnailViewActions.ACTION_PLACE.equals(place);
+	}
 
-    public boolean isTransparencyChessboardVisible() {
-        return editorUI.getImageComponent().isTransparencyChessboardVisible();
-    }
+	public void setGridVisible(boolean visible)
+	{
+		editorUI.getImageComponent().setGridVisible(visible);
+		editorUI.repaint();
+	}
 
-    public boolean isEnabledForActionPlace(String place) {
-        // Disable for thumbnails action
-        return !ThumbnailViewActions.ACTION_PLACE.equals(place);
-    }
+	public boolean isGridVisible()
+	{
+		return editorUI.getImageComponent().isGridVisible();
+	}
 
-    public void setGridVisible(boolean visible) {
-        editorUI.getImageComponent().setGridVisible(visible);
-        editorUI.repaint();
-    }
+	public boolean isDisposed()
+	{
+		return disposed;
+	}
 
-    public boolean isGridVisible() {
-        return editorUI.getImageComponent().isGridVisible();
-    }
+	public ImageZoomModel getZoomModel()
+	{
+		return editorUI.getZoomModel();
+	}
 
-    public boolean isDisposed() {
-        return disposed;
-    }
+	public void dispose()
+	{
+		Disposer.dispose(editorUI);
+		VirtualFileManager.getInstance().removeVirtualFileListener(this);
+		disposed = true;
+	}
 
-    public ImageZoomModel getZoomModel() {
-        return editorUI.getZoomModel();
-    }
+	public void propertyChanged(@NotNull VirtualFilePropertyEvent event)
+	{
+		super.propertyChanged(event);
+		if(file.equals(event.getFile()))
+		{
+			// Change document
+			file.refresh(true, false, new Runnable()
+			{
+				public void run()
+				{
+					if(ImageFileTypeManager.getInstance().isImage(file))
+					{
+						setValue(file);
+					}
+					else
+					{
+						setValue(null);
+						// Close editor
+						FileEditorManager editorManager = FileEditorManager.getInstance(project);
+						editorManager.closeFile(file);
+					}
+				}
+			});
+		}
+	}
 
-    public void dispose() {
-        Options options = OptionsManager.getInstance().getOptions();
-        options.removePropertyChangeListener(optionsChangeListener);
-        editorUI.dispose();
-        VirtualFileManager.getInstance().removeVirtualFileListener(this);
-        disposed = true;
-    }
-
-    public void propertyChanged(VirtualFilePropertyEvent event) {
-        super.propertyChanged(event);
-        if (file.equals(event.getFile())) {
-            // Change document
-            file.refresh(true, false, new Runnable() {
-                public void run() {
-                    if (ImageFileTypeManager.getInstance().isImage(file)) {
-                        setValue(file);
-                    } else {
-                        setValue(null);
-                        // Close editor
-                        FileEditorManager editorManager = FileEditorManager.getInstance(project);
-                        editorManager.closeFile(file);
-                    }
-                }
-            });
-        }
-    }
-
-    public void contentsChanged(VirtualFileEvent event) {
-        super.contentsChanged(event);
-        if (file.equals(event.getFile())) {
-            // Change document
-            file.refresh(true, false, new Runnable() {
-                public void run() {
-                    setValue(file);
-                }
-            });
-        }
-    }
-
-    private class OptionsChangeListener implements PropertyChangeListener {
-        public void propertyChange(PropertyChangeEvent evt) {
-            Options options = (Options) evt.getSource();
-            EditorOptions editorOptions = options.getEditorOptions();
-            TransparencyChessboardOptions chessboardOptions = editorOptions.getTransparencyChessboardOptions();
-            GridOptions gridOptions = editorOptions.getGridOptions();
-
-            ImageComponent imageComponent = editorUI.getImageComponent();
-            imageComponent.setTransparencyChessboardCellSize(chessboardOptions.getCellSize());
-            imageComponent.setTransparencyChessboardWhiteColor(chessboardOptions.getWhiteColor());
-            imageComponent.setTransparencyChessboardBlankColor(chessboardOptions.getBlackColor());
-            imageComponent.setGridLineZoomFactor(gridOptions.getLineZoomFactor());
-            imageComponent.setGridLineSpan(gridOptions.getLineSpan());
-            imageComponent.setGridLineColor(gridOptions.getLineColor());
-        }
-    }
+	public void contentsChanged(@NotNull VirtualFileEvent event)
+	{
+		super.contentsChanged(event);
+		if(file.equals(event.getFile()))
+		{
+			// Change document
+			file.refresh(true, false, new Runnable()
+			{
+				public void run()
+				{
+					setValue(file);
+				}
+			});
+		}
+	}
 }
