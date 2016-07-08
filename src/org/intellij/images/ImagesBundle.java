@@ -15,7 +15,7 @@
  */
 package org.intellij.images;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 /**
  * @author max
