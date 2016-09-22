@@ -2,7 +2,7 @@
   <artifact build-on-make="true" name="dist">
     <output-path>$PROJECT_DIR$/out/artifacts/dist</output-path>
     <root id="root">
-      <element id="directory" name="images">
+      <element id="directory" name="com.intellij.images">
         <element id="directory" name="lib">
           <element id="zip-archive" name="images.jar">
             <element id="module-output" name="consulo-images" />

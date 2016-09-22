@@ -5,7 +5,6 @@
 	<version>SNAPSHOT</version>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
 		<applicationConfigurable instance="org.intellij.images.options.impl.OptionsConfigurabe" id="Images" displayName="Images"/>
 		<fileEditorProvider implementation="org.intellij.images.editor.impl.ImageFileEditorProvider"/>
 		<selectInTarget implementation="org.intellij.images.thumbnail.impl.ThumbnailSelectInTarget"/>
