@@ -1,11 +1,11 @@
-<idea-plugin version="2">
+<idea-plugin>
 	<id>com.intellij.images</id>
 	<name>Images</name>
 	<vendor>JetBrains</vendor>
 	<version>SNAPSHOT</version>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<applicationConfigurable instance="org.intellij.images.options.impl.OptionsConfigurabe" id="Images" displayName="Images"/>
+		<applicationConfigurable instance="org.intellij.images.options.impl.OptionsConfigurabe" id="Images" displayName="Images" parentId="editor"/>
 		<fileEditorProvider implementation="org.intellij.images.editor.impl.ImageFileEditorProvider"/>
 		<selectInTarget implementation="org.intellij.images.thumbnail.impl.ThumbnailSelectInTarget"/>
 		<applicationService serviceInterface="org.intellij.images.options.OptionsManager"
