@@ -15,11 +15,29 @@
  */
 package org.intellij.images;
 
-import consulo.lombok.annotations.Bundle;
+import org.jetbrains.annotations.PropertyKey;
+import com.intellij.AbstractBundle;
 
 /**
  * @author max
  */
-@Bundle("org.intellij.images.ImagesBundle")
-public class ImagesBundle {
+public class ImagesBundle extends AbstractBundle
+{
+	private static final String BUNDLE = "org.intellij.images.ImagesBundle";
+	private static final ImagesBundle ourInstance = new ImagesBundle();
+
+	private ImagesBundle()
+	{
+		super(BUNDLE);
+	}
+
+	public static String message(@PropertyKey(resourceBundle = BUNDLE) String key)
+	{
+		return ourInstance.getMessage(key);
+	}
+
+	public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params)
+	{
+		return ourInstance.getMessage(key, params);
+	}
 }
