@@ -15,29 +15,31 @@
  */
 package org.intellij.images.fileTypes.impl;
 
-import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.fileTypes.*;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import gnu.trove.THashSet;
-import icons.ImagesIcons;
+
+import java.util.Set;
+
+import javax.imageio.ImageIO;
+
 import org.intellij.images.ImagesBundle;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.vfs.IfsUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-
-import javax.imageio.ImageIO;
-import java.util.Set;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeConsumer;
+import com.intellij.openapi.fileTypes.UserBinaryFileType;
+import com.intellij.openapi.fileTypes.UserFileType;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import icons.ImagesIcons;
 
 /**
  * Image file type manager.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-final class ImageFileTypeManagerImpl extends ImageFileTypeManager implements ApplicationComponent {
-  @NonNls private static final String NAME = "ImagesFileTypeManager";
-
+final class ImageFileTypeManagerImpl extends ImageFileTypeManager {
   @NonNls private static final String IMAGE_FILE_TYPE_NAME = "Images";
   private static final String IMAGE_FILE_TYPE_DESCRIPTION = ImagesBundle.message("images.filetype.description");
   private static final UserFileType imageFileType;
@@ -58,17 +60,6 @@ final class ImageFileTypeManagerImpl extends ImageFileTypeManager implements App
 
   public FileType getImageFileType() {
     return imageFileType;
-  }
-
-  @NotNull
-  public String getComponentName() {
-    return NAME;
-  }
-
-  public void initComponent() {
-  }
-
-  public void disposeComponent() {
   }
 
   public static final class ImageFileType extends UserBinaryFileType {

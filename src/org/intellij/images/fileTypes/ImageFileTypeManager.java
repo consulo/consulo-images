@@ -15,8 +15,8 @@
  */
 package org.intellij.images.fileTypes;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -26,19 +26,21 @@ import com.intellij.openapi.vfs.VirtualFile;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public abstract class ImageFileTypeManager extends FileTypeFactory {
-    public static ImageFileTypeManager getInstance() {
-        Application application = ApplicationManager.getApplication();
-        return application.getComponent(ImageFileTypeManager.class);
-    }
+public abstract class ImageFileTypeManager extends FileTypeFactory
+{
+	@NotNull
+	public static ImageFileTypeManager getInstance()
+	{
+		return ServiceManager.getService(ImageFileTypeManager.class);
+	}
 
-    /**
-     * Check that file is image.
-     *
-     * @param file File to check
-     * @return Return <code>true</code> if image file is file with Images file type
-     */
-    public abstract boolean isImage(VirtualFile file);
+	/**
+	 * Check that file is image.
+	 *
+	 * @param file File to check
+	 * @return Return <code>true</code> if image file is file with Images file type
+	 */
+	public abstract boolean isImage(VirtualFile file);
 
-    public abstract FileType getImageFileType();
+	public abstract FileType getImageFileType();
 }
