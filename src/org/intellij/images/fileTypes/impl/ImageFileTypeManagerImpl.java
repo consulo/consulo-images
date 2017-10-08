@@ -51,9 +51,6 @@ final class ImageFileTypeManagerImpl extends ImageFileTypeManager {
     imageFileType.setDescription(IMAGE_FILE_TYPE_DESCRIPTION);
   }
 
-  public ImageFileTypeManagerImpl() {
-  }
-
   public boolean isImage(VirtualFile file) {
     return file.getFileType() instanceof ImageFileType;
   }
