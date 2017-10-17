@@ -15,9 +15,9 @@
  */
 package org.intellij.images.thumbnail.actionSystem;
 
+import org.intellij.images.thumbnail.ThumbnailView;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import org.intellij.images.thumbnail.ThumbnailView;
 
 /**
  * Thumbnail view actions utility.
@@ -43,7 +43,7 @@ public final class ThumbnailViewActionUtil {
     }
 
     public static ThumbnailView getThumbnailView(AnActionEvent e) {
-      return ThumbnailView.DATA_KEY.getData(e.getDataContext());
+      return e.getData(ThumbnailView.DATA_KEY);
     }
 
     /**

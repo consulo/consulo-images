@@ -79,6 +79,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -127,13 +128,10 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 		final PsiActionSupportFactory factory = PsiActionSupportFactory.getInstance();
 		if(factory != null && editor != null)
 		{
-			copyPasteSupport = factory.createPsiBasedCopyPasteSupport(editor.getProject(), this, new PsiActionSupportFactory.PsiElementSelector()
+			copyPasteSupport = factory.createPsiBasedCopyPasteSupport(editor.getProject(), this, () ->
 			{
-				public PsiElement[] getSelectedElements()
-				{
-					PsiElement[] data = LangDataKeys.PSI_ELEMENT_ARRAY.getData(ImageEditorUI.this);
-					return data == null ? PsiElement.EMPTY_ARRAY : data;
-				}
+				PsiElement[] data = ImageEditorUI.this.getDataUnchecked(LangDataKeys.PSI_ELEMENT_ARRAY);
+				return data == null ? PsiElement.EMPTY_ARRAY : data;
 			});
 		}
 		else
@@ -531,49 +529,48 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 		}
 	}
 
-
 	@Nullable
-	public Object getData(String dataId)
+	@Override
+	public Object getData(@NotNull Key<?> dataId)
 	{
-
-		if(CommonDataKeys.PROJECT.is(dataId))
+		if(CommonDataKeys.PROJECT == dataId)
 		{
 			return editor != null ? editor.getProject() : null;
 		}
-		else if(CommonDataKeys.VIRTUAL_FILE.is(dataId))
+		else if(CommonDataKeys.VIRTUAL_FILE == dataId)
 		{
 			return editor != null ? editor.getFile() : null;
 		}
-		else if(CommonDataKeys.VIRTUAL_FILE_ARRAY.is(dataId))
+		else if(CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId)
 		{
 			return editor != null ? new VirtualFile[]{editor.getFile()} : new VirtualFile[]{};
 		}
-		else if(CommonDataKeys.PSI_FILE.is(dataId))
+		else if(CommonDataKeys.PSI_FILE == dataId)
 		{
-			return getData(CommonDataKeys.PSI_ELEMENT.getName());
+			return getData(CommonDataKeys.PSI_ELEMENT);
 		}
-		else if(CommonDataKeys.PSI_ELEMENT.is(dataId))
+		else if(CommonDataKeys.PSI_ELEMENT == dataId)
 		{
 			VirtualFile file = editor != null ? editor.getFile() : null;
 			return file != null && file.isValid() ? PsiManager.getInstance(editor.getProject()).findFile(file) : null;
 		}
-		else if(LangDataKeys.PSI_ELEMENT_ARRAY.is(dataId))
+		else if(LangDataKeys.PSI_ELEMENT_ARRAY == dataId)
 		{
-			return editor != null ? new PsiElement[]{(PsiElement) getData(CommonDataKeys.PSI_ELEMENT.getName())} : new PsiElement[]{};
+			return editor != null ? new PsiElement[]{(PsiElement) getData(CommonDataKeys.PSI_ELEMENT)} : new PsiElement[]{};
 		}
-		else if(PlatformDataKeys.COPY_PROVIDER.is(dataId) && copyPasteSupport != null)
+		else if(PlatformDataKeys.COPY_PROVIDER == dataId && copyPasteSupport != null)
 		{
 			return this;
 		}
-		else if(PlatformDataKeys.CUT_PROVIDER.is(dataId) && copyPasteSupport != null)
+		else if(PlatformDataKeys.CUT_PROVIDER == dataId && copyPasteSupport != null)
 		{
 			return copyPasteSupport.getCutProvider();
 		}
-		else if(PlatformDataKeys.DELETE_ELEMENT_PROVIDER.is(dataId))
+		else if(PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId)
 		{
 			return deleteProvider;
 		}
-		else if(ImageComponentDecorator.DATA_KEY.is(dataId))
+		else if(ImageComponentDecorator.DATA_KEY == dataId)
 		{
 			return editor != null ? editor : this;
 		}

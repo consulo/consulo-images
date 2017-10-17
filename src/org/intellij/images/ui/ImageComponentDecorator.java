@@ -16,7 +16,7 @@
 package org.intellij.images.ui;
 
 import org.intellij.images.editor.ImageZoomModel;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 
 /**
  * Image Component manager. It can toggle backround transparency, grid, etc.
@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.DataKey;
  */
 public interface ImageComponentDecorator
 {
-	DataKey<ImageComponentDecorator> DATA_KEY = DataKey.create(ImageComponentDecorator.class.getName());
+	Key<ImageComponentDecorator> DATA_KEY = Key.create(ImageComponentDecorator.class.getName());
 
 	void setTransparencyChessboardVisible(boolean visible);
 

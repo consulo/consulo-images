@@ -15,61 +15,62 @@
  */
 package org.intellij.images.thumbnail;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.DataKey;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.intellij.images.ImagesBundle;
 import org.intellij.images.ui.ImageComponentDecorator;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * Thumbnail thumbnail is a component with thumbnails for a set of {@link com.intellij.openapi.vfs.VirtualFile}.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public interface ThumbnailView extends Disposable, ImageComponentDecorator {
-  DataKey<ThumbnailView> DATA_KEY = DataKey.create(ThumbnailView.class.getName());
+public interface ThumbnailView extends Disposable, ImageComponentDecorator
+{
+	Key<ThumbnailView> DATA_KEY = Key.create(ThumbnailView.class.getName());
 
-  String TOOLWINDOW_ID = ImagesBundle.message("thumbnails.toolwindow.name");
+	String TOOLWINDOW_ID = ImagesBundle.message("thumbnails.toolwindow.name");
 
-  @NotNull
-  Project getProject();
+	@NotNull
+	Project getProject();
 
-  /**
-   * Add virtual files to view
-   *
-   * @param root Root
-   */
-  void setRoot(@NotNull VirtualFile root);
+	/**
+	 * Add virtual files to view
+	 *
+	 * @param root Root
+	 */
+	void setRoot(@NotNull VirtualFile root);
 
-  /**
-   * Return current root
-   *
-   * @return Current root
-   */
-  VirtualFile getRoot();
+	/**
+	 * Return current root
+	 *
+	 * @return Current root
+	 */
+	VirtualFile getRoot();
 
-  boolean isRecursive();
+	boolean isRecursive();
 
-  void setRecursive(boolean recursive);
+	void setRecursive(boolean recursive);
 
-  void setSelected(@NotNull VirtualFile file, boolean selected);
+	void setSelected(@NotNull VirtualFile file, boolean selected);
 
-  boolean isSelected(@NotNull VirtualFile file);
+	boolean isSelected(@NotNull VirtualFile file);
 
-  @NotNull
-  VirtualFile[] getSelection();
+	@NotNull
+	VirtualFile[] getSelection();
 
-  /**
-   * Scroll to selection. If ToolWindow is not active, then
-   * it will perform activatation before scroll.
-   */
-  void scrollToSelection();
+	/**
+	 * Scroll to selection. If ToolWindow is not active, then
+	 * it will perform activatation before scroll.
+	 */
+	void scrollToSelection();
 
-  void setVisible(boolean visible);
+	void setVisible(boolean visible);
 
-  boolean isVisible();
+	boolean isVisible();
 
-  void activate();
+	void activate();
 }
