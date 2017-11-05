@@ -15,6 +15,21 @@
  */
 package org.intellij.images.editor.impl;
 
+import java.beans.PropertyChangeListener;
+
+import javax.swing.JComponent;
+
+import org.intellij.images.editor.ImageEditor;
+import org.intellij.images.editor.ImageFileEditor;
+import org.intellij.images.editor.ImageZoomModel;
+import org.intellij.images.options.EditorOptions;
+import org.intellij.images.options.GridOptions;
+import org.intellij.images.options.Options;
+import org.intellij.images.options.OptionsManager;
+import org.intellij.images.options.TransparencyChessboardOptions;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
@@ -24,16 +39,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import org.intellij.images.editor.ImageEditor;
-import org.intellij.images.editor.ImageFileEditor;
-import org.intellij.images.editor.ImageZoomModel;
-import org.intellij.images.options.*;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
-import java.beans.PropertyChangeListener;
 
 /**
  * Image Editor.
@@ -127,7 +132,7 @@ final class ImageFileEditorImpl extends UserDataHolderBase implements ImageFileE
 
   @Nullable
   @Override
-  public VirtualFile getVirtualFile() {
+  public VirtualFile getFile() {
     return imageEditor.getFile();
   }
 
