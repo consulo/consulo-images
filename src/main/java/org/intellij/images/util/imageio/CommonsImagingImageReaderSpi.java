@@ -50,7 +50,7 @@ public class CommonsImagingImageReaderSpi extends ImageReaderSpi
 	public CommonsImagingImageReaderSpi()
 	{
 		super();
-		vendorName = "JetBrains, s.r.o.";
+		vendorName = "consulo.io";
 		version = "1.0";
 
 		// todo standard GIF/BMP formats can be optionally skipped as well
