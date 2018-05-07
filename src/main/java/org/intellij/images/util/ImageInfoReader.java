@@ -17,8 +17,8 @@ package org.intellij.images.util;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 
@@ -32,17 +32,17 @@ public class ImageInfoReader {
   }
 
   @Nullable
-  public static Info getInfo(@NotNull final String file) {
+  public static Info getInfo(@Nonnull final String file) {
     return read(file);
   }
 
   @Nullable
-  public static Info getInfo(@NotNull final byte[] data) {
+  public static Info getInfo(@Nonnull final byte[] data) {
     return read(data);
   }
 
   @Nullable
-  private static Info read(@NotNull final String file) {
+  private static Info read(@Nonnull final String file) {
     final RandomAccessFile raf;
     try {
       //noinspection HardCodedStringLiteral
@@ -65,7 +65,7 @@ public class ImageInfoReader {
   }
 
   @Nullable
-  private static Info read(@NotNull final byte[] data) {
+  private static Info read(@Nonnull final byte[] data) {
     final DataInputStream is = new DataInputStream(new UnsyncByteArrayInputStream(data));
     try {
       return readFileData(is);
@@ -85,7 +85,7 @@ public class ImageInfoReader {
 
 
   @Nullable
-  private static Info readFileData(@NotNull final DataInput di) throws IOException {
+  private static Info readFileData(@Nonnull final DataInput di) throws IOException {
     final int b1 = di.readUnsignedByte();
     final int b2 = di.readUnsignedByte();
 

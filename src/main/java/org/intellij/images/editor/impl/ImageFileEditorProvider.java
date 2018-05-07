@@ -15,6 +15,8 @@
  */
 package org.intellij.images.editor.impl;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
@@ -23,7 +25,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Image editor provider.
@@ -39,21 +40,21 @@ final class ImageFileEditorProvider implements FileEditorProvider, DumbAware {
         this.typeManager = typeManager;
     }
 
-    public boolean accept(@NotNull Project project, @NotNull VirtualFile file) {
+    public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
         return typeManager.isImage(file);
     }
 
-    @NotNull
-    public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
+    @Nonnull
+    public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
         return new ImageFileEditorImpl(project, file);
     }
 
-    public void disposeEditor(@NotNull FileEditor editor) {
+    public void disposeEditor(@Nonnull FileEditor editor) {
       Disposer.dispose(editor);
     }
 
-    @NotNull
-    public FileEditorState readState(@NotNull Element sourceElement, @NotNull Project project, @NotNull VirtualFile file) {
+    @Nonnull
+    public FileEditorState readState(@Nonnull Element sourceElement, @Nonnull Project project, @Nonnull VirtualFile file) {
         return new FileEditorState() {
             public boolean canBeMergedWith(FileEditorState otherState, FileEditorStateLevel level) {
                 return false;
@@ -61,15 +62,15 @@ final class ImageFileEditorProvider implements FileEditorProvider, DumbAware {
         };
     }
 
-    public void writeState(@NotNull FileEditorState state, @NotNull Project project, @NotNull Element targetElement) {
+    public void writeState(@Nonnull FileEditorState state, @Nonnull Project project, @Nonnull Element targetElement) {
     }
 
-    @NotNull
+    @Nonnull
     public String getEditorTypeId() {
         return EDITOR_TYPE_ID;
     }
 
-    @NotNull
+    @Nonnull
     public FileEditorPolicy getPolicy() {
         return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
     }

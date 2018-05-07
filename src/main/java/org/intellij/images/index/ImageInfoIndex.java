@@ -25,7 +25,7 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.util.ImageInfoReader;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -72,20 +72,20 @@ public class ImageInfoIndex extends SingleEntryFileBasedIndexExtension<ImageInfo
 
   private final SingleEntryIndexer<ImageInfo> myDataIndexer = new SingleEntryIndexer<ImageInfo>(false) {
     @Override
-    protected ImageInfo computeValue(@NotNull FileContent inputData) {
+    protected ImageInfo computeValue(@Nonnull FileContent inputData) {
       final ImageInfoReader.Info info = ImageInfoReader.getInfo(inputData.getContent());
       return info != null? new ImageInfo(info.width, info.height, info.bpp) : null;
     }
   };
 
   @Override
-  @NotNull
+  @Nonnull
   public ID<Integer, ImageInfo> getName() {
     return INDEX_ID;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SingleEntryIndexer<ImageInfo> getIndexer() {
     return myDataIndexer;
   }

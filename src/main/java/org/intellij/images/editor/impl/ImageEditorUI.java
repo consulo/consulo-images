@@ -36,6 +36,8 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Locale;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -61,8 +63,6 @@ import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
 import org.intellij.images.ui.ImageComponent;
 import org.intellij.images.ui.ImageComponentDecorator;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.CopyPasteSupport;
 import com.intellij.ide.CopyProvider;
 import com.intellij.ide.DeleteProvider;
@@ -361,7 +361,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 		}
 
 		@Override
-		protected void paintComponent(@NotNull Graphics g)
+		protected void paintComponent(@Nonnull Graphics g)
 		{
 			super.paintComponent(g);
 			if(UIUtil.isUnderDarcula())
@@ -491,7 +491,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
 	private class DocumentChangeListener implements ChangeListener
 	{
-		public void stateChanged(@NotNull ChangeEvent e)
+		public void stateChanged(@Nonnull ChangeEvent e)
 		{
 			ImageDocument document = imageComponent.getDocument();
 			BufferedImage value = document.getValue();
@@ -508,7 +508,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
 	private class FocusRequester extends MouseAdapter
 	{
-		public void mousePressed(@NotNull MouseEvent e)
+		public void mousePressed(@Nonnull MouseEvent e)
 		{
 			requestFocus();
 		}
@@ -531,7 +531,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
 	@Nullable
 	@Override
-	public Object getData(@NotNull Key<?> dataId)
+	public Object getData(@Nonnull Key<?> dataId)
 	{
 		if(CommonDataKeys.PROJECT == dataId)
 		{
@@ -579,7 +579,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 	}
 
 	@Override
-	public void performCopy(@NotNull DataContext dataContext)
+	public void performCopy(@Nonnull DataContext dataContext)
 	{
 		ImageDocument document = imageComponent.getDocument();
 		BufferedImage image = document.getValue();
@@ -587,13 +587,13 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 	}
 
 	@Override
-	public boolean isCopyEnabled(@NotNull DataContext dataContext)
+	public boolean isCopyEnabled(@Nonnull DataContext dataContext)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean isCopyVisible(@NotNull DataContext dataContext)
+	public boolean isCopyVisible(@Nonnull DataContext dataContext)
 	{
 		return true;
 	}
@@ -602,7 +602,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 	{
 		private final BufferedImage myImage;
 
-		public ImageTransferable(@NotNull BufferedImage image)
+		public ImageTransferable(@Nonnull BufferedImage image)
 		{
 			myImage = image;
 		}

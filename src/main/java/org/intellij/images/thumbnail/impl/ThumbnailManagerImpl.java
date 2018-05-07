@@ -15,11 +15,12 @@
  */
 package org.intellij.images.thumbnail.impl;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import org.intellij.images.thumbnail.ThumbnailManager;
 import org.intellij.images.thumbnail.ThumbnailView;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Thumbail manager.
@@ -34,7 +35,7 @@ final class ThumbnailManagerImpl extends ThumbnailManager implements Disposable 
     this.project = project;
   }
 
-  @NotNull
+  @Nonnull
   public final ThumbnailView getThumbnailView() {
     if (thumbnailView == null) {
       thumbnailView = new ThumbnailViewImpl(project);

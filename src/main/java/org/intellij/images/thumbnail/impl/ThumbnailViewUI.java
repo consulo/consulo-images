@@ -50,8 +50,8 @@ import org.intellij.images.ui.ImageComponentDecorator;
 import org.intellij.images.ui.ThumbnailComponent;
 import org.intellij.images.ui.ThumbnailComponentUI;
 import org.intellij.images.vfs.IfsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.ide.CopyPasteSupport;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.PsiActionSupportFactory;
@@ -252,7 +252,7 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable
 		return index != -1 && list.isSelectedIndex(index);
 	}
 
-	@NotNull
+	@Nonnull
 	public VirtualFile[] getSelection()
 	{
 		if(list != null)
@@ -506,7 +506,7 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable
 
 	@Nullable
 	@Override
-	public Object getData(@NotNull Key<?> dataId)
+	public Object getData(@Nonnull Key<?> dataId)
 	{
 		if(CommonDataKeys.PROJECT == dataId)
 		{
@@ -581,7 +581,7 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable
 	}
 
 
-	@NotNull
+	@Nonnull
 	private PsiElement[] getSelectedElements()
 	{
 		VirtualFile[] selectedFiles = getSelectedFiles();
@@ -599,7 +599,7 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable
 		return PsiUtilBase.toPsiElementArray(psiElements);
 	}
 
-	@NotNull
+	@Nonnull
 	private VirtualFile[] getSelectedFiles()
 	{
 		if(list != null)
@@ -662,7 +662,7 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable
 
 	private final class VFSListener extends VirtualFileAdapter
 	{
-		public void contentsChanged(@NotNull VirtualFileEvent event)
+		public void contentsChanged(@Nonnull VirtualFileEvent event)
 		{
 			VirtualFile file = event.getFile();
 			if(list != null)
@@ -676,7 +676,7 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable
 			}
 		}
 
-		public void fileDeleted(@NotNull VirtualFileEvent event)
+		public void fileDeleted(@Nonnull VirtualFileEvent event)
 		{
 			VirtualFile file = event.getFile();
 			VirtualFile root = thumbnailView.getRoot();
@@ -690,17 +690,17 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable
 			}
 		}
 
-		public void propertyChanged(@NotNull VirtualFilePropertyEvent event)
+		public void propertyChanged(@Nonnull VirtualFilePropertyEvent event)
 		{
 			refresh();
 		}
 
-		public void fileCreated(@NotNull VirtualFileEvent event)
+		public void fileCreated(@Nonnull VirtualFileEvent event)
 		{
 			refresh();
 		}
 
-		public void fileMoved(@NotNull VirtualFileMoveEvent event)
+		public void fileMoved(@Nonnull VirtualFileMoveEvent event)
 		{
 			refresh();
 		}

@@ -19,13 +19,13 @@ import gnu.trove.THashSet;
 
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 
 import org.intellij.images.ImagesBundle;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.vfs.IfsUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.UserBinaryFileType;
@@ -62,7 +62,7 @@ final class ImageFileTypeManagerImpl extends ImageFileTypeManager {
   public static final class ImageFileType extends UserBinaryFileType {
   }
 
-  public void createFileTypes(final @NotNull FileTypeConsumer consumer) {
+  public void createFileTypes(final @Nonnull FileTypeConsumer consumer) {
     final Set<String> processed = new THashSet<String>();
 
     final String[] readerFormatNames = ImageIO.getReaderFormatNames();

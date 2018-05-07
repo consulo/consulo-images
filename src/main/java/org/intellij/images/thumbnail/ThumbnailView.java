@@ -17,7 +17,7 @@ package org.intellij.images.thumbnail;
 
 import org.intellij.images.ImagesBundle;
 import org.intellij.images.ui.ImageComponentDecorator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -34,7 +34,7 @@ public interface ThumbnailView extends Disposable, ImageComponentDecorator
 
 	String TOOLWINDOW_ID = ImagesBundle.message("thumbnails.toolwindow.name");
 
-	@NotNull
+	@Nonnull
 	Project getProject();
 
 	/**
@@ -42,7 +42,7 @@ public interface ThumbnailView extends Disposable, ImageComponentDecorator
 	 *
 	 * @param root Root
 	 */
-	void setRoot(@NotNull VirtualFile root);
+	void setRoot(@Nonnull VirtualFile root);
 
 	/**
 	 * Return current root
@@ -55,11 +55,11 @@ public interface ThumbnailView extends Disposable, ImageComponentDecorator
 
 	void setRecursive(boolean recursive);
 
-	void setSelected(@NotNull VirtualFile file, boolean selected);
+	void setSelected(@Nonnull VirtualFile file, boolean selected);
 
-	boolean isSelected(@NotNull VirtualFile file);
+	boolean isSelected(@Nonnull VirtualFile file);
 
-	@NotNull
+	@Nonnull
 	VirtualFile[] getSelection();
 
 	/**

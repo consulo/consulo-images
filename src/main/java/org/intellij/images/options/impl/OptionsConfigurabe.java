@@ -23,9 +23,9 @@ import org.intellij.images.ImagesBundle;
 import org.intellij.images.options.Options;
 import org.intellij.images.options.OptionsManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -96,7 +96,7 @@ public final class OptionsConfigurabe extends BaseConfigurableWithChangeSupport 
       util.editConfigurable(project, new OptionsConfigurabe());
     }
 
-  @NotNull
+  @Nonnull
   @NonNls
   public String getId() {
     return "Images";

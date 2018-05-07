@@ -15,7 +15,7 @@
  */
 package org.intellij.images.fileTypes;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
@@ -28,7 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
  */
 public abstract class ImageFileTypeManager extends FileTypeFactory
 {
-	@NotNull
+	@Nonnull
 	public static ImageFileTypeManager getInstance()
 	{
 		return ServiceManager.getService(ImageFileTypeManager.class);

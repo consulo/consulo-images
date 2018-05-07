@@ -24,7 +24,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.intellij.images.index.ImageInfoIndex;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.net.URI;
 import java.net.URISyntaxException;

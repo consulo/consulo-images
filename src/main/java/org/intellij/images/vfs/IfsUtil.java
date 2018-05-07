@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -32,8 +34,6 @@ import javax.imageio.stream.ImageInputStream;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.common.bytesource.ByteSourceArray;
 import org.apache.commons.imaging.formats.ico.IcoImageParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -65,7 +65,7 @@ public final class IfsUtil
 	 * @return true if file image is loaded.
 	 * @throws java.io.IOException if image can not be loaded
 	 */
-	private static boolean refresh(@NotNull VirtualFile file) throws IOException
+	private static boolean refresh(@Nonnull VirtualFile file) throws IOException
 	{
 		Long loadedTimeStamp = file.getUserData(TIMESTAMP_KEY);
 		SoftReference<BufferedImage> imageRef = file.getUserData(BUFFERED_IMAGE_REF_KEY);
@@ -123,7 +123,7 @@ public final class IfsUtil
 	}
 
 	@Nullable
-	public static BufferedImage getImage(@NotNull VirtualFile file) throws IOException
+	public static BufferedImage getImage(@Nonnull VirtualFile file) throws IOException
 	{
 		refresh(file);
 		SoftReference<BufferedImage> imageRef = file.getUserData(BUFFERED_IMAGE_REF_KEY);
@@ -131,7 +131,7 @@ public final class IfsUtil
 	}
 
 	@Nullable
-	public static String getFormat(@NotNull VirtualFile file) throws IOException
+	public static String getFormat(@Nonnull VirtualFile file) throws IOException
 	{
 		refresh(file);
 		return file.getUserData(FORMAT_KEY);

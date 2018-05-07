@@ -17,13 +17,14 @@ package org.intellij.images.editor.impl;
 
 import java.awt.image.BufferedImage;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.options.EditorOptions;
 import org.intellij.images.options.GridOptions;
 import org.intellij.images.options.Options;
 import org.intellij.images.options.OptionsManager;
 import org.intellij.images.options.TransparencyChessboardOptions;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -45,13 +46,13 @@ public final class ImageEditorManagerImpl
 	 * @param file    File
 	 * @return Image editor for file
 	 */
-	@NotNull
-	public static ImageEditor createImageEditor(@NotNull Project project, @NotNull VirtualFile file)
+	@Nonnull
+	public static ImageEditor createImageEditor(@Nonnull Project project, @Nonnull VirtualFile file)
 	{
 		return new ImageEditorImpl(project, file);
 	}
 
-	@NotNull
+	@Nonnull
 	public static ImageEditorUI createImageEditorUI(BufferedImage image)
 	{
 		ImageEditorUI ui = new ImageEditorUI(null);
@@ -71,7 +72,7 @@ public final class ImageEditorManagerImpl
 	 *
 	 * @param editor Editor to release.
 	 */
-	public static void releaseImageEditor(@NotNull ImageEditor editor)
+	public static void releaseImageEditor(@Nonnull ImageEditor editor)
 	{
 		if(!editor.isDisposed())
 		{

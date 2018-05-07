@@ -15,6 +15,7 @@
  */
 package org.intellij.images.editor.impl;
 
+import javax.annotation.Nonnull;
 import javax.swing.JComponent;
 
 import org.intellij.images.editor.ImageDocument;
@@ -23,7 +24,6 @@ import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
 import org.intellij.images.vfs.IfsUtil;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
@@ -45,7 +45,7 @@ final class ImageEditorImpl extends VirtualFileAdapter implements ImageEditor
 	private final ImageEditorUI editorUI;
 	private boolean disposed;
 
-	ImageEditorImpl(@NotNull Project project, @NotNull VirtualFile file)
+	ImageEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file)
 	{
 		this.project = project;
 		this.file = file;
@@ -86,13 +86,13 @@ final class ImageEditorImpl extends VirtualFileAdapter implements ImageEditor
 		return editorUI.getImageComponent();
 	}
 
-	@NotNull
+	@Nonnull
 	public VirtualFile getFile()
 	{
 		return file;
 	}
 
-	@NotNull
+	@Nonnull
 	public Project getProject()
 	{
 		return project;
@@ -148,7 +148,7 @@ final class ImageEditorImpl extends VirtualFileAdapter implements ImageEditor
 		disposed = true;
 	}
 
-	public void propertyChanged(@NotNull VirtualFilePropertyEvent event)
+	public void propertyChanged(@Nonnull VirtualFilePropertyEvent event)
 	{
 		super.propertyChanged(event);
 		if(file.equals(event.getFile()))
@@ -174,7 +174,7 @@ final class ImageEditorImpl extends VirtualFileAdapter implements ImageEditor
 		}
 	}
 
-	public void contentsChanged(@NotNull VirtualFileEvent event)
+	public void contentsChanged(@Nonnull VirtualFileEvent event)
 	{
 		super.contentsChanged(event);
 		if(file.equals(event.getFile()))

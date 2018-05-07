@@ -15,6 +15,8 @@
  */
 package org.intellij.images.completion;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -23,14 +25,13 @@ import com.intellij.psi.file.FileLookupInfoProvider;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.index.ImageInfoIndex;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author spleaner
  */
 public class ImageLookupInfoProvider extends FileLookupInfoProvider {
 
-  public Pair<String, String> getLookupInfo(@NotNull VirtualFile file, Project project) {
+  public Pair<String, String> getLookupInfo(@Nonnull VirtualFile file, Project project) {
     final String[] s = new String[] {null};
     ImageInfoIndex.processValues(file, new FileBasedIndex.ValueProcessor<ImageInfoIndex.ImageInfo>() {
       @SuppressWarnings({"HardCodedStringLiteral"})
@@ -43,7 +44,7 @@ public class ImageLookupInfoProvider extends FileLookupInfoProvider {
     return s[0] == null ? null : new Pair<String, String>(file.getName(), s[0]);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType[] getFileTypes() {
     return new FileType[]{ImageFileTypeManager.getInstance().getImageFileType()};

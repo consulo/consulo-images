@@ -15,7 +15,7 @@
  */
 package org.intellij.images.thumbnail;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.components.ServiceManager;
 
@@ -35,7 +35,7 @@ public abstract class ThumbnailManager {
    *
    * @return Return thumbnail view
    */
-  @NotNull
+  @Nonnull
   public abstract ThumbnailView getThumbnailView();
 
 }
