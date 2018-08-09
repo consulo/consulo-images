@@ -18,101 +18,163 @@
 
 package org.intellij.images.ui;
 
-import com.intellij.util.ui.UIUtil;
-import org.intellij.images.editor.ImageDocument;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.TexturePaint;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+
+import javax.swing.JComponent;
+import javax.swing.plaf.ComponentUI;
+
+import org.intellij.images.editor.ImageDocument;
+import com.intellij.util.ui.UIUtil;
 
 /**
  * UI for {@link ImageComponent}.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public class ImageComponentUI extends ComponentUI {
-    private static final ImageComponentUI ui = new ImageComponentUI();
+public class ImageComponentUI extends ComponentUI
+{
+	private BufferedImage pattern;
 
-    public void paint(Graphics g, JComponent c) {
-        ImageComponent ic = (ImageComponent)c;
-        if (ic != null) {
-            ImageDocument document = ic.getDocument();
-            BufferedImage image = document.getValue();
-            if (image != null) {
-                paintBorder(g, ic);
+	private ImageComponentUI(JComponent c)
+	{
+		c.addPropertyChangeListener(evt ->
+		{
+			String name = evt.getPropertyName();
+			if(ImageComponent.TRANSPARENCY_CHESSBOARD_BLACK_COLOR_PROP.equals(name) ||
+					ImageComponent.TRANSPARENCY_CHESSBOARD_WHITE_COLOR_PROP.equals(name) ||
+					ImageComponent.TRANSPARENCY_CHESSBOARD_CELL_SIZE_PROP.equals(name))
+			{
+				pattern = null;
+			}
+		});
+	}
 
-                Dimension size = ic.getCanvasSize();
-                Graphics igc = g.create(2, 2, size.width, size.height);
+	@Override
+	public void paint(Graphics g, JComponent c)
+	{
+		ImageComponent ic = (ImageComponent) c;
+		if(ic != null)
+		{
+			ImageDocument document = ic.getDocument();
+			BufferedImage image = document.getValue(ic.getZoomFactor());
+			if(image != null)
+			{
+				if(ic.isFileSizeVisible())
+				{
+					paintBorder(g, ic);
+				}
 
-                // Transparency chessboard
-                if (ic.isTransparencyChessboardVisible()) {
-                    paintChessboard(igc, ic);
-                }
+				Dimension size = ic.getCanvasSize();
+				Graphics igc = g.create(ImageComponent.IMAGE_INSETS, ImageComponent.IMAGE_INSETS, size.width, size.height);
 
-                paintImage(igc, ic);
+				// Transparency chessboard
+				if(ic.isTransparencyChessboardVisible() && image.getTransparency() != Transparency.OPAQUE)
+				{
+					paintChessboard(igc, ic);
+				}
 
-                // Grid
-                if (ic.isGridVisible()) {
-                    paintGrid(igc, ic);
-                }
+				paintImage(igc, ic);
 
-                igc.dispose();
-            }
-        }
-    }
+				// Grid
+				if(ic.isGridVisible())
+				{
+					paintGrid(igc, ic);
+				}
 
-    private void paintBorder(Graphics g, ImageComponent ic) {
-        Dimension size = ic.getSize();
-        g.setColor(ic.getTransparencyChessboardBlackColor());
-        g.drawRect(0, 0, size.width - 1, size.height - 1);
-    }
+				igc.dispose();
+			}
+		}
+	}
 
-    private void paintChessboard(Graphics g, ImageComponent ic) {
-        Dimension size = ic.getCanvasSize();
-        // Create pattern
-        int cellSize = ic.getTransparencyChessboardCellSize();
-        int patternSize = 2 * cellSize;
-        BufferedImage pattern = UIUtil.createImage(patternSize, patternSize, BufferedImage.TYPE_INT_ARGB);
-        Graphics imageGraphics = pattern.getGraphics();
-        imageGraphics.setColor(ic.getTransparencyChessboardWhiteColor());
-        imageGraphics.fillRect(0, 0, patternSize, patternSize);
-        imageGraphics.setColor(ic.getTransparencyChessboardBlackColor());
-        imageGraphics.fillRect(0, cellSize, cellSize, cellSize);
-        imageGraphics.fillRect(cellSize, 0, cellSize, cellSize);
+	private static void paintBorder(Graphics g, ImageComponent ic)
+	{
+		Dimension size = ic.getSize();
+		g.setColor(ic.getTransparencyChessboardBlackColor());
+		g.drawRect(0, 0, size.width - 1, size.height - 1);
+	}
 
-        ((Graphics2D)g).setPaint(new TexturePaint(pattern, new Rectangle(0, 0, patternSize, patternSize)));
-        g.fillRect(0, 0, size.width, size.height);
-    }
+	private void paintChessboard(Graphics g, ImageComponent ic)
+	{
+		Dimension size = ic.getCanvasSize();
+		// Create pattern
+		int cellSize = ic.getTransparencyChessboardCellSize();
+		int patternSize = 2 * cellSize;
 
-    private void paintImage(Graphics g, ImageComponent ic) {
-        ImageDocument document = ic.getDocument();
-        Dimension size = ic.getCanvasSize();
-        g.drawImage(document.getRenderer(), 0, 0, size.width, size.height, ic);
-    }
+		if(pattern == null)
+		{
+			pattern = UIUtil.createImage(g, patternSize, patternSize, BufferedImage.TYPE_INT_ARGB);
+			Graphics imageGraphics = pattern.getGraphics();
+			imageGraphics.setColor(ic.getTransparencyChessboardWhiteColor());
+			imageGraphics.fillRect(0, 0, patternSize, patternSize);
+			imageGraphics.setColor(ic.getTransparencyChessboardBlackColor());
+			imageGraphics.fillRect(0, cellSize, cellSize, cellSize);
+			imageGraphics.fillRect(cellSize, 0, cellSize, cellSize);
+		}
 
-    private void paintGrid(Graphics g, ImageComponent ic) {
-        Dimension size = ic.getCanvasSize();
-        BufferedImage image = ic.getDocument().getValue();
-        int imageWidth = image.getWidth();
-        int imageHeight = image.getHeight();
-        double zoomX = (double)size.width / (double)imageWidth;
-        double zoomY = (double)size.height / (double)imageHeight;
-        double zoomFactor = (zoomX + zoomY) / 2.0d;
-        if (zoomFactor >= ic.getGridLineZoomFactor()) {
-            g.setColor(ic.getGridLineColor());
-            int ls = ic.getGridLineSpan();
-            for (int dx = ls; dx < imageWidth; dx += ls) {
-              UIUtil.drawLine(g, (int)((double)dx * zoomX), 0, (int)((double)dx * zoomX), size.height);
-            }
-            for (int dy = ls; dy < imageHeight; dy += ls) {
-              UIUtil.drawLine(g, 0, (int)((double)dy * zoomY), size.width, (int)((double)dy * zoomY));
-            }
-        }
-    }
+		((Graphics2D) g).setPaint(new TexturePaint(pattern, new Rectangle(0, 0, patternSize, patternSize)));
+		g.fillRect(0, 0, size.width, size.height);
+	}
 
-    @SuppressWarnings({"UnusedDeclaration"})
-    public static ComponentUI createUI(JComponent c) {
-        return ui;
-    }
+	private static void paintImage(Graphics g, ImageComponent ic)
+	{
+		ImageDocument document = ic.getDocument();
+		Dimension size = ic.getCanvasSize();
+
+		Graphics2D g2d = (Graphics2D) g;
+		RenderingHints oldHints = g2d.getRenderingHints();
+
+		BufferedImage image = document.getValue(ic.getZoomFactor());
+
+		if(size.width > image.getWidth() && size.height > image.getHeight())
+		{
+			// disable any kind of source image manipulation when resizing
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+		}
+		else
+		{
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		}
+		UIUtil.drawImage(g, image, new Rectangle(0, 0, size.width, size.height), ic);
+
+		g2d.setRenderingHints(oldHints);
+	}
+
+	private static void paintGrid(Graphics g, ImageComponent ic)
+	{
+		Dimension size = ic.getCanvasSize();
+		BufferedImage image = ic.getDocument().getValue();
+		int imageWidth = image.getWidth();
+		int imageHeight = image.getHeight();
+		double zoomX = (double) size.width / (double) imageWidth;
+		double zoomY = (double) size.height / (double) imageHeight;
+		double zoomFactor = (zoomX + zoomY) / 2.0d;
+		if(zoomFactor >= ic.getGridLineZoomFactor())
+		{
+			g.setColor(ic.getGridLineColor());
+			int ls = ic.getGridLineSpan();
+			for(int dx = ls; dx < imageWidth; dx += ls)
+			{
+				UIUtil.drawLine(g, (int) ((double) dx * zoomX), 0, (int) ((double) dx * zoomX), size.height);
+			}
+			for(int dy = ls; dy < imageHeight; dy += ls)
+			{
+				UIUtil.drawLine(g, 0, (int) ((double) dy * zoomY), size.width, (int) ((double) dy * zoomY));
+			}
+		}
+	}
+
+	@SuppressWarnings({"UnusedDeclaration"})
+	public static ComponentUI createUI(JComponent c)
+	{
+		return new ImageComponentUI(c);
+	}
 }

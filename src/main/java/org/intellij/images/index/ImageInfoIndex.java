@@ -15,132 +15,178 @@
  */
 package org.intellij.images.index;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.indexing.*;
-import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.DataInputOutputUtil;
-import org.intellij.images.fileTypes.ImageFileTypeManager;
-import org.intellij.images.util.ImageInfoReader;
-import javax.annotation.Nonnull;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Collection;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.intellij.images.fileTypes.ImageFileTypeManager;
+import org.intellij.images.fileTypes.impl.SvgFileType;
+import org.intellij.images.util.ImageInfoReader;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.indexing.DefaultFileTypeSpecificInputFilter;
+import com.intellij.util.indexing.FileBasedIndex;
+import com.intellij.util.indexing.FileContent;
+import com.intellij.util.indexing.ID;
+import com.intellij.util.indexing.SingleEntryFileBasedIndexExtension;
+import com.intellij.util.indexing.SingleEntryIndexer;
+import com.intellij.util.io.DataExternalizer;
+import com.intellij.util.io.DataInputOutputUtil;
 
 /**
  * @author spleaner
  */
-public class ImageInfoIndex extends SingleEntryFileBasedIndexExtension<ImageInfoIndex.ImageInfo> {
-  private static final int ourMaxImageSize;
-  static {
-    int maxImageSize = 200;
-    try {
-      maxImageSize = Integer.parseInt(System.getProperty("idea.max.image.filesize", Integer.toString(maxImageSize)), 10);
-    } catch (NumberFormatException ex) {}
-    ourMaxImageSize = maxImageSize;
-  }
+public class ImageInfoIndex extends SingleEntryFileBasedIndexExtension<ImageInfoIndex.ImageInfo>
+{
+	private static final int ourMaxImageSize;
 
-  public static final ID<Integer, ImageInfo> INDEX_ID = ID.create("ImageFileInfoIndex");
+	static
+	{
+		int maxImageSize = 10;
+		try
+		{
+			maxImageSize = Integer.parseInt(System.getProperty("idea.max.image.filesize", Integer.toString(maxImageSize)), 10);
+		}
+		catch(NumberFormatException ex)
+		{
+		}
+		ourMaxImageSize = maxImageSize * 1024 * 1024;
+	}
 
-  private final FileBasedIndex.InputFilter myInputFilter = new FileBasedIndex.InputFilter() {
-    @Override
-    public boolean acceptInput(Project project, final VirtualFile file) {
-      return (file.getFileSystem() == LocalFileSystem.getInstance() || file.getFileSystem() instanceof TempFileSystem) &&
-             file.getFileType() == ImageFileTypeManager.getInstance().getImageFileType() &&
-             (file.getLength() / 1024) < ourMaxImageSize
-        ;
-    }
-  };
+	public static final ID<Integer, ImageInfo> INDEX_ID = ID.create("ImageFileInfoIndex");
 
-  private final DataExternalizer<ImageInfo> myValueExternalizer = new DataExternalizer<ImageInfo>() {
-    @Override
-    public void save(final DataOutput out, final ImageInfo info) throws IOException {
-      DataInputOutputUtil.writeINT(out, info.width);
-      DataInputOutputUtil.writeINT(out, info.height);
-      DataInputOutputUtil.writeINT(out, info.bpp);
-    }
+	private final DataExternalizer<ImageInfo> myValueExternalizer = new DataExternalizer<ImageInfo>()
+	{
+		@Override
+		public void save(final DataOutput out, final ImageInfo info) throws IOException
+		{
+			DataInputOutputUtil.writeINT(out, info.width);
+			DataInputOutputUtil.writeINT(out, info.height);
+			DataInputOutputUtil.writeINT(out, info.bpp);
+		}
 
-    @Override
-    public ImageInfo read(final DataInput in) throws IOException {
-      return new ImageInfo(DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in));
-    }
-  };
+		@Override
+		public ImageInfo read(final DataInput in) throws IOException
+		{
+			return new ImageInfo(DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in));
+		}
+	};
 
-  private final SingleEntryIndexer<ImageInfo> myDataIndexer = new SingleEntryIndexer<ImageInfo>(false) {
-    @Override
-    protected ImageInfo computeValue(@Nonnull FileContent inputData) {
-      final ImageInfoReader.Info info = ImageInfoReader.getInfo(inputData.getContent());
-      return info != null? new ImageInfo(info.width, info.height, info.bpp) : null;
-    }
-  };
+	private final SingleEntryIndexer<ImageInfo> myDataIndexer = new SingleEntryIndexer<ImageInfo>(false)
+	{
+		@Override
+		protected ImageInfo computeValue(@Nonnull FileContent inputData)
+		{
+			final ImageInfoReader.Info info = ImageInfoReader.getInfo(inputData.getContent());
+			return info != null ? new ImageInfo(info.width, info.height, info.bpp) : null;
+		}
+	};
 
-  @Override
-  @Nonnull
-  public ID<Integer, ImageInfo> getName() {
-    return INDEX_ID;
-  }
+	@Override
+	@Nonnull
+	public ID<Integer, ImageInfo> getName()
+	{
+		return INDEX_ID;
+	}
 
-  @Override
-  @Nonnull
-  public SingleEntryIndexer<ImageInfo> getIndexer() {
-    return myDataIndexer;
-  }
+	@Override
+	@Nonnull
+	public SingleEntryIndexer<ImageInfo> getIndexer()
+	{
+		return myDataIndexer;
+	}
 
-  public static void processValues(VirtualFile virtualFile, FileBasedIndex.ValueProcessor<ImageInfo> processor, Project project) {
-    FileBasedIndex.getInstance().processValues(INDEX_ID, Math.abs(FileBasedIndex.getFileId(virtualFile)), virtualFile, processor, GlobalSearchScope
-        .fileScope(project, virtualFile));
-  }
+	public static void processValues(VirtualFile virtualFile, FileBasedIndex.ValueProcessor<ImageInfo> processor, Project project)
+	{
+		FileBasedIndex.getInstance().processValues(INDEX_ID, Math.abs(FileBasedIndex.getFileId(virtualFile)), virtualFile, processor, GlobalSearchScope
+				.fileScope(project, virtualFile));
+	}
 
-  @Override
-  public DataExternalizer<ImageInfo> getValueExternalizer() {
-    return myValueExternalizer;
-  }
+	@Nonnull
+	@Override
+	public DataExternalizer<ImageInfo> getValueExternalizer()
+	{
+		return myValueExternalizer;
+	}
 
-  @Override
-  public FileBasedIndex.InputFilter getInputFilter() {
-    return myInputFilter;
-  }
+	@Nonnull
+	@Override
+	public FileBasedIndex.InputFilter getInputFilter()
+	{
+		Collection<FileType> fileTypes = ImageFileTypeManager.getInstance().getFileTypes();
+		return new DefaultFileTypeSpecificInputFilter(ContainerUtil.toArray(fileTypes, FileType.ARRAY_FACTORY))
+		{
+			@Override
+			public boolean acceptInput(@Nullable Project project, @Nonnull VirtualFile file)
+			{
+				return file.isInLocalFileSystem() && file.getLength() < ourMaxImageSize;
+			}
+		};
+	}
 
-  @Override
-  public int getVersion() {
-    return 5;
-  }
+	@Override
+	public int getVersion()
+	{
+		return 5;
+	}
 
-  public static class ImageInfo {
-    public int width;
-    public int height;
-    public int bpp;
+	public static class ImageInfo
+	{
+		public int width;
+		public int height;
+		public int bpp;
 
-    public ImageInfo(int width, int height, int bpp) {
-      this.width = width;
-      this.height = height;
-      this.bpp = bpp;
-    }
+		public ImageInfo(int width, int height, int bpp)
+		{
+			this.width = width;
+			this.height = height;
+			this.bpp = bpp;
+		}
 
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+		@Override
+		public boolean equals(Object o)
+		{
+			if(this == o)
+			{
+				return true;
+			}
+			if(o == null || getClass() != o.getClass())
+			{
+				return false;
+			}
 
-      ImageInfo imageInfo = (ImageInfo)o;
+			ImageInfo imageInfo = (ImageInfo) o;
 
-      if (bpp != imageInfo.bpp) return false;
-      if (height != imageInfo.height) return false;
-      if (width != imageInfo.width) return false;
+			if(bpp != imageInfo.bpp)
+			{
+				return false;
+			}
+			if(height != imageInfo.height)
+			{
+				return false;
+			}
+			if(width != imageInfo.width)
+			{
+				return false;
+			}
 
-      return true;
-    }
+			return true;
+		}
 
-    @Override
-    public int hashCode() {
-      int result = width;
-      result = 31 * result + height;
-      result = 31 * result + bpp;
-      return result;
-    }
-  }
+		@Override
+		public int hashCode()
+		{
+			int result = width;
+			result = 31 * result + height;
+			result = 31 * result + bpp;
+			return result;
+		}
+	}
 }

@@ -15,64 +15,89 @@
  */
 package org.intellij.images.fileTypes.impl;
 
-import gnu.trove.THashSet;
-
-import java.util.Set;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
-import javax.imageio.ImageIO;
+import javax.annotation.Nullable;
 
-import org.intellij.images.ImagesBundle;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
-import org.intellij.images.vfs.IfsUtil;
 import org.jetbrains.annotations.NonNls;
+import com.intellij.openapi.fileTypes.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.UserBinaryFileType;
-import com.intellij.openapi.fileTypes.UserFileType;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import icons.ImagesIcons;
+import consulo.images.ImageFileType;
+import consulo.images.ImageFileTypeProvider;
 
 /**
  * Image file type manager.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-final class ImageFileTypeManagerImpl extends ImageFileTypeManager {
-  @NonNls private static final String IMAGE_FILE_TYPE_NAME = "Images";
-  private static final String IMAGE_FILE_TYPE_DESCRIPTION = ImagesBundle.message("images.filetype.description");
-  private static final UserFileType imageFileType;
+public final class ImageFileTypeManagerImpl extends ImageFileTypeManager
+{
+	private final Map<FileType, String> myFileTypes = new HashMap<>();
 
-  static {
-    imageFileType = new ImageFileType();
-    imageFileType.setIcon(ImagesIcons.ImagesFileType);
-    imageFileType.setName(IMAGE_FILE_TYPE_NAME);
-    imageFileType.setDescription(IMAGE_FILE_TYPE_DESCRIPTION);
-  }
+	ImageFileTypeManagerImpl()
+	{
+		FileTypeConsumer consumer = new FileTypeConsumer()
+		{
+			@Override
+			public void consume(@Nonnull FileType fileType)
+			{
+				consume(fileType, fileType.getDefaultExtension());
+			}
 
-  public boolean isImage(VirtualFile file) {
-    return file.getFileType() instanceof ImageFileType;
-  }
+			@Override
+			public void consume(@Nonnull FileType fileType, @NonNls String extensions)
+			{
+				myFileTypes.put(fileType, extensions);
+			}
 
-  public FileType getImageFileType() {
-    return imageFileType;
-  }
+			@Override
+			public void consume(@Nonnull FileType fileType, FileNameMatcher... matchers)
+			{
+				throw new UnsupportedOperationException();
+			}
 
-  public static final class ImageFileType extends UserBinaryFileType {
-  }
+			@Nullable
+			@Override
+			public FileType getStandardFileTypeByName(@Nonnull @NonNls String name)
+			{
+				throw new UnsupportedOperationException();
+			}
+		};
 
-  public void createFileTypes(final @Nonnull FileTypeConsumer consumer) {
-    final Set<String> processed = new THashSet<String>();
+		for(ImageFileTypeProvider provider : ImageFileTypeProvider.EP_NAME.getExtensions())
+		{
+			provider.register(consumer);
+		}
+	}
 
-    final String[] readerFormatNames = ImageIO.getReaderFormatNames();
-    for (String format : readerFormatNames) {
-      final String ext = format.toLowerCase();
-      processed.add(ext);
-    }
+	@Override
+	public Collection<FileType> getFileTypes()
+	{
+		return myFileTypes.keySet();
+	}
 
-    processed.add(IfsUtil.ICO_FORMAT.toLowerCase());
+	@Nonnull
+	public Map<FileType, String> getRegisteredFileTypes()
+	{
+		return myFileTypes;
+	}
 
-    consumer.consume(imageFileType, StringUtil.join(processed, FileTypeConsumer.EXTENSION_DELIMITER));
-  }
+	@Override
+	public boolean isImage(@Nonnull VirtualFile file)
+	{
+		return file.getFileType() == ImageFileType.INSTANCE;
+	}
+
+	@Nonnull
+	@Override
+	public FileType getImageFileType()
+	{
+		return ImageFileType.INSTANCE;
+	}
 }

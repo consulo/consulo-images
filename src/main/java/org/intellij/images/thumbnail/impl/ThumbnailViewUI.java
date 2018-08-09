@@ -35,6 +35,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 import org.intellij.images.fileTypes.ImageFileTypeManager;
@@ -50,8 +52,6 @@ import org.intellij.images.ui.ImageComponentDecorator;
 import org.intellij.images.ui.ThumbnailComponent;
 import org.intellij.images.ui.ThumbnailComponentUI;
 import org.intellij.images.vfs.IfsUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.ide.CopyPasteSupport;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.PsiActionSupportFactory;
@@ -315,7 +315,7 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable
 					{
 						// Ignore
 						ImageComponent imageComponent = getImageComponent();
-						imageComponent.getDocument().setValue(null);
+						imageComponent.getDocument().setValue((BufferedImage)null);
 					}
 				}
 
@@ -323,7 +323,7 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable
 			else
 			{
 				ImageComponent imageComponent = getImageComponent();
-				imageComponent.getDocument().setValue(null);
+				imageComponent.getDocument().setValue((BufferedImage) null);
 				setFileName(null);
 				setFileSize(0);
 				setToolTipText(null);

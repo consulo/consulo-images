@@ -4,15 +4,27 @@
 	<vendor>JetBrains</vendor>
 	<version>SNAPSHOT</version>
 
+	<depends optional="true" config-file="com.intellij.xml.xml">com.intellij.xml</depends>
+
+	<extensionPoints>
+		<extensionPoint name="imageFileTypeProvider" interface="consulo.images.ImageFileTypeProvider"/>
+	</extensionPoints>
+
+	<extensions defaultExtensionNs="com.intellij.images">
+		<imageFileTypeProvider implementation="consulo.images.impl.DefaultImageFileTypeProvider" />
+	</extensions>
+
 	<extensions defaultExtensionNs="com.intellij">
+		<fileTypeFactory implementation="consulo.images.ImageFileTypeFactory"/>
+
 		<applicationConfigurable instance="org.intellij.images.options.impl.OptionsConfigurabe" id="Images" displayName="Images" parentId="editor"/>
+
 		<fileEditorProvider implementation="org.intellij.images.editor.impl.ImageFileEditorProvider"/>
 		<selectInTarget implementation="org.intellij.images.thumbnail.impl.ThumbnailSelectInTarget"/>
 		<applicationService serviceInterface="org.intellij.images.options.OptionsManager"
 							serviceImplementation="org.intellij.images.options.impl.OptionsManagerImpl"/>
 		<projectService serviceInterface="org.intellij.images.thumbnail.ThumbnailManager"
 						serviceImplementation="org.intellij.images.thumbnail.impl.ThumbnailManagerImpl"/>
-		<fileTypeFactory implementation="org.intellij.images.fileTypes.impl.ImageFileTypeManagerImpl"/>
 		<fileBasedIndex implementation="org.intellij.images.index.ImageInfoIndex"/>
 		<fileLookupInfoProvider implementation="org.intellij.images.completion.ImageLookupInfoProvider"/>
 		<documentationProvider implementation="org.intellij.images.fileTypes.ImageDocumentationProvider"/>

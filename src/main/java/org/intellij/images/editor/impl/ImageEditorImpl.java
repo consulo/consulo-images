@@ -24,49 +24,65 @@ import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
 import org.intellij.images.vfs.IfsUtil;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
+import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 
 /**
  * Image viewer implementation.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-final class ImageEditorImpl extends VirtualFileAdapter implements ImageEditor
+public final class ImageEditorImpl implements ImageEditor
 {
 	private final Project project;
 	private final VirtualFile file;
 	private final ImageEditorUI editorUI;
 	private boolean disposed;
 
-	ImageEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file)
+	public ImageEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file)
 	{
 		this.project = project;
 		this.file = file;
 
 		editorUI = new ImageEditorUI(this);
+		Disposer.register(this, editorUI);
 
-		VirtualFileManager.getInstance().addVirtualFileListener(this);
+		VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener()
+		{
+			@Override
+			public void propertyChanged(@Nonnull VirtualFilePropertyEvent event)
+			{
+				ImageEditorImpl.this.propertyChanged(event);
+			}
+
+			@Override
+			public void contentsChanged(@Nonnull VirtualFileEvent event)
+			{
+				ImageEditorImpl.this.contentsChanged(event);
+			}
+		}, this);
 
 		setValue(file);
 	}
 
-	private void setValue(VirtualFile file)
+	public void setValue(VirtualFile file)
 	{
 		try
 		{
-			editorUI.setImage(IfsUtil.getImage(file), IfsUtil.getFormat(file));
+			editorUI.setImageProvider(IfsUtil.getImageProvider(file), IfsUtil.getFormat(file));
 		}
 		catch(Exception e)
 		{
 			//     Error loading image file
-			editorUI.setImage(null, null);
+			editorUI.setImageProvider(null, null);
 		}
 	}
 
@@ -76,7 +92,7 @@ final class ImageEditorImpl extends VirtualFileAdapter implements ImageEditor
 		return document.getValue() != null;
 	}
 
-	public JComponent getComponent()
+	public ImageEditorUI getComponent()
 	{
 		return editorUI;
 	}
@@ -143,50 +159,38 @@ final class ImageEditorImpl extends VirtualFileAdapter implements ImageEditor
 
 	public void dispose()
 	{
-		Disposer.dispose(editorUI);
-		VirtualFileManager.getInstance().removeVirtualFileListener(this);
 		disposed = true;
 	}
 
-	public void propertyChanged(@Nonnull VirtualFilePropertyEvent event)
+	void propertyChanged(@Nonnull VirtualFilePropertyEvent event)
 	{
-		super.propertyChanged(event);
 		if(file.equals(event.getFile()))
 		{
 			// Change document
-			file.refresh(true, false, new Runnable()
+			file.refresh(true, false, () ->
 			{
-				public void run()
+				if(ImageFileTypeManager.getInstance().isImage(file))
 				{
-					if(ImageFileTypeManager.getInstance().isImage(file))
-					{
-						setValue(file);
-					}
-					else
-					{
-						setValue(null);
-						// Close editor
-						FileEditorManager editorManager = FileEditorManager.getInstance(project);
-						editorManager.closeFile(file);
-					}
+					setValue(file);
+				}
+				else
+				{
+					setValue(null);
+					// Close editor
+					FileEditorManager editorManager = FileEditorManager.getInstance(project);
+					editorManager.closeFile(file);
 				}
 			});
 		}
 	}
 
-	public void contentsChanged(@Nonnull VirtualFileEvent event)
+	void contentsChanged(@Nonnull VirtualFileEvent event)
 	{
-		super.contentsChanged(event);
 		if(file.equals(event.getFile()))
 		{
 			// Change document
-			file.refresh(true, false, new Runnable()
-			{
-				public void run()
-				{
-					setValue(file);
-				}
-			});
+			Runnable postRunnable = () -> setValue(file);
+			RefreshQueue.getInstance().refresh(true, false, postRunnable, ModalityState.current(), file);
 		}
 	}
 }

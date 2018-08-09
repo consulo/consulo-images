@@ -19,14 +19,11 @@ import java.awt.image.BufferedImage;
 
 import javax.annotation.Nonnull;
 
-import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.options.EditorOptions;
 import org.intellij.images.options.GridOptions;
 import org.intellij.images.options.Options;
 import org.intellij.images.options.OptionsManager;
 import org.intellij.images.options.TransparencyChessboardOptions;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * Image viewer manager implementation.
@@ -37,19 +34,6 @@ public final class ImageEditorManagerImpl
 {
 	private ImageEditorManagerImpl()
 	{
-	}
-
-	/**
-	 * Create image viewer editor. Don't forget release editor by {@link #releaseImageEditor(ImageEditor)} method.
-	 *
-	 * @param project Project
-	 * @param file    File
-	 * @return Image editor for file
-	 */
-	@Nonnull
-	public static ImageEditor createImageEditor(@Nonnull Project project, @Nonnull VirtualFile file)
-	{
-		return new ImageEditorImpl(project, file);
 	}
 
 	@Nonnull
@@ -63,20 +47,7 @@ public final class ImageEditorManagerImpl
 		ui.getImageComponent().setGridVisible(gridOptions.isShowDefault());
 		ui.getImageComponent().setTransparencyChessboardVisible(transparencyChessboardOptions.isShowDefault());
 
-		ui.setImage(image, null);
+		ui.setImageProvider((scale, ancestor) -> image, null);
 		return ui;
-	}
-
-	/**
-	 * Release editor. Disposing caches and other resources allocated in creation.
-	 *
-	 * @param editor Editor to release.
-	 */
-	public static void releaseImageEditor(@Nonnull ImageEditor editor)
-	{
-		if(!editor.isDisposed())
-		{
-			editor.dispose();
-		}
 	}
 }

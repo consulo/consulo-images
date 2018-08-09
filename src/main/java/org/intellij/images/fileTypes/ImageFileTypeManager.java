@@ -15,10 +15,12 @@
  */
 package org.intellij.images.fileTypes;
 
+import java.util.Collection;
+
 import javax.annotation.Nonnull;
+
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 
 /**
@@ -26,7 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public abstract class ImageFileTypeManager extends FileTypeFactory
+public abstract class ImageFileTypeManager
 {
 	@Nonnull
 	public static ImageFileTypeManager getInstance()
@@ -40,7 +42,10 @@ public abstract class ImageFileTypeManager extends FileTypeFactory
 	 * @param file File to check
 	 * @return Return <code>true</code> if image file is file with Images file type
 	 */
-	public abstract boolean isImage(VirtualFile file);
+	public abstract boolean isImage(@Nonnull VirtualFile file);
 
+	@Nonnull
 	public abstract FileType getImageFileType();
+
+	public abstract Collection<FileType> getFileTypes();
 }

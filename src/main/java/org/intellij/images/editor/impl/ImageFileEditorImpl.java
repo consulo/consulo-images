@@ -15,10 +15,10 @@
  */
 package org.intellij.images.editor.impl;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.JComponent;
 
 import org.intellij.images.editor.ImageEditor;
@@ -29,120 +29,150 @@ import org.intellij.images.options.GridOptions;
 import org.intellij.images.options.Options;
 import org.intellij.images.options.OptionsManager;
 import org.intellij.images.options.TransparencyChessboardOptions;
-import org.jetbrains.annotations.NonNls;
+import org.intellij.images.options.ZoomOptions;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.util.EventDispatcher;
 
 /**
  * Image Editor.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-final class ImageFileEditorImpl extends UserDataHolderBase implements ImageFileEditor {
-    @NonNls
-    private static final String NAME = "ImageFileEditor";
-    private final ImageEditor imageEditor;
+public final class ImageFileEditorImpl extends UserDataHolderBase implements ImageFileEditor, PropertyChangeListener
+{
+	private static final String NAME = "ImageFileEditor";
 
-    ImageFileEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file) {
-        imageEditor = ImageEditorManagerImpl.createImageEditor(project, file);
+	private final ImageEditor imageEditor;
+	private final EventDispatcher<PropertyChangeListener> myDispatcher = EventDispatcher.create(PropertyChangeListener.class);
 
-        // Append file listener
-        VirtualFileManager.getInstance().addVirtualFileListener(imageEditor);
+	public ImageFileEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file)
+	{
+		imageEditor = new ImageEditorImpl(project, file);
+		Disposer.register(this, imageEditor);
 
-        // Set background and grid default options
-        Options options = OptionsManager.getInstance().getOptions();
-        EditorOptions editorOptions = options.getEditorOptions();
-        GridOptions gridOptions = editorOptions.getGridOptions();
-        TransparencyChessboardOptions transparencyChessboardOptions = editorOptions.getTransparencyChessboardOptions();
-        imageEditor.setGridVisible(gridOptions.isShowDefault());
-        imageEditor.setTransparencyChessboardVisible(transparencyChessboardOptions.isShowDefault());
-    }
+		// Set background and grid default options
+		Options options = OptionsManager.getInstance().getOptions();
+		EditorOptions editorOptions = options.getEditorOptions();
+		GridOptions gridOptions = editorOptions.getGridOptions();
+		TransparencyChessboardOptions transparencyChessboardOptions = editorOptions.getTransparencyChessboardOptions();
+		imageEditor.setGridVisible(gridOptions.isShowDefault());
+		imageEditor.setTransparencyChessboardVisible(transparencyChessboardOptions.isShowDefault());
 
-    @Nonnull
-    public JComponent getComponent() {
-        return imageEditor.getComponent();
-    }
+		((ImageEditorImpl) imageEditor).getComponent().getImageComponent().addPropertyChangeListener(this);
+	}
 
-    public JComponent getPreferredFocusedComponent() {
-        return imageEditor.getContentComponent();
-    }
+	@Nonnull
+	public JComponent getComponent()
+	{
+		return imageEditor.getComponent();
+	}
 
-    @Nonnull
-    public String getName() {
-        return NAME;
-    }
+	public JComponent getPreferredFocusedComponent()
+	{
+		return imageEditor.getContentComponent();
+	}
 
-    @Nonnull
-    public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
-        ImageZoomModel zoomModel = imageEditor.getZoomModel();
-        return new ImageFileEditorState(
-                imageEditor.isTransparencyChessboardVisible(),
-                imageEditor.isGridVisible(),
-                zoomModel.getZoomFactor());
-    }
+	@Nonnull
+	public String getName()
+	{
+		return NAME;
+	}
 
-    public void setState(@Nonnull FileEditorState state) {
-        if (state instanceof ImageFileEditorState) {
-            ImageFileEditorState editorState = (ImageFileEditorState) state;
-            ImageZoomModel zoomModel = imageEditor.getZoomModel();
-            imageEditor.setTransparencyChessboardVisible(editorState.isBackgroundVisible());
-            imageEditor.setGridVisible(editorState.isGridVisible());
-            zoomModel.setZoomFactor(editorState.getZoomFactor());
-        }
-    }
+	@Nonnull
+	public FileEditorState getState(@Nonnull FileEditorStateLevel level)
+	{
+		ImageZoomModel zoomModel = imageEditor.getZoomModel();
+		return new ImageFileEditorState(
+				imageEditor.isTransparencyChessboardVisible(),
+				imageEditor.isGridVisible(),
+				zoomModel.getZoomFactor(),
+				zoomModel.isZoomLevelChanged());
+	}
 
-    public boolean isModified() {
-        return false;
-    }
+	public void setState(@Nonnull FileEditorState state)
+	{
+		if(state instanceof ImageFileEditorState)
+		{
+			Options options = OptionsManager.getInstance().getOptions();
+			ZoomOptions zoomOptions = options.getEditorOptions().getZoomOptions();
 
-    public boolean isValid() {
-        return true;
-    }
+			ImageFileEditorState editorState = (ImageFileEditorState) state;
+			ImageZoomModel zoomModel = imageEditor.getZoomModel();
+			imageEditor.setTransparencyChessboardVisible(editorState.isBackgroundVisible());
+			imageEditor.setGridVisible(editorState.isGridVisible());
+			if(editorState.isZoomFactorChanged() || !zoomOptions.isSmartZooming())
+			{
+				zoomModel.setZoomFactor(editorState.getZoomFactor());
+			}
+			zoomModel.setZoomLevelChanged(editorState.isZoomFactorChanged());
+		}
+	}
 
-    public void selectNotify() {
-    }
+	public boolean isModified()
+	{
+		return false;
+	}
 
-    public void deselectNotify() {
-    }
+	public boolean isValid()
+	{
+		return true;
+	}
 
-    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
-    }
+	public void selectNotify()
+	{
+	}
 
-    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
-    }
+	public void deselectNotify()
+	{
+	}
 
-    public BackgroundEditorHighlighter getBackgroundHighlighter() {
-        return null;
-    }
+	public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener)
+	{
+		myDispatcher.addListener(listener);
+	}
 
-    public FileEditorLocation getCurrentLocation() {
-        return null;
-    }
+	public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener)
+	{
+		myDispatcher.removeListener(listener);
+	}
 
-    public StructureViewBuilder getStructureViewBuilder() {
-        return null;
-    }
+	@Override
+	public void propertyChange(@Nonnull PropertyChangeEvent event)
+	{
+		PropertyChangeEvent editorEvent = new PropertyChangeEvent(this, event.getPropertyName(), event.getOldValue(), event.getNewValue());
+		myDispatcher.getMulticaster().propertyChange(editorEvent);
+	}
 
-  @Nullable
-  @Override
-  public VirtualFile getFile() {
-    return imageEditor.getFile();
-  }
+	public BackgroundEditorHighlighter getBackgroundHighlighter()
+	{
+		return null;
+	}
 
-  public void dispose() {
-        VirtualFileManager.getInstance().removeVirtualFileListener(imageEditor);
-        ImageEditorManagerImpl.releaseImageEditor(imageEditor);
-    }
+	public FileEditorLocation getCurrentLocation()
+	{
+		return null;
+	}
 
-    @Nonnull
-    public ImageEditor getImageEditor() {
-        return imageEditor;
-    }
+	public StructureViewBuilder getStructureViewBuilder()
+	{
+		return null;
+	}
+
+	public void dispose()
+	{
+	}
+
+	@Nonnull
+	public ImageEditor getImageEditor()
+	{
+		return imageEditor;
+	}
 }
