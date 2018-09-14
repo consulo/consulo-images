@@ -16,62 +16,66 @@
 package org.intellij.images.editor.impl;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
-import com.intellij.openapi.fileEditor.*;
+import org.intellij.images.fileTypes.ImageFileTypeManager;
+import org.jetbrains.annotations.NonNls;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.FileEditorPolicy;
+import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.intellij.images.fileTypes.ImageFileTypeManager;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * Image editor provider.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-final class ImageFileEditorProvider implements FileEditorProvider, DumbAware {
-    @NonNls private static final String EDITOR_TYPE_ID = "images";
+final class ImageFileEditorProvider implements FileEditorProvider, DumbAware
+{
+	@NonNls
+	private static final String EDITOR_TYPE_ID = "images";
 
-    private final ImageFileTypeManager typeManager;
+	private final ImageFileTypeManager typeManager;
 
-    ImageFileEditorProvider(ImageFileTypeManager typeManager) {
-        this.typeManager = typeManager;
-    }
+	@Inject
+	ImageFileEditorProvider(ImageFileTypeManager typeManager)
+	{
+		this.typeManager = typeManager;
+	}
 
-    public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
-        return typeManager.isImage(file);
-    }
+	@Override
+	public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file)
+	{
+		return typeManager.isImage(file);
+	}
 
-    @Nonnull
-    public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
-        return new ImageFileEditorImpl(project, file);
-    }
+	@Override
+	@Nonnull
+	public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file)
+	{
+		return new ImageFileEditorImpl(project, file);
+	}
 
-    public void disposeEditor(@Nonnull FileEditor editor) {
-      Disposer.dispose(editor);
-    }
+	@Override
+	public void disposeEditor(@Nonnull FileEditor editor)
+	{
+		Disposer.dispose(editor);
+	}
 
-    @Nonnull
-    public FileEditorState readState(@Nonnull Element sourceElement, @Nonnull Project project, @Nonnull VirtualFile file) {
-        return new FileEditorState() {
-            public boolean canBeMergedWith(FileEditorState otherState, FileEditorStateLevel level) {
-                return false;
-            }
-        };
-    }
+	@Override
+	@Nonnull
+	public String getEditorTypeId()
+	{
+		return EDITOR_TYPE_ID;
+	}
 
-    public void writeState(@Nonnull FileEditorState state, @Nonnull Project project, @Nonnull Element targetElement) {
-    }
-
-    @Nonnull
-    public String getEditorTypeId() {
-        return EDITOR_TYPE_ID;
-    }
-
-    @Nonnull
-    public FileEditorPolicy getPolicy() {
-        return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
-    }
+	@Override
+	@Nonnull
+	public FileEditorPolicy getPolicy()
+	{
+		return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
+	}
 }

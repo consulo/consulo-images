@@ -21,6 +21,8 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.jetbrains.annotations.NonNls;
@@ -36,11 +38,13 @@ import consulo.images.ImageFileTypeProvider;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
+@Singleton
 public final class ImageFileTypeManagerImpl extends ImageFileTypeManager
 {
 	private final Map<FileType, String> myFileTypes = new HashMap<>();
 
-	ImageFileTypeManagerImpl()
+	@Inject
+	public ImageFileTypeManagerImpl()
 	{
 		FileTypeConsumer consumer = new FileTypeConsumer()
 		{

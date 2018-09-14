@@ -16,22 +16,26 @@
 package org.intellij.images.thumbnail.impl;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
 import org.intellij.images.thumbnail.ThumbnailManager;
 import org.intellij.images.thumbnail.ThumbnailView;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.project.Project;
 
 /**
  * Thumbail manager.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
+@Singleton
 final class ThumbnailManagerImpl extends ThumbnailManager implements Disposable {
   private final Project project;
   private ThumbnailView thumbnailView;
 
-  public ThumbnailManagerImpl(Project project) {
+  @Inject
+  ThumbnailManagerImpl(Project project) {
     this.project = project;
   }
 
