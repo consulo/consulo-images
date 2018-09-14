@@ -4,6 +4,7 @@
 	<vendor>JetBrains</vendor>
 	<version>SNAPSHOT</version>
 
+	<depends>consulo.library.batik</depends>
 	<depends optional="true" config-file="com.intellij.xml.xml">com.intellij.xml</depends>
 
 	<extensionPoints>
