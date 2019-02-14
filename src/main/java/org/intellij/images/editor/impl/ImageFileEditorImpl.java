@@ -15,9 +15,6 @@
  */
 package org.intellij.images.editor.impl;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import javax.annotation.Nonnull;
 import javax.swing.JComponent;
 
@@ -40,13 +37,15 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EventDispatcher;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 
 /**
  * Image Editor.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public final class ImageFileEditorImpl extends UserDataHolderBase implements ImageFileEditor, PropertyChangeListener
+public final class ImageFileEditorImpl extends UserDataHolderBase implements ImageFileEditor
 {
 	private static final String NAME = "ImageFileEditor";
 
@@ -66,26 +65,33 @@ public final class ImageFileEditorImpl extends UserDataHolderBase implements Ima
 		imageEditor.setGridVisible(gridOptions.isShowDefault());
 		imageEditor.setTransparencyChessboardVisible(transparencyChessboardOptions.isShowDefault());
 
-		((ImageEditorImpl) imageEditor).getComponent().getImageComponent().addPropertyChangeListener(this);
+		((ImageEditorImpl) imageEditor).getComponent().getImageComponent().addPropertyChangeListener(event -> {
+			PropertyChangeEvent editorEvent = new PropertyChangeEvent(this, event.getPropertyName(), event.getOldValue(), event.getNewValue());
+			myDispatcher.getMulticaster().propertyChange(editorEvent);
+		});
 	}
 
+	@Override
 	@Nonnull
 	public JComponent getComponent()
 	{
 		return imageEditor.getComponent();
 	}
 
+	@Override
 	public JComponent getPreferredFocusedComponent()
 	{
 		return imageEditor.getContentComponent();
 	}
 
+	@Override
 	@Nonnull
 	public String getName()
 	{
 		return NAME;
 	}
 
+	@Override
 	@Nonnull
 	public FileEditorState getState(@Nonnull FileEditorStateLevel level)
 	{
@@ -97,6 +103,7 @@ public final class ImageFileEditorImpl extends UserDataHolderBase implements Ima
 				zoomModel.isZoomLevelChanged());
 	}
 
+	@Override
 	public void setState(@Nonnull FileEditorState state)
 	{
 		if(state instanceof ImageFileEditorState)
@@ -116,60 +123,64 @@ public final class ImageFileEditorImpl extends UserDataHolderBase implements Ima
 		}
 	}
 
+	@Override
 	public boolean isModified()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean isValid()
 	{
 		return true;
 	}
 
+	@Override
 	public void selectNotify()
 	{
 	}
 
+	@Override
 	public void deselectNotify()
 	{
 	}
 
+	@Override
 	public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener)
 	{
 		myDispatcher.addListener(listener);
 	}
 
+	@Override
 	public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener)
 	{
 		myDispatcher.removeListener(listener);
 	}
 
 	@Override
-	public void propertyChange(@Nonnull PropertyChangeEvent event)
-	{
-		PropertyChangeEvent editorEvent = new PropertyChangeEvent(this, event.getPropertyName(), event.getOldValue(), event.getNewValue());
-		myDispatcher.getMulticaster().propertyChange(editorEvent);
-	}
-
 	public BackgroundEditorHighlighter getBackgroundHighlighter()
 	{
 		return null;
 	}
 
+	@Override
 	public FileEditorLocation getCurrentLocation()
 	{
 		return null;
 	}
 
+	@Override
 	public StructureViewBuilder getStructureViewBuilder()
 	{
 		return null;
 	}
 
+	@Override
 	public void dispose()
 	{
 	}
 
+	@Override
 	@Nonnull
 	public ImageEditor getImageEditor()
 	{
