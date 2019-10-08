@@ -18,32 +18,25 @@
 
 package org.intellij.images.ui;
 
-import static com.intellij.util.ui.JBUI.ScaleType.OBJ_SCALE;
-
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.List;
-
-import javax.annotation.Nullable;
-import javax.swing.JComponent;
-import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI.ScaleContext;
 import org.intellij.images.ImagesBundle;
 import org.intellij.images.editor.ImageDocument;
 import org.intellij.images.options.GridOptions;
 import org.intellij.images.options.TransparencyChessboardOptions;
 import org.jetbrains.annotations.NonNls;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI.ScaleContext;
+
+import javax.annotation.Nullable;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.List;
+
+import static com.intellij.util.ui.JBUI.ScaleType.OBJ_SCALE;
 
 /**
  * Image component is draw image box with effects.
@@ -84,7 +77,7 @@ public class ImageComponent extends JComponent
 
 	static
 	{
-		UIManager.getDefaults().put(uiClassID, ImageComponentUI.class.getName());
+		//UIManager.getDefaults().put(uiClassID, ImageComponentUI.class.getName());
 	}
 
 	private final ImageDocument document = new ImageDocumentImpl(this);
@@ -285,14 +278,17 @@ public class ImageComponent extends JComponent
 		return new Dimension(size.width - IMAGE_INSETS * 2, size.height - IMAGE_INSETS * 2);
 	}
 
+	@Override
 	public String getUIClassID()
 	{
 		return uiClassID;
 	}
 
+	@Override
 	public void updateUI()
 	{
-		setUI(UIManager.getUI(this));
+		setUI(ImageComponentUI.createUI(this));
+		//setUI(UIManager.getUI(this));
 	}
 
 	private static class ImageDocumentImpl implements ImageDocument
@@ -324,6 +320,7 @@ public class ImageComponent extends JComponent
 			});
 		}
 
+		@Override
 		public Image getRenderer()
 		{
 			return renderer;
@@ -356,6 +353,7 @@ public class ImageComponent extends JComponent
 			return imageProvider != null ? imageProvider.apply(scale, myComponent) : null;
 		}
 
+		@Override
 		public void setValue(BufferedImage image)
 		{
 			this.renderer = image != null ? Toolkit.getDefaultToolkit().createImage(image.getSource()) : null;
@@ -374,12 +372,14 @@ public class ImageComponent extends JComponent
 			fireChangeEvent(new ChangeEvent(this));
 		}
 
+		@Override
 		public String getFormat()
 		{
 			return format;
 		}
 
 
+		@Override
 		public void setFormat(String format)
 		{
 			this.format = format;
@@ -394,11 +394,13 @@ public class ImageComponent extends JComponent
 			}
 		}
 
+		@Override
 		public void addChangeListener(ChangeListener listener)
 		{
 			listeners.add(listener);
 		}
 
+		@Override
 		public void removeChangeListener(ChangeListener listener)
 		{
 			listeners.remove(listener);
