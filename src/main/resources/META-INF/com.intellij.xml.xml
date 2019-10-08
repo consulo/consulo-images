@@ -1,4 +1,4 @@
-<idea-plugin>
+<consulo-plugin>
 	<actions>
 		<action class="org.intellij.images.actions.ConvertSvgToPngAction"
 				id="Images.ConvertSvgToPng"
@@ -14,4 +14,4 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<fileEditorProvider implementation="consulo.images.svg.editor.SVGFileEditorProvider" />
 	</extensions>
-</idea-plugin>
+</consulo-plugin>

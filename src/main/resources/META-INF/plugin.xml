@@ -1,4 +1,4 @@
-<idea-plugin>
+<consulo-plugin>
 	<id>com.intellij.images</id>
 	<name>Images</name>
 	<vendor>JetBrains</vendor>
@@ -149,4 +149,4 @@
 			<reference id="ExternalToolsGroup"/>
 		</group>
 	</actions>
-</idea-plugin>
+</consulo-plugin>
