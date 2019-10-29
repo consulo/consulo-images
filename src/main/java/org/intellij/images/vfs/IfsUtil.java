@@ -14,34 +14,12 @@
  * limitations under the License.
  */
 
-/** $Id$ */
+/**
+ * $Id$
+ */
 
 package org.intellij.images.vfs;
 
-import static com.intellij.util.ui.JBUI.ScaleType.OBJ_SCALE;
-
-import java.awt.Component;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Iterator;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReadParam;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-
-import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.common.bytesource.ByteSourceArray;
-import org.apache.commons.imaging.formats.ico.IcoImageParser;
-import org.intellij.images.editor.ImageDocument;
-import org.intellij.images.editor.ImageDocument.ScaledImageProvider;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -55,6 +33,29 @@ import com.intellij.util.LogicalRoot;
 import com.intellij.util.LogicalRootsManager;
 import com.intellij.util.SVGLoader;
 import com.intellij.util.ui.JBUI.ScaleContext;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.common.bytesource.ByteSourceArray;
+import org.apache.commons.imaging.formats.ico.IcoImageParser;
+import org.intellij.images.editor.ImageDocument;
+import org.intellij.images.editor.ImageDocument.ScaledImageProvider;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
+
+import static com.intellij.util.ui.JBUI.ScaleType.OBJ_SCALE;
 
 /**
  * Image loader utility.

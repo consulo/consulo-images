@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collection;
@@ -73,6 +74,7 @@ public final class ImageFileTypeManagerImpl extends ImageFileTypeManager
 			}
 		};
 
+		ImageIO.scanForPlugins();
 		for(ImageFileTypeProvider provider : ImageFileTypeProvider.EP_NAME.getExtensionList())
 		{
 			provider.register(consumer);
