@@ -15,8 +15,8 @@
  */
 package org.intellij.images.ui;
 
+import consulo.util.dataholder.Key;
 import org.intellij.images.editor.ImageZoomModel;
-import com.intellij.openapi.util.Key;
 
 /**
  * Image Component manager. It can toggle backround transparency, grid, etc.

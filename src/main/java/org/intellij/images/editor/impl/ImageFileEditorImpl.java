@@ -15,18 +15,6 @@
  */
 package org.intellij.images.editor.impl;
 
-import javax.annotation.Nonnull;
-import javax.swing.JComponent;
-
-import org.intellij.images.editor.ImageEditor;
-import org.intellij.images.editor.ImageFileEditor;
-import org.intellij.images.editor.ImageZoomModel;
-import org.intellij.images.options.EditorOptions;
-import org.intellij.images.options.GridOptions;
-import org.intellij.images.options.Options;
-import org.intellij.images.options.OptionsManager;
-import org.intellij.images.options.TransparencyChessboardOptions;
-import org.intellij.images.options.ZoomOptions;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
@@ -34,11 +22,18 @@ import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EventDispatcher;
+import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
+import org.intellij.images.editor.ImageEditor;
+import org.intellij.images.editor.ImageFileEditor;
+import org.intellij.images.editor.ImageZoomModel;
+import org.intellij.images.options.*;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
 
 /**
  * Image Editor.

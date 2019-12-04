@@ -15,13 +15,14 @@
  */
 package org.intellij.images.thumbnail;
 
-import org.intellij.images.ImagesBundle;
-import org.intellij.images.ui.ImageComponentDecorator;
-import javax.annotation.Nonnull;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.util.dataholder.Key;
+import org.intellij.images.ImagesBundle;
+import org.intellij.images.ui.ImageComponentDecorator;
+
+import javax.annotation.Nonnull;
 
 /**
  * Thumbnail thumbnail is a component with thumbnails for a set of {@link com.intellij.openapi.vfs.VirtualFile}.

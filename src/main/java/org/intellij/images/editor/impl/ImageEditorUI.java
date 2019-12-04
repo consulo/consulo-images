@@ -15,81 +15,13 @@
  */
 package org.intellij.images.editor.impl;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.net.URL;
-import java.util.Locale;
-
-import javax.annotation.Nonnull;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import org.intellij.images.ImagesBundle;
-import org.intellij.images.editor.ImageDocument;
-import org.intellij.images.editor.ImageDocument.ScaledImageProvider;
-import org.intellij.images.editor.ImageEditor;
-import org.intellij.images.editor.ImageZoomModel;
-import org.intellij.images.editor.actionSystem.ImageEditorActions;
-import org.intellij.images.options.EditorOptions;
-import org.intellij.images.options.GridOptions;
-import org.intellij.images.options.Options;
-import org.intellij.images.options.OptionsManager;
-import org.intellij.images.options.TransparencyChessboardOptions;
-import org.intellij.images.options.ZoomOptions;
-import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
-import org.intellij.images.ui.ImageComponent;
-import org.intellij.images.ui.ImageComponentDecorator;
-import org.intellij.images.vfs.IfsUtil;
-import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nullable;
-import com.intellij.ide.CopyPasteDelegator;
-import com.intellij.ide.CopyPasteSupport;
-import com.intellij.ide.CopyProvider;
-import com.intellij.ide.DataManager;
-import com.intellij.ide.DeleteProvider;
+import com.intellij.ide.*;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPopupMenu;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -106,6 +38,38 @@ import com.intellij.util.SVGLoader;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.JBUI.ScaleContext;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.dataholder.Key;
+import org.intellij.images.ImagesBundle;
+import org.intellij.images.editor.ImageDocument;
+import org.intellij.images.editor.ImageDocument.ScaledImageProvider;
+import org.intellij.images.editor.ImageEditor;
+import org.intellij.images.editor.ImageZoomModel;
+import org.intellij.images.editor.actionSystem.ImageEditorActions;
+import org.intellij.images.options.*;
+import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
+import org.intellij.images.ui.ImageComponent;
+import org.intellij.images.ui.ImageComponentDecorator;
+import org.intellij.images.vfs.IfsUtil;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.net.URL;
+import java.util.Locale;
 
 /**
  * Image editor UI
@@ -272,6 +236,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 		return imageComponent;
 	}
 
+	@Override
 	public void dispose()
 	{
 		Options options = OptionsManager.getInstance().getOptions();
@@ -317,6 +282,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 		return imageComponent.isGridVisible();
 	}
 
+	@Override
 	public ImageZoomModel getZoomModel()
 	{
 		return zoomModel;
@@ -395,12 +361,14 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 			imageComponent.setLocation(point);
 		}
 
+		@Override
 		public void invalidate()
 		{
 			centerComponents();
 			super.invalidate();
 		}
 
+		@Override
 		public Dimension getPreferredSize()
 		{
 			return imageComponent.getSize();
@@ -420,6 +388,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
 	private final class ImageWheelAdapter implements MouseWheelListener
 	{
+		@Override
 		public void mouseWheelMoved(MouseWheelEvent e)
 		{
 			Options options = OptionsManager.getInstance().getOptions();
@@ -491,11 +460,13 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 		};
 		private double zoomFactor = 0.0d;
 
+		@Override
 		public double getZoomFactor()
 		{
 			return zoomFactor;
 		}
 
+		@Override
 		public void setZoomFactor(double zoomFactor)
 		{
 			double oldZoomFactor = getZoomFactor();
@@ -529,6 +500,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 			return Math.max(factor, MICRO_ZOOM_LIMIT);
 		}
 
+		@Override
 		public void fitZoomToWindow()
 		{
 			Options options = OptionsManager.getInstance().getOptions();
@@ -546,12 +518,14 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 			myZoomLevelChanged = false;
 		}
 
+		@Override
 		public void zoomOut()
 		{
 			setZoomFactor(getNextZoomOut());
 			myZoomLevelChanged = true;
 		}
 
+		@Override
 		public void zoomIn()
 		{
 			setZoomFactor(getNextZoomIn());
@@ -592,12 +566,14 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 			return Math.min(factor, getMaximumZoomFactor());
 		}
 
+		@Override
 		public boolean canZoomOut()
 		{
 			// Ignore small differences caused by floating-point arithmetic.
 			return getZoomFactor() - 1.0e-14 > getMinimumZoomFactor();
 		}
 
+		@Override
 		public boolean canZoomIn()
 		{
 			return getZoomFactor() < getMaximumZoomFactor();
@@ -609,6 +585,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 			myZoomLevelChanged = value;
 		}
 
+		@Override
 		public boolean isZoomLevelChanged()
 		{
 			return myZoomLevelChanged;
@@ -669,6 +646,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
 	private class DocumentChangeListener implements ChangeListener
 	{
+		@Override
 		public void stateChanged(@Nonnull ChangeEvent e)
 		{
 			updateImageComponentSize();
@@ -688,6 +666,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
 	private class FocusRequester extends MouseAdapter
 	{
+		@Override
 		public void mousePressed(@Nonnull MouseEvent e)
 		{
 			IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(ImageEditorUI.this, true));
@@ -820,6 +799,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
 	private class OptionsChangeListener implements PropertyChangeListener
 	{
+		@Override
 		public void propertyChange(PropertyChangeEvent evt)
 		{
 			Options options = (Options) evt.getSource();
