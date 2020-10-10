@@ -62,7 +62,7 @@ import com.intellij.util.ui.JBUI.ScaleContext;
  */
 public class SVGLoader
 {
-	private static final Logger LOG = Logger.getInstance("#com.intellij.util.SVGLoader");
+	private static final Logger LOG = Logger.getInstance(SVGLoader.class);
 
 	public static final NotNullValue<Double> MAX_SIZE = new NotNullValue<Double>()
 	{

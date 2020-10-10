@@ -64,7 +64,7 @@ import static com.intellij.util.ui.JBUI.ScaleType.OBJ_SCALE;
  */
 public final class IfsUtil
 {
-	private static final Logger LOG = Logger.getInstance("#org.intellij.images.vfs.IfsUtil");
+	private static final Logger LOG = Logger.getInstance(IfsUtil.class);
 
 	public static final String ICO_FORMAT = "ico";
 	public static final String SVG_FORMAT = "svg";

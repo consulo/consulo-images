@@ -1,0 +1,60 @@
+error.empty.external.editor.path:
+  text: Please configure external editor executable path
+error.title.empty.external.editor.path:
+  text: External Editor not Configured
+error.title.launching.external.editor:
+  text: Problem Launching External Executable
+select.external.executable.title:
+  text: Select editor
+select.external.executable.message:
+  text: Select external graphics editor
+error.broken.image.file.format:
+  text: <html><b>Image not loaded</b><br>Try to open it externally to fix format problem</html>
+images.filetype.description:
+  text: Image files
+settings.page.name:
+  text: Images
+thumbnails.toolwindow.name:
+  text: Thumbnails
+thumbnails.component.error.text:
+  text: Error
+icons.count:
+  text: '{0,choice, 0#no images|1#1 image|2#{0,number} images|100# > 100 images}'
+icon.dimensions:
+  text: '{0,number}x{1,number}x{2,number}'
+settings.preffered.smart.zoom.width:
+  text: 'Preferred minimum wi&dth for smart zooming (pixels):'
+settings.preffered.smart.zoom.height:
+  text: 'Preferred minimum &height for smart zooming (pixels):'
+show.grid.lines:
+  text: Show &Grid lines by default
+show.transparency.chessboard:
+  text: Show &transparency chessboard by default
+enable.mousewheel.zooming:
+  text: Zoom image with &mouse wheel ({0}+Mouse Wheel)
+smart.zoom:
+  text: Enable smart &zooming for small images
+chessboard.cell.size:
+  text: 'Chessboard cell &size (pixels):'
+show.grid.every:
+  text: 'Show Grid line after &every (pixels):'
+show.grid.zoom.limit:
+  text: 'Show Grid lines &only then zoom factor equal or more than:'
+white.cell.color:
+  text: 'Color of ''&white'' cell:'
+black.cell.color:
+  text: 'Color of ''&black'' cell:'
+grid.line.color:
+  text: 'Grid line &color:'
+external.editor.executable.path:
+  text: 'Executable &path:'
+external.editor.border.title:
+  text: External Editor
+main.page.border.title:
+  text: Editor
+plugin.Images.description:
+  text: Provides image viewing and thumbnail browsing
+unknown.format:
+  text: Unknown Format
+image.info:
+  text: '{0}x{1} {2} ({3}-bit color) {4}'

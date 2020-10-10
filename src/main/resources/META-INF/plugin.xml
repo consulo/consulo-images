@@ -3,7 +3,6 @@
 	<name>Images</name>
 	<vendor>JetBrains</vendor>
 	<version>SNAPSHOT</version>
-
 	<depends>consulo.library.batik</depends>
 	<depends optional="true" config-file="com.intellij.xml.xml">com.intellij.xml</depends>
 
@@ -39,7 +38,7 @@
 		</action>
 		<action class="org.intellij.images.actions.EditExternallyAction"
 				id="Images.EditExternaly"
-				icon="ImagesIcons.EditExternaly"
+				icon="consulo.images.ImagesIconGroup@editexternaly"
 				text="Open Image in External Editor">
 			<keyboard-shortcut first-keystroke="control alt F4" keymap="$default"/>
 			<add-to-group anchor="after" group-id="ProjectViewPopupMenu" relative-to-action="EditSource"/>
@@ -52,7 +51,7 @@
 		</action>
 		<action class="org.intellij.images.actions.ToggleTransparencyChessboardAction"
 				id="Images.ToggleTransparencyChessboard"
-				icon="ImagesIcons.ToggleTransparencyChessboard"
+				icon="consulo.images.ImagesIconGroup@toggletransparencychessboard"
 				text="Show Chessboard"
 				description="Show a chessboard on transparent image parts">
 		</action>
@@ -60,24 +59,24 @@
 			<reference id="Images.ToggleTransparencyChessboard"/>
 			<action class="org.intellij.images.editor.actions.ToggleGridAction"
 					id="Images.Editor.ToggleGrid"
-					icon="ImagesIcons.ToggleGrid"
+					icon="consulo.images.ImagesIconGroup@togglegrid"
 					text="Show Grid">
 				<keyboard-shortcut first-keystroke="control QUOTE" keymap="$default"/>
 			</action>
 			<separator/>
 			<action class="org.intellij.images.editor.actions.ZoomInAction"
 					id="Images.Editor.ZoomIn"
-					icon="AllIcons.Graph.ZoomIn"
+					icon="consulo.platform.base.PlatformIconGroup@graph.zoomin"
 					text="Zoom In"
 					use-shortcut-of="ExpandAll"/>
 			<action class="org.intellij.images.editor.actions.ZoomOutAction"
 					id="Images.Editor.ZoomOut"
-					icon="AllIcons.Graph.ZoomOut"
+					icon="consulo.platform.base.PlatformIconGroup@graph.zoomout"
 					text="Zoom Out"
 					use-shortcut-of="CollapseAll"/>
 			<action class="org.intellij.images.editor.actions.ActualSizeAction"
 					id="Images.Editor.ActualSize"
-					icon="AllIcons.Graph.ActualZoom"
+					icon="consulo.platform.base.PlatformIconGroup@graph.actualzoom"
 					text="Zoom to Actual Size">
 				<keyboard-shortcut first-keystroke="control DIVIDE" keymap="$default"/>
 				<keyboard-shortcut first-keystroke="control SLASH" keymap="$default"/>
@@ -106,14 +105,14 @@
 					id="Images.Thumbnails.UpFolder"
 					text="Parent Folder"
 					description="Show image thumbnails from the containing folder"
-					icon="AllIcons.Nodes.UpFolder">
+					icon="consulo.platform.base.PlatformIconGroup@nodes.upfolder">
 				<keyboard-shortcut first-keystroke="BACK_SPACE" keymap="$default"/>
 			</action>
 			<action class="org.intellij.images.thumbnail.actions.ToggleRecursiveAction"
 					id="Images.Thumbnails.ToggleRecursive"
 					text="Recursive"
 					description="Toggle whether to show the images from subfolders recursively"
-					icon="AllIcons.ObjectBrowser.FlattenPackages">
+					icon="consulo.platform.base.PlatformIconGroup@objectbrowser.flattenpackages">
 				<keyboard-shortcut first-keystroke="control MULTIPLY" keymap="$default"/>
 			</action>
 			<separator/>
@@ -123,7 +122,7 @@
 					id="Images.Thumbnails.Hide"
 					text="Hide"
 					description="Hide image thumbnails"
-					icon="AllIcons.Actions.Cancel" use-shortcut-of="CloseContent"/>
+					icon="consulo.platform.base.PlatformIconGroup@actions.cancel" use-shortcut-of="CloseContent"/>
 		</group>
 		<group id="Images.ThumbnailsPopupMenu">
 			<reference id="CutCopyPasteGroup"/>

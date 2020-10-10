@@ -26,7 +26,7 @@ import java.io.*;
  * @author spleaner
  */
 public class ImageInfoReader {
-  private static final Logger LOG = Logger.getInstance("#org.intellij.images.util.ImageInfoReader");
+  private static final Logger LOG = Logger.getInstance(ImageInfoReader.class.getName() );
 
   private ImageInfoReader() {
   }

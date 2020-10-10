@@ -30,6 +30,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.ui.components.Magnificator;
 import com.intellij.util.LazyInitializer.NotNullValue;
@@ -164,7 +165,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 		JComponent toolbarPanel = actionToolbar.getComponent();
 		toolbarPanel.addMouseListener(new FocusRequester());
 
-		JLabel errorLabel = new JLabel(
+		JLabel errorLabel = new JBLabel(
 				ImagesBundle.message("error.broken.image.file.format"),
 				Messages.getErrorIcon(), SwingConstants.CENTER
 		);
