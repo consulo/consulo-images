@@ -21,14 +21,15 @@ import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.images.ImageFileType;
 import consulo.images.ImageFileTypeProvider;
+import jakarta.inject.Inject;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

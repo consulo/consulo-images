@@ -15,7 +15,7 @@
  */
 package org.intellij.images.options.impl;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.intellij.images.options.Options;
 import org.intellij.images.options.OptionsManager;

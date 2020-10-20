@@ -16,7 +16,7 @@
 package org.intellij.images.editor.impl;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.jetbrains.annotations.NonNls;
