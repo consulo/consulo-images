@@ -15,8 +15,7 @@
  */
 package org.intellij.images.options;
 
-import org.jetbrains.annotations.NonNls;
-
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -24,31 +23,29 @@ import java.awt.*;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public interface TransparencyChessboardOptions extends Cloneable {
-    @NonNls
-    String ATTR_PREFIX = "Editor.TransparencyChessboard.";
-    @NonNls
-    String ATTR_SHOW_DEFAULT = ATTR_PREFIX + "showDefault";
-    @NonNls
-    String ATTR_CELL_SIZE = ATTR_PREFIX + "cellSize";
-    @NonNls
-    String ATTR_WHITE_COLOR = ATTR_PREFIX + "whiteColor";
-    @NonNls
-    String ATTR_BLACK_COLOR = ATTR_PREFIX + "blackColor";
+public interface TransparencyChessboardOptions extends Cloneable
+{
+	String ATTR_PREFIX = "Editor.TransparencyChessboard.";
+	String ATTR_SHOW_DEFAULT = ATTR_PREFIX + "showDefault";
+	String ATTR_CELL_SIZE = ATTR_PREFIX + "cellSize";
+	String ATTR_WHITE_COLOR = ATTR_PREFIX + "whiteColor";
+	String ATTR_BLACK_COLOR = ATTR_PREFIX + "blackColor";
 
-    int DEFAULT_CELL_SIZE = 5;
-    Color DEFAULT_WHITE_COLOR = Color.WHITE;
-    Color DEFAULT_BLACK_COLOR = Color.LIGHT_GRAY;
+	int DEFAULT_CELL_SIZE = 5;
+	Color DEFAULT_WHITE_COLOR = Color.WHITE;
+	Color DEFAULT_BLACK_COLOR = Color.LIGHT_GRAY;
 
-    boolean isShowDefault();
+	boolean isShowDefault();
 
-    int getCellSize();
+	int getCellSize();
 
-    Color getWhiteColor();
+	@Nonnull
+	Color getWhiteColor();
 
-    Color getBlackColor();
+	@Nonnull
+	Color getBlackColor();
 
-    void inject(TransparencyChessboardOptions options);
+	void inject(TransparencyChessboardOptions options);
 
-    boolean setOption(String name, Object value);
+	boolean setOption(String name, Object value);
 }

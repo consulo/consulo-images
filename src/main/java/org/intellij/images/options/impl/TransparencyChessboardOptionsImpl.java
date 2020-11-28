@@ -15,11 +15,14 @@
  */
 package org.intellij.images.options.impl;
 
+import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMExternalizer;
+import consulo.images.ImageColorKeys;
 import org.intellij.images.options.TransparencyChessboardOptions;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.beans.PropertyChangeSupport;
 
@@ -28,134 +31,126 @@ import java.beans.PropertyChangeSupport;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-final class TransparencyChessboardOptionsImpl implements TransparencyChessboardOptions, JDOMExternalizable {
-    private boolean showDefault = true;
-    private int cellSize = DEFAULT_CELL_SIZE;
-    private Color whiteColor = DEFAULT_WHITE_COLOR;
-    private Color blackColor = DEFAULT_BLACK_COLOR;
-    private final PropertyChangeSupport propertyChangeSupport;
+final class TransparencyChessboardOptionsImpl implements TransparencyChessboardOptions, JDOMExternalizable
+{
+	private boolean showDefault = true;
+	private int cellSize = DEFAULT_CELL_SIZE;
+	private final PropertyChangeSupport propertyChangeSupport;
 
-    TransparencyChessboardOptionsImpl(PropertyChangeSupport propertyChangeSupport) {
-        this.propertyChangeSupport = propertyChangeSupport;
-    }
+	TransparencyChessboardOptionsImpl(PropertyChangeSupport propertyChangeSupport)
+	{
+		this.propertyChangeSupport = propertyChangeSupport;
+	}
 
-    public boolean isShowDefault() {
-        return showDefault;
-    }
+	@Override
+	public boolean isShowDefault()
+	{
+		return showDefault;
+	}
 
-    public int getCellSize() {
-        return cellSize;
-    }
+	@Override
+	public int getCellSize()
+	{
+		return cellSize;
+	}
 
-    public Color getWhiteColor() {
-        return whiteColor;
-    }
+	@Nonnull
+	@Override
+	public Color getWhiteColor()
+	{
+		Color color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.WHITE_CELL_COLOR_KEY);
+		return color != null ? color : ImageColorKeys.WHITE_CELL_COLOR_KEY.getDefaultColor();
+	}
 
-    public Color getBlackColor() {
-        return blackColor;
-    }
+	@Nonnull
+	@Override
+	public Color getBlackColor()
+	{
+		Color color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.BLACK_CELL_COLOR_KEY);
+		return color != null ? color : ImageColorKeys.BLACK_CELL_COLOR_KEY.getDefaultColor();
+	}
 
-    void setShowDefault(boolean showDefault) {
-        boolean oldValue = this.showDefault;
-        if (oldValue != showDefault) {
-            this.showDefault = showDefault;
-            propertyChangeSupport.firePropertyChange(ATTR_SHOW_DEFAULT, oldValue, this.showDefault);
-        }
-    }
+	void setShowDefault(boolean showDefault)
+	{
+		boolean oldValue = this.showDefault;
+		if(oldValue != showDefault)
+		{
+			this.showDefault = showDefault;
+			propertyChangeSupport.firePropertyChange(ATTR_SHOW_DEFAULT, oldValue, this.showDefault);
+		}
+	}
 
-    void setCellSize(int cellSize) {
-        int oldValue = this.cellSize;
-        if (oldValue != cellSize) {
-            this.cellSize = cellSize;
-            propertyChangeSupport.firePropertyChange(ATTR_CELL_SIZE, oldValue, this.cellSize);
-        }
-    }
+	void setCellSize(int cellSize)
+	{
+		int oldValue = this.cellSize;
+		if(oldValue != cellSize)
+		{
+			this.cellSize = cellSize;
+			propertyChangeSupport.firePropertyChange(ATTR_CELL_SIZE, oldValue, this.cellSize);
+		}
+	}
 
-    void setWhiteColor(Color whiteColor) {
-        Color oldValue = this.whiteColor;
-        if (whiteColor == null) {
-            this.whiteColor = DEFAULT_WHITE_COLOR;
-        }
-        if (!oldValue.equals(whiteColor)) {
-            this.whiteColor = whiteColor;
-            propertyChangeSupport.firePropertyChange(ATTR_WHITE_COLOR, oldValue, this.whiteColor);
-        }
-    }
+	@Override
+	public void inject(TransparencyChessboardOptions options)
+	{
+		setShowDefault(options.isShowDefault());
+		setCellSize(options.getCellSize());
+	}
 
-    void setBlackColor(Color blackColor) {
-        Color oldValue = this.blackColor;
-        if (blackColor == null) {
-            blackColor = DEFAULT_BLACK_COLOR;
-        }
-        if (!oldValue.equals(blackColor)) {
-            this.blackColor = blackColor;
-            propertyChangeSupport.firePropertyChange(ATTR_BLACK_COLOR, oldValue, this.blackColor);
-        }
-    }
+	@Override
+	public boolean setOption(String name, Object value)
+	{
+		if(ATTR_SHOW_DEFAULT.equals(name))
+		{
+			setShowDefault((Boolean) value);
+		}
+		else if(ATTR_CELL_SIZE.equals(name))
+		{
+			setCellSize((Integer) value);
+		}
+		else
+		{
+			return false;
+		}
+		return true;
+	}
 
-    public void inject(TransparencyChessboardOptions options) {
-        setShowDefault(options.isShowDefault());
-        setCellSize(options.getCellSize());
-        setWhiteColor(options.getWhiteColor());
-        setBlackColor(options.getBlackColor());
-    }
+	@Override
+	public void readExternal(Element element)
+	{
+		setShowDefault(JDOMExternalizer.readBoolean(element, ATTR_SHOW_DEFAULT));
+		setCellSize(JDOMExternalizer.readInteger(element, ATTR_CELL_SIZE, DEFAULT_CELL_SIZE));
+	}
 
-    public boolean setOption(String name, Object value) {
-        if (ATTR_SHOW_DEFAULT.equals(name)) {
-            setShowDefault((Boolean)value);
-        } else if (ATTR_CELL_SIZE.equals(name)) {
-            setCellSize((Integer)value);
-        } else if (ATTR_WHITE_COLOR.equals(name)) {
-            setWhiteColor((Color)value);
-        } else if (ATTR_BLACK_COLOR.equals(name)) {
-            setBlackColor((Color)value);
-        } else {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public void writeExternal(Element element)
+	{
+		JDOMExternalizer.write(element, ATTR_SHOW_DEFAULT, showDefault);
+		JDOMExternalizer.write(element, ATTR_CELL_SIZE, cellSize);
+	}
 
-    public void readExternal(Element element) {
-        setShowDefault(JDOMExternalizer.readBoolean(element, ATTR_SHOW_DEFAULT));
-        setCellSize(JDOMExternalizer.readInteger(element, ATTR_CELL_SIZE, DEFAULT_CELL_SIZE));
-        setWhiteColor(JDOMExternalizerEx.readColor(element, ATTR_WHITE_COLOR, DEFAULT_WHITE_COLOR));
-        setBlackColor(JDOMExternalizerEx.readColor(element, ATTR_BLACK_COLOR, DEFAULT_BLACK_COLOR));
-    }
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		if(!(o instanceof TransparencyChessboardOptions))
+		{
+			return false;
+		}
 
-    public void writeExternal(Element element) {
-        JDOMExternalizer.write(element, ATTR_SHOW_DEFAULT, showDefault);
-        JDOMExternalizer.write(element, ATTR_CELL_SIZE, cellSize);
-        JDOMExternalizerEx.write(element, ATTR_WHITE_COLOR, whiteColor);
-        JDOMExternalizerEx.write(element, ATTR_BLACK_COLOR, blackColor);
-    }
+		TransparencyChessboardOptions otherOptions = (TransparencyChessboardOptions) o;
 
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof TransparencyChessboardOptions)) {
-            return false;
-        }
+		return cellSize == otherOptions.getCellSize() && showDefault == otherOptions.isShowDefault();
 
-        TransparencyChessboardOptions otherOptions = (TransparencyChessboardOptions)o;
+	}
 
-        return cellSize == otherOptions.getCellSize() &&
-            showDefault == otherOptions.isShowDefault() &&
-            (blackColor != null ?
-                blackColor.equals(otherOptions.getBlackColor()) :
-                otherOptions.getBlackColor() == null) &&
-            (whiteColor != null ?
-                whiteColor.equals(otherOptions.getWhiteColor()) :
-                otherOptions.getWhiteColor() == null);
-
-    }
-
-    public int hashCode() {
-        int result;
-        result = (showDefault ? 1 : 0);
-        result = 29 * result + cellSize;
-        result = 29 * result + (whiteColor != null ? whiteColor.hashCode() : 0);
-        result = 29 * result + (blackColor != null ? blackColor.hashCode() : 0);
-        return result;
-    }
+	public int hashCode()
+	{
+		int result;
+		result = (showDefault ? 1 : 0);
+		result = 29 * result + cellSize;
+		return result;
+	}
 }

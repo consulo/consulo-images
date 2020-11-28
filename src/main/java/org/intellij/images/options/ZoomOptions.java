@@ -15,36 +15,33 @@
  */
 package org.intellij.images.options;
 
-import org.jetbrains.annotations.NonNls;
+import consulo.ui.Size;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
 
 /**
  * Options for zooming feature.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public interface ZoomOptions extends Cloneable {
-    @NonNls
-    String ATTR_PREFIX = "Editor.Zoom.";
-    @NonNls
-    String ATTR_WHEEL_ZOOMING = ATTR_PREFIX + "wheelZooming";
-    @NonNls
-    String ATTR_SMART_ZOOMING = ATTR_PREFIX + "smartZooming";
-    @NonNls
-    String ATTR_PREFFERED_WIDTH = ATTR_PREFIX + "prefferedWidth";
-    @NonNls
-    String ATTR_PREFFERED_HEIGHT = ATTR_PREFIX + "prefferedHeight";
+public interface ZoomOptions extends Cloneable
+{
+	String ATTR_PREFIX = "Editor.Zoom.";
+	String ATTR_WHEEL_ZOOMING = ATTR_PREFIX + "wheelZooming";
+	String ATTR_SMART_ZOOMING = ATTR_PREFIX + "smartZooming";
+	String ATTR_PREFFERED_WIDTH = ATTR_PREFIX + "prefferedWidth";
+	String ATTR_PREFFERED_HEIGHT = ATTR_PREFIX + "prefferedHeight";
 
-    Dimension DEFAULT_PREFFERED_SIZE = new Dimension(128, 128);
+	Size DEFAULT_PREFFERED_SIZE = new Size(128, 128);
 
-    boolean isWheelZooming();
+	boolean isWheelZooming();
 
-    boolean isSmartZooming();
+	boolean isSmartZooming();
 
-    Dimension getPrefferedSize();
+	@Nonnull
+	Size getPrefferedSize();
 
-    void inject(ZoomOptions options);
+	void inject(ZoomOptions options);
 
-    boolean setOption(String name, Object value);
+	boolean setOption(String name, Object value);
 }

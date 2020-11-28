@@ -11,13 +11,15 @@
 	</extensionPoints>
 
 	<extensions defaultExtensionNs="com.intellij.images">
-		<imageFileTypeProvider implementation="consulo.images.impl.DefaultImageFileTypeProvider" />
+		<imageFileTypeProvider implementation="consulo.images.impl.DefaultImageFileTypeProvider"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="consulo.images.ImageFileTypeFactory"/>
 
-		<applicationConfigurable instance="org.intellij.images.options.impl.OptionsConfigurabe" id="Images" displayName="Images" parentId="editor"/>
+		<applicationConfigurable instance="consulo.images.preferences.impl.ImagesOptionsConfigurabe" id="images" displayName="Image Viewer" parentId="editor"/>
+
+		<colorSettingsPage implementation="consulo.images.preferences.impl.ImagesColorSettingsPage"/>
 
 		<fileEditorProvider implementation="org.intellij.images.editor.impl.ImageFileEditorProvider"/>
 		<selectInTarget implementation="org.intellij.images.thumbnail.impl.ThumbnailSelectInTarget"/>

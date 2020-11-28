@@ -39,6 +39,7 @@ import com.intellij.util.SVGLoader;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.JBUI.ScaleContext;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.Size;
 import consulo.util.dataholder.Key;
 import org.intellij.images.ImagesBundle;
 import org.intellij.images.editor.ImageDocument;
@@ -608,9 +609,9 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 		int width = bounds.width;
 		int height = bounds.height;
 
-		Dimension preferredMinimumSize = zoomOptions.getPrefferedSize();
-		if(width < preferredMinimumSize.width &&
-				height < preferredMinimumSize.height)
+		Size preferredMinimumSize = zoomOptions.getPrefferedSize();
+		if(width < preferredMinimumSize.getWidth() &&
+				height < preferredMinimumSize.getHeight())
 		{
 			double factor = (preferredMinimumSize.getWidth() / (double) width +
 					preferredMinimumSize.getHeight() / (double) height) / 2.0d;
