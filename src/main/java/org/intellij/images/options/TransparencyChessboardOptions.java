@@ -15,6 +15,8 @@
  */
 package org.intellij.images.options;
 
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import java.awt.*;
 
@@ -40,10 +42,10 @@ public interface TransparencyChessboardOptions extends Cloneable
 	int getCellSize();
 
 	@Nonnull
-	Color getWhiteColor();
+	ColorValue getWhiteColor();
 
 	@Nonnull
-	Color getBlackColor();
+	ColorValue getBlackColor();
 
 	void inject(TransparencyChessboardOptions options);
 

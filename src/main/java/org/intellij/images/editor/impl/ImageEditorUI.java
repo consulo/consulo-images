@@ -39,6 +39,7 @@ import com.intellij.util.SVGLoader;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.JBUI.ScaleContext;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.Size;
 import consulo.util.dataholder.Key;
 import org.intellij.images.ImagesBundle;
@@ -130,11 +131,11 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 		TransparencyChessboardOptions chessboardOptions = editorOptions.getTransparencyChessboardOptions();
 		GridOptions gridOptions = editorOptions.getGridOptions();
 		imageComponent.setTransparencyChessboardCellSize(chessboardOptions.getCellSize());
-		imageComponent.setTransparencyChessboardWhiteColor(chessboardOptions.getWhiteColor());
-		imageComponent.setTransparencyChessboardBlankColor(chessboardOptions.getBlackColor());
+		imageComponent.setTransparencyChessboardWhiteColor(TargetAWT.to(chessboardOptions.getWhiteColor()));
+		imageComponent.setTransparencyChessboardBlankColor(TargetAWT.to(chessboardOptions.getBlackColor()));
 		imageComponent.setGridLineZoomFactor(gridOptions.getLineZoomFactor());
 		imageComponent.setGridLineSpan(gridOptions.getLineSpan());
-		imageComponent.setGridLineColor(gridOptions.getLineColor());
+		imageComponent.setGridLineColor(TargetAWT.to(gridOptions.getLineColor()));
 
 		// Create layout
 		ImageContainerPane view = new ImageContainerPane(imageComponent);
@@ -810,11 +811,11 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 			GridOptions gridOptions = editorOptions.getGridOptions();
 
 			imageComponent.setTransparencyChessboardCellSize(chessboardOptions.getCellSize());
-			imageComponent.setTransparencyChessboardWhiteColor(chessboardOptions.getWhiteColor());
-			imageComponent.setTransparencyChessboardBlankColor(chessboardOptions.getBlackColor());
+			imageComponent.setTransparencyChessboardWhiteColor(TargetAWT.to(chessboardOptions.getWhiteColor()));
+			imageComponent.setTransparencyChessboardBlankColor(TargetAWT.to(chessboardOptions.getBlackColor()));
 			imageComponent.setGridLineZoomFactor(gridOptions.getLineZoomFactor());
 			imageComponent.setGridLineSpan(gridOptions.getLineSpan());
-			imageComponent.setGridLineColor(gridOptions.getLineColor());
+			imageComponent.setGridLineColor(TargetAWT.to(gridOptions.getLineColor()));
 		}
 	}
 

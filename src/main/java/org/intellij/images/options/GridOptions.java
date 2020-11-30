@@ -16,6 +16,7 @@
 package org.intellij.images.options;
 
 import com.intellij.ui.JBColor;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -43,7 +44,7 @@ public interface GridOptions extends Cloneable {
     int getLineSpan();
 
     @Nonnull
-    Color getLineColor();
+    ColorValue getLineColor();
 
     void inject(GridOptions options);
 

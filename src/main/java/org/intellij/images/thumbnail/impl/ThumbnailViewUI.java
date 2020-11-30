@@ -37,6 +37,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SideBorder;
 import com.intellij.ui.components.JBList;
+import consulo.awt.TargetAWT;
 import consulo.util.dataholder.Key;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.options.*;
@@ -121,8 +122,8 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable
 			TransparencyChessboardOptions chessboardOptions = editorOptions.getTransparencyChessboardOptions();
 			imageComponent.setTransparencyChessboardVisible(chessboardOptions.isShowDefault());
 			imageComponent.setTransparencyChessboardCellSize(chessboardOptions.getCellSize());
-			imageComponent.setTransparencyChessboardWhiteColor(chessboardOptions.getWhiteColor());
-			imageComponent.setTransparencyChessboardBlankColor(chessboardOptions.getBlackColor());
+			imageComponent.setTransparencyChessboardWhiteColor(TargetAWT.to(chessboardOptions.getWhiteColor()));
+			imageComponent.setTransparencyChessboardBlankColor(TargetAWT.to(chessboardOptions.getBlackColor()));
 
 			options.addPropertyChangeListener(optionsListener);
 
@@ -694,11 +695,11 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable
 
 			ImageComponent imageComponent = cellRenderer.getImageComponent();
 			imageComponent.setTransparencyChessboardCellSize(chessboardOptions.getCellSize());
-			imageComponent.setTransparencyChessboardWhiteColor(chessboardOptions.getWhiteColor());
-			imageComponent.setTransparencyChessboardBlankColor(chessboardOptions.getBlackColor());
+			imageComponent.setTransparencyChessboardWhiteColor(TargetAWT.to(chessboardOptions.getWhiteColor()));
+			imageComponent.setTransparencyChessboardBlankColor(TargetAWT.to(chessboardOptions.getBlackColor()));
 			imageComponent.setGridLineZoomFactor(gridOptions.getLineZoomFactor());
 			imageComponent.setGridLineSpan(gridOptions.getLineSpan());
-			imageComponent.setGridLineColor(gridOptions.getLineColor());
+			imageComponent.setGridLineColor(TargetAWT.to(gridOptions.getLineColor()));
 		}
 	}
 

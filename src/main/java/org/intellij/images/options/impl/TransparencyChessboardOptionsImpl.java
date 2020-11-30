@@ -19,6 +19,7 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMExternalizer;
 import consulo.images.ImageColorKeys;
+import consulo.ui.color.ColorValue;
 import org.intellij.images.options.TransparencyChessboardOptions;
 import org.jdom.Element;
 
@@ -56,18 +57,18 @@ final class TransparencyChessboardOptionsImpl implements TransparencyChessboardO
 
 	@Nonnull
 	@Override
-	public Color getWhiteColor()
+	public ColorValue getWhiteColor()
 	{
-		Color color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.WHITE_CELL_COLOR_KEY);
-		return color != null ? color : ImageColorKeys.WHITE_CELL_COLOR_KEY.getDefaultColor();
+		ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.WHITE_CELL_COLOR_KEY);
+		return color != null ? color : ImageColorKeys.WHITE_CELL_COLOR_KEY.getDefaultColorValue();
 	}
 
 	@Nonnull
 	@Override
-	public Color getBlackColor()
+	public ColorValue getBlackColor()
 	{
-		Color color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.BLACK_CELL_COLOR_KEY);
-		return color != null ? color : ImageColorKeys.BLACK_CELL_COLOR_KEY.getDefaultColor();
+		ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.BLACK_CELL_COLOR_KEY);
+		return color != null ? color : ImageColorKeys.BLACK_CELL_COLOR_KEY.getDefaultColorValue();
 	}
 
 	void setShowDefault(boolean showDefault)
