@@ -28,7 +28,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EnvironmentUtil;
-import consulo.images.preferences.impl.ImagesOptionsConfigurabe;
+import consulo.images.preferences.impl.ImagesOptionsConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.intellij.images.ImagesBundle;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
@@ -58,7 +58,7 @@ public final class EditExternallyAction extends AnAction
 			Messages.showErrorDialog(project,
 					ImagesBundle.message("error.empty.external.editor.path"),
 					ImagesBundle.message("error.title.empty.external.editor.path"));
-			ImagesOptionsConfigurabe.show(project);
+			ImagesOptionsConfigurable.show(project);
 		}
 		else
 		{
@@ -108,7 +108,7 @@ public final class EditExternallyAction extends AnAction
 				catch(ExecutionException ex)
 				{
 					Messages.showErrorDialog(project, ex.getLocalizedMessage(), ImagesBundle.message("error.title.launching.external.editor"));
-					ImagesOptionsConfigurabe.show(project);
+					ImagesOptionsConfigurable.show(project);
 				}
 			}
 		}

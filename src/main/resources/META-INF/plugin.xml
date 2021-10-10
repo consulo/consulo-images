@@ -17,7 +17,7 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="consulo.images.ImageFileTypeFactory"/>
 
-		<applicationConfigurable instance="consulo.images.preferences.impl.ImagesOptionsConfigurabe" id="images" displayName="Image Viewer" parentId="editor"/>
+		<applicationConfigurable instance="consulo.images.preferences.impl.ImagesOptionsConfigurable" id="images" displayName="Image Viewer" parentId="editor"/>
 
 		<colorSettingsPage implementation="consulo.images.preferences.impl.ImagesColorSettingsPage"/>
 

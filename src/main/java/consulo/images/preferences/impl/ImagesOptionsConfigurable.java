@@ -5,7 +5,6 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.platform.Platform;
@@ -20,7 +19,6 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import org.intellij.images.ImagesBundle;
 import org.intellij.images.options.*;
 
 import javax.annotation.Nonnull;
@@ -29,21 +27,19 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 11/28/2020
  */
-public class ImagesOptionsConfigurabe extends SimpleConfigurableByProperties implements SearchableConfigurable
+public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties implements SearchableConfigurable
 {
 	@RequiredUIAccess
 	public static void show(Project project)
 	{
 		final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
-		util.editConfigurable(project, new ImagesOptionsConfigurabe(OptionsManager::getInstance));
+		util.showSettingsDialog(project, ImagesOptionsConfigurable.class);
 	}
 
-	private Provider<OptionsManager> myOptionsManager;
-
-	private Disposable myDisposable;
+	private final Provider<OptionsManager> myOptionsManager;
 
 	@Inject
-	public ImagesOptionsConfigurabe(Provider<OptionsManager> optionsManager)
+	public ImagesOptionsConfigurable(Provider<OptionsManager> optionsManager)
 	{
 		myOptionsManager = optionsManager;
 	}
@@ -51,10 +47,8 @@ public class ImagesOptionsConfigurabe extends SimpleConfigurableByProperties imp
 	@RequiredUIAccess
 	@Nonnull
 	@Override
-	protected Component createLayout(PropertyBuilder propertyBuilder)
+	protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable)
 	{
-		myDisposable = Disposable.newDisposable();
-
 		Options options = myOptionsManager.get().getOptions();
 		GridOptions gridOptions = options.getEditorOptions().getGridOptions();
 		TransparencyChessboardOptions chessboardOptions = options.getEditorOptions().getTransparencyChessboardOptions();
@@ -125,9 +119,9 @@ public class ImagesOptionsConfigurabe extends SimpleConfigurableByProperties imp
 			VerticalLayout externalEditorLayout = VerticalLayout.create();
 
 			FileChooserTextBoxBuilder fileChooserTextBoxBuilder = FileChooserTextBoxBuilder.create(null);
-			fileChooserTextBoxBuilder.uiDisposable(myDisposable);
-			fileChooserTextBoxBuilder.dialogTitle(ImagesBundle.message("select.external.executable.title"));
-			fileChooserTextBoxBuilder.dialogDescription(ImagesBundle.message("select.external.executable.message"));
+			fileChooserTextBoxBuilder.uiDisposable(uiDisposable);
+			fileChooserTextBoxBuilder.dialogTitle(ImagesLocalize.selectExternalExecutableTitle());
+			fileChooserTextBoxBuilder.dialogDescription(ImagesLocalize.selectExternalExecutableMessage());
 
 			FileChooserTextBoxBuilder.Controller controller = fileChooserTextBoxBuilder.build();
 
@@ -140,18 +134,6 @@ public class ImagesOptionsConfigurabe extends SimpleConfigurableByProperties imp
 			root.add(LabeledLayout.create(ImagesLocalize.externalEditorBorderTitle(), externalEditorLayout));
 		}
 		return root;
-	}
-
-	@RequiredUIAccess
-	@Override
-	protected void disposeUIResources(@Nonnull LayoutWrapper component)
-	{
-		super.disposeUIResources(component);
-
-		if(myDisposable != null)
-		{
-			Disposer.dispose(myDisposable);
-		}
 	}
 
 	@Nonnull
