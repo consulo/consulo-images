@@ -43,7 +43,6 @@
 		</action>
 		<action class="org.intellij.images.actions.EditExternallyAction"
 				id="Images.EditExternaly"
-				icon="consulo.images.ImagesIconGroup@editexternaly"
 				text="Open Image in External Editor">
 			<keyboard-shortcut first-keystroke="control alt F4" keymap="$default"/>
 			<add-to-group anchor="after" group-id="ProjectViewPopupMenu" relative-to-action="EditSource"/>
@@ -64,7 +63,7 @@
 			<reference id="Images.ToggleTransparencyChessboard"/>
 			<action class="org.intellij.images.editor.actions.ToggleGridAction"
 					id="Images.Editor.ToggleGrid"
-					icon="consulo.images.ImagesIconGroup@togglegrid"
+					icon="consulo.platform.base.PlatformIconGroup@graph.grid"
 					text="Show Grid">
 				<keyboard-shortcut first-keystroke="control QUOTE" keymap="$default"/>
 			</action>
