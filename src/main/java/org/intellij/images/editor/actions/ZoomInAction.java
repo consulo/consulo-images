@@ -17,9 +17,13 @@ package org.intellij.images.editor.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
+import org.intellij.images.ui.ImageComponentDecorator;
+
+import javax.annotation.Nonnull;
 
 /**
  * Zoom in.
@@ -27,21 +31,25 @@ import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  * @see ImageEditor#getZoomModel
  */
-public final class ZoomInAction extends AnAction {
-    public void actionPerformed(AnActionEvent e) {
-        ImageEditor editor = ImageEditorActionUtil.getValidEditor(e);
-        if (editor != null) {
-            ImageZoomModel zoomModel = editor.getZoomModel();
-            zoomModel.zoomIn();
-        }
-    }
+public final class ZoomInAction extends AnAction
+{
+	@Override
+	@RequiredUIAccess
+	public void actionPerformed(@Nonnull AnActionEvent e)
+	{
+		ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+		if(decorator != null)
+		{
+			ImageZoomModel zoomModel = decorator.getZoomModel();
+			zoomModel.zoomIn();
+		}
+	}
 
-    public void update(AnActionEvent e) {
-        super.update(e);
-        if (ImageEditorActionUtil.setEnabled(e)) {
-            ImageEditor editor = ImageEditorActionUtil.getValidEditor(e);
-            ImageZoomModel zoomModel = editor.getZoomModel();
-            e.getPresentation().setEnabled(zoomModel.canZoomIn());
-        }
-    }
+	@Override
+	@RequiredUIAccess
+	public void update(AnActionEvent e)
+	{
+		ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+		e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomIn());
+	}
 }

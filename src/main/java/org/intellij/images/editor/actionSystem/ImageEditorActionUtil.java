@@ -15,12 +15,10 @@
  */
 package org.intellij.images.editor.actionSystem;
 
-import org.intellij.images.editor.ImageEditor;
-import org.intellij.images.editor.ImageFileEditor;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.fileEditor.FileEditor;
+import org.intellij.images.ui.ImageComponentDecorator;
+
+import javax.annotation.Nullable;
 
 /**
  * Editor actions utility.
@@ -33,44 +31,9 @@ public final class ImageEditorActionUtil
 	{
 	}
 
-	/**
-	 * Extract current editor from event context.
-	 *
-	 * @param e Action event
-	 * @return Current {@link ImageEditor} or <code>null</code>
-	 */
-	public static ImageEditor getValidEditor(AnActionEvent e)
+	@Nullable
+	public static ImageComponentDecorator getImageComponentDecorator(AnActionEvent e)
 	{
-		ImageEditor editor = getEditor(e);
-		if(editor != null && editor.isValid())
-		{
-			return editor;
-		}
-		return null;
-	}
-
-	public static ImageEditor getEditor(AnActionEvent e)
-	{
-		FileEditor editor = e.getData(PlatformDataKeys.FILE_EDITOR);
-		if(editor instanceof ImageFileEditor)
-		{
-			ImageFileEditor fileEditor = (ImageFileEditor) editor;
-			return fileEditor.getImageEditor();
-		}
-		return null;
-	}
-
-	/**
-	 * Enable or disable current action from event.
-	 *
-	 * @param e Action event
-	 * @return Enabled value
-	 */
-	public static boolean setEnabled(AnActionEvent e)
-	{
-		ImageEditor editor = getValidEditor(e);
-		Presentation presentation = e.getPresentation();
-		presentation.setEnabled(editor != null);
-		return presentation.isEnabled();
+		return e.getData(ImageComponentDecorator.DATA_KEY);
 	}
 }
