@@ -17,8 +17,8 @@ package org.intellij.images.fileTypes.impl;
 
 import com.intellij.ide.highlighter.XmlLikeFileType;
 import com.intellij.images.localize.ImagesLocalize;
-import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.openapi.fileTypes.UIBasedFileType;
+import consulo.images.svg.SVGLanguage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import icons.ImagesIcons;
@@ -34,7 +34,7 @@ public final class SvgFileType extends XmlLikeFileType implements UIBasedFileTyp
 
 	private SvgFileType()
 	{
-		super(XMLLanguage.INSTANCE);
+		super(SVGLanguage.INSTANCE);
 	}
 
 	@Nonnull
