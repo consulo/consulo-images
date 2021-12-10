@@ -58,3 +58,5 @@ unknown.format:
   text: Unknown Format
 image.info:
   text: '{0}x{1} {2} ({3}-bit color) {4}'
+svg.file.type.description:
+  text: Scalable Vector Graphics

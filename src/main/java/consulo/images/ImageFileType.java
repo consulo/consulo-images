@@ -1,12 +1,13 @@
 package consulo.images;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.intellij.images.ImagesBundle;
+import com.intellij.images.localize.ImagesLocalize;
 import com.intellij.openapi.fileTypes.FileType;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import icons.ImagesIcons;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -25,9 +26,9 @@ public class ImageFileType implements FileType
 
 	@Nonnull
 	@Override
-	public String getDescription()
+	public LocalizeValue getDescription()
 	{
-		return ImagesBundle.message("images.filetype.description");
+		return ImagesLocalize.imagesFiletypeDescription();
 	}
 
 	@Nonnull

@@ -15,13 +15,15 @@
  */
 package org.intellij.images.fileTypes.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.ide.highlighter.XmlLikeFileType;
+import com.intellij.images.localize.ImagesLocalize;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.openapi.fileTypes.UIBasedFileType;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import icons.ImagesIcons;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -44,9 +46,9 @@ public final class SvgFileType extends XmlLikeFileType implements UIBasedFileTyp
 
 	@Nonnull
 	@Override
-	public String getDescription()
+	public LocalizeValue getDescription()
 	{
-		return "Scalable Vector Graphics";
+		return ImagesLocalize.svgFileTypeDescription();
 	}
 
 	@Nonnull
@@ -56,7 +58,7 @@ public final class SvgFileType extends XmlLikeFileType implements UIBasedFileTyp
 		return "svg";
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
 	public Image getIcon()
 	{
