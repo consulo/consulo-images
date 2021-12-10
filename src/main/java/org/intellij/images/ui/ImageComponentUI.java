@@ -18,20 +18,13 @@
 
 package org.intellij.images.ui;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.TexturePaint;
-import java.awt.Transparency;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JComponent;
-import javax.swing.plaf.ComponentUI;
-
-import org.intellij.images.editor.ImageDocument;
 import com.intellij.util.ui.UIUtil;
+import org.intellij.images.editor.ImageDocument;
+
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * UI for {@link ImageComponent}.
