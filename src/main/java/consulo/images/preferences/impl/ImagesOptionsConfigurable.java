@@ -1,6 +1,7 @@
 package consulo.images.preferences.impl;
 
 import com.intellij.images.localize.ImagesLocalize;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
@@ -114,7 +115,8 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
 		smartWheelPanel.add(LabeledBuilder.sided(ImagesLocalize.settingsPrefferedSmartZoomHeight(), smartZoomingHeight));
 		propertyBuilder.add(smartZoomingHeight, () -> zoomOptions.getPrefferedSize().getHeight(), it -> zoomOptions.setOption(ZoomOptions.ATTR_PREFFERED_HEIGHT, it));
 
-		if(platform.isDesktop())
+		// FIXME [VISTALL] this is not correct, awt+swt is desktop, but web not - new check?
+		if(Application.get().isSwingApplication())
 		{
 			VerticalLayout externalEditorLayout = VerticalLayout.create();
 
