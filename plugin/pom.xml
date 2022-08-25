@@ -97,6 +97,12 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>com.intellij.images-image.svg-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>com.intellij.images-image.svg-impl</artifactId>
             <version>${project.version}</version>
         </dependency>

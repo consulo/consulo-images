@@ -11,7 +11,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.openapi.fileEditor.TextEditorWithPreview;
 import consulo.images.editor.ImageFileEditorImpl;
-import consulo.images.svg.SvgFileType;
+import consulo.images.svg.SVGFileType;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 public class SVGFileEditorProvider implements FileEditorProvider, DumbAware {
   @Override
   public boolean accept(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
-    return virtualFile.getFileType() == SvgFileType.INSTANCE;
+    return virtualFile.getFileType() == SVGFileType.INSTANCE;
   }
 
   @RequiredUIAccess

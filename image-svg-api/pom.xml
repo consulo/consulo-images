@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>consulo.plugin</groupId>
-    <artifactId>com.intellij.images-image.svg-impl</artifactId>
+    <artifactId>com.intellij.images-image.svg-api</artifactId>
     <version>3-SNAPSHOT</version>
 
     <repositories>
@@ -38,19 +38,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>com.intellij.images-image.api</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>com.intellij.images-image.svg-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>consulo</groupId>
-            <artifactId>consulo-ide-impl</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

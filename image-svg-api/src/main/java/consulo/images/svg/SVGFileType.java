@@ -33,10 +33,10 @@ import javax.annotation.Nullable;
 /**
  * @author Konstantin Bulenkov
  */
-public final class SvFileType extends XmlLikeFileType implements UIBasedFileType, ImageFileType {
-  public static final SvFileType INSTANCE = new SvFileType();
+public final class SVGFileType extends XmlLikeFileType implements UIBasedFileType, ImageFileType {
+  public static final SVGFileType INSTANCE = new SVGFileType();
 
-  private SvFileType() {
+  private SVGFileType() {
     super(SVGLanguage.INSTANCE);
   }
 

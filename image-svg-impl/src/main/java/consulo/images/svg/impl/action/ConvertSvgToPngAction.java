@@ -20,7 +20,7 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.images.svg.internal.SVGConvertService;
-import consulo.images.svg.SvgFileType;
+import consulo.images.svg.SVGFileType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -59,7 +59,7 @@ public class ConvertSvgToPngAction extends DumbAwareAction {
   @Override
   public void update(AnActionEvent e) {
     VirtualFile svgFile = e.getData(VirtualFile.KEY);
-    boolean enabled = svgFile != null && svgFile.getFileType() == SvgFileType.INSTANCE;
+    boolean enabled = svgFile != null && svgFile.getFileType() == SVGFileType.INSTANCE;
     e.getPresentation().setEnabledAndVisible(enabled);
   }
 }

@@ -3,7 +3,7 @@ package consulo.images.svg.desktop.awt.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.images.desktop.awt.impl.IfsUtil;
 import consulo.images.desktop.awt.impl.ImageProcessor;
-import consulo.images.svg.SvgFileType;
+import consulo.images.svg.SVGFileType;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.JBUI;
 import consulo.util.lang.Pair;
@@ -31,7 +31,7 @@ public class SVGImageProcessor implements ImageProcessor {
 
   @Override
   public boolean accept(@Nonnull VirtualFile file) {
-    return file.getFileType() == SvgFileType.INSTANCE;
+    return file.getFileType() == SVGFileType.INSTANCE;
   }                                                                                              
 
   @Override
