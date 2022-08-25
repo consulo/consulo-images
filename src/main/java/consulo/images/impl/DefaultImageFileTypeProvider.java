@@ -1,9 +1,10 @@
 package consulo.images.impl;
 
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.images.ImageFileType;
 import consulo.images.ImageFileTypeProvider;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import org.intellij.images.vfs.IfsUtil;
 
 import javax.annotation.Nonnull;
@@ -15,22 +16,20 @@ import java.util.Set;
  * @author VISTALL
  * @since 2018-08-09
  */
-public class DefaultImageFileTypeProvider implements ImageFileTypeProvider
-{
-	@Override
-	public void register(@Nonnull FileTypeConsumer fileTypeConsumer)
-	{
-		final Set<String> processed = new HashSet<>();
+@ExtensionImpl
+public class DefaultImageFileTypeProvider implements ImageFileTypeProvider {
+  @Override
+  public void register(@Nonnull FileTypeConsumer fileTypeConsumer) {
+    final Set<String> processed = new HashSet<>();
 
-		final String[] readerFormatNames = ImageIO.getReaderFormatNames();
-		for(String format : readerFormatNames)
-		{
-			final String ext = format.toLowerCase();
-			processed.add(ext);
-		}
+    final String[] readerFormatNames = ImageIO.getReaderFormatNames();
+    for (String format : readerFormatNames) {
+      final String ext = format.toLowerCase();
+      processed.add(ext);
+    }
 
-		processed.add(IfsUtil.ICO_FORMAT.toLowerCase());
+    processed.add(IfsUtil.ICO_FORMAT.toLowerCase());
 
-		fileTypeConsumer.consume(ImageFileType.INSTANCE, StringUtil.join(processed, FileTypeConsumer.EXTENSION_DELIMITER));
-	}
+    fileTypeConsumer.consume(ImageFileType.INSTANCE, StringUtil.join(processed, FileTypeConsumer.EXTENSION_DELIMITER));
+  }
 }

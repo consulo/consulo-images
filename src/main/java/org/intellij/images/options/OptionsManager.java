@@ -15,13 +15,16 @@
  */
 package org.intellij.images.options;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.ide.ServiceManager;
 
 /**
  * Options manager.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class OptionsManager {
     /**
      * Return current options.

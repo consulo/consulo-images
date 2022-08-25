@@ -15,8 +15,8 @@
  */
 package org.intellij.images.util;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.logging.Logger;
+import consulo.util.io.UnsyncByteArrayInputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

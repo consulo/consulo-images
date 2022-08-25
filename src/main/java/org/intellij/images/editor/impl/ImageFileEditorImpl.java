@@ -15,16 +15,16 @@
  */
 package org.intellij.images.editor.impl;
 
-import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
-import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.openapi.fileEditor.FileEditorLocation;
-import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.fileEditor.FileEditorStateLevel;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.EventDispatcher;
+import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditorLocation;
+import consulo.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditorStateLevel;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.project.Project;
+import consulo.proxy.EventDispatcher;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.virtualFileSystem.VirtualFile;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.intellij.images.editor.ImageEditor;
@@ -40,145 +40,125 @@ import javax.swing.*;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public final class ImageFileEditorImpl extends UserDataHolderBase implements ImageFileEditor
-{
-	private static final String NAME = "ImageFileEditor";
+public final class ImageFileEditorImpl extends UserDataHolderBase implements ImageFileEditor {
+  private static final String NAME = "ImageFileEditor";
 
-	private final ImageEditor imageEditor;
-	private final EventDispatcher<PropertyChangeListener> myDispatcher = EventDispatcher.create(PropertyChangeListener.class);
+  private final ImageEditor imageEditor;
+  private final EventDispatcher<PropertyChangeListener> myDispatcher = EventDispatcher.create(PropertyChangeListener.class);
 
-	public ImageFileEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file)
-	{
-		imageEditor = new ImageEditorImpl(project, file);
-		Disposer.register(this, imageEditor);
+  public ImageFileEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file) {
+    imageEditor = new ImageEditorImpl(project, file);
+    Disposer.register(this, imageEditor);
 
-		// Set background and grid default options
-		Options options = OptionsManager.getInstance().getOptions();
-		EditorOptions editorOptions = options.getEditorOptions();
-		GridOptions gridOptions = editorOptions.getGridOptions();
-		TransparencyChessboardOptions transparencyChessboardOptions = editorOptions.getTransparencyChessboardOptions();
-		imageEditor.setGridVisible(gridOptions.isShowDefault());
-		imageEditor.setTransparencyChessboardVisible(transparencyChessboardOptions.isShowDefault());
+    // Set background and grid default options
+    Options options = OptionsManager.getInstance().getOptions();
+    EditorOptions editorOptions = options.getEditorOptions();
+    GridOptions gridOptions = editorOptions.getGridOptions();
+    TransparencyChessboardOptions transparencyChessboardOptions = editorOptions.getTransparencyChessboardOptions();
+    imageEditor.setGridVisible(gridOptions.isShowDefault());
+    imageEditor.setTransparencyChessboardVisible(transparencyChessboardOptions.isShowDefault());
 
-		((ImageEditorImpl) imageEditor).getComponent().getImageComponent().addPropertyChangeListener(event -> {
-			PropertyChangeEvent editorEvent = new PropertyChangeEvent(this, event.getPropertyName(), event.getOldValue(), event.getNewValue());
-			myDispatcher.getMulticaster().propertyChange(editorEvent);
-		});
-	}
+    ((ImageEditorImpl) imageEditor).getComponent().getImageComponent().addPropertyChangeListener(event -> {
+      PropertyChangeEvent editorEvent = new PropertyChangeEvent(this, event.getPropertyName(), event.getOldValue(), event.getNewValue());
+      myDispatcher.getMulticaster().propertyChange(editorEvent);
+    });
+  }
 
-	@Override
-	@Nonnull
-	public JComponent getComponent()
-	{
-		return imageEditor.getComponent();
-	}
+  @Override
+  @Nonnull
+  public JComponent getComponent() {
+    return imageEditor.getComponent();
+  }
 
-	@Override
-	public JComponent getPreferredFocusedComponent()
-	{
-		return imageEditor.getContentComponent();
-	}
+  @Override
+  public JComponent getPreferredFocusedComponent() {
+    return imageEditor.getContentComponent();
+  }
 
-	@Override
-	@Nonnull
-	public String getName()
-	{
-		return NAME;
-	}
+  @Override
+  @Nonnull
+  public String getName() {
+    return NAME;
+  }
 
-	@Override
-	@Nonnull
-	public FileEditorState getState(@Nonnull FileEditorStateLevel level)
-	{
-		ImageZoomModel zoomModel = imageEditor.getZoomModel();
-		return new ImageFileEditorState(
-				imageEditor.isTransparencyChessboardVisible(),
-				imageEditor.isGridVisible(),
-				zoomModel.getZoomFactor(),
-				zoomModel.isZoomLevelChanged());
-	}
+  @Override
+  @Nonnull
+  public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
+    ImageZoomModel zoomModel = imageEditor.getZoomModel();
+    return new ImageFileEditorState(
+        imageEditor.isTransparencyChessboardVisible(),
+        imageEditor.isGridVisible(),
+        zoomModel.getZoomFactor(),
+        zoomModel.isZoomLevelChanged());
+  }
 
-	@Override
-	public void setState(@Nonnull FileEditorState state)
-	{
-		if(state instanceof ImageFileEditorState)
-		{
-			Options options = OptionsManager.getInstance().getOptions();
-			ZoomOptions zoomOptions = options.getEditorOptions().getZoomOptions();
+  @Override
+  public void setState(@Nonnull FileEditorState state) {
+    if (state instanceof ImageFileEditorState) {
+      Options options = OptionsManager.getInstance().getOptions();
+      ZoomOptions zoomOptions = options.getEditorOptions().getZoomOptions();
 
-			ImageFileEditorState editorState = (ImageFileEditorState) state;
-			ImageZoomModel zoomModel = imageEditor.getZoomModel();
-			imageEditor.setTransparencyChessboardVisible(editorState.isBackgroundVisible());
-			imageEditor.setGridVisible(editorState.isGridVisible());
-			if(editorState.isZoomFactorChanged() || !zoomOptions.isSmartZooming())
-			{
-				zoomModel.setZoomFactor(editorState.getZoomFactor());
-			}
-			zoomModel.setZoomLevelChanged(editorState.isZoomFactorChanged());
-		}
-	}
+      ImageFileEditorState editorState = (ImageFileEditorState) state;
+      ImageZoomModel zoomModel = imageEditor.getZoomModel();
+      imageEditor.setTransparencyChessboardVisible(editorState.isBackgroundVisible());
+      imageEditor.setGridVisible(editorState.isGridVisible());
+      if (editorState.isZoomFactorChanged() || !zoomOptions.isSmartZooming()) {
+        zoomModel.setZoomFactor(editorState.getZoomFactor());
+      }
+      zoomModel.setZoomLevelChanged(editorState.isZoomFactorChanged());
+    }
+  }
 
-	@Override
-	public boolean isModified()
-	{
-		return false;
-	}
+  @Override
+  public boolean isModified() {
+    return false;
+  }
 
-	@Override
-	public boolean isValid()
-	{
-		return true;
-	}
+  @Override
+  public boolean isValid() {
+    return true;
+  }
 
-	@Override
-	public void selectNotify()
-	{
-	}
+  @Override
+  public void selectNotify() {
+  }
 
-	@Override
-	public void deselectNotify()
-	{
-	}
+  @Override
+  public void deselectNotify() {
+  }
 
-	@Override
-	public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener)
-	{
-		myDispatcher.addListener(listener);
-	}
+  @Override
+  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    myDispatcher.addListener(listener);
+  }
 
-	@Override
-	public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener)
-	{
-		myDispatcher.removeListener(listener);
-	}
+  @Override
+  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    myDispatcher.removeListener(listener);
+  }
 
-	@Override
-	public BackgroundEditorHighlighter getBackgroundHighlighter()
-	{
-		return null;
-	}
+  @Override
+  public BackgroundEditorHighlighter getBackgroundHighlighter() {
+    return null;
+  }
 
-	@Override
-	public FileEditorLocation getCurrentLocation()
-	{
-		return null;
-	}
+  @Override
+  public FileEditorLocation getCurrentLocation() {
+    return null;
+  }
 
-	@Override
-	public StructureViewBuilder getStructureViewBuilder()
-	{
-		return null;
-	}
+  @Override
+  public StructureViewBuilder getStructureViewBuilder() {
+    return null;
+  }
 
-	@Override
-	public void dispose()
-	{
-	}
+  @Override
+  public void dispose() {
+  }
 
-	@Override
-	@Nonnull
-	public ImageEditor getImageEditor()
-	{
-		return imageEditor;
-	}
+  @Override
+  @Nonnull
+  public ImageEditor getImageEditor() {
+    return imageEditor;
+  }
 }

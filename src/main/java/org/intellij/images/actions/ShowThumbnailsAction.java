@@ -15,9 +15,13 @@
  */
 package org.intellij.images.actions;
 
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.images.thumbnail.ThumbnailManager;
 import org.intellij.images.thumbnail.ThumbnailView;
 

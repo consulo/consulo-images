@@ -15,9 +15,9 @@
  */
 package org.intellij.images.options.impl;
 
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.WriteExternalException;
 import org.intellij.images.options.EditorOptions;
 import org.intellij.images.options.ExternalEditorOptions;
 import org.intellij.images.options.Options;

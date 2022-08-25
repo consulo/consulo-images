@@ -18,9 +18,9 @@
 
 package org.intellij.images.thumbnail.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.ex.action.AnAction;
 import org.intellij.images.thumbnail.ThumbnailView;
 import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActionUtil;
 

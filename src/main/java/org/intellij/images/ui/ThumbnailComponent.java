@@ -18,7 +18,7 @@
 
 package org.intellij.images.ui;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

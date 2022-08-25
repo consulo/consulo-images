@@ -18,11 +18,11 @@
 
 package org.intellij.images.ui;
 
-import com.intellij.openapi.ui.Messages;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
-import icons.ImagesIcons;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import org.intellij.images.ImagesIcons;
 import org.intellij.images.ImagesBundle;
 import org.intellij.images.editor.ImageDocument;
 import org.jetbrains.annotations.NonNls;

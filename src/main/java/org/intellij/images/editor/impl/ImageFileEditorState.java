@@ -19,9 +19,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.fileEditor.FileEditorStateLevel;
-import com.intellij.openapi.fileEditor.TransferableFileEditorState;
+import consulo.fileEditor.FileEditorState;
+import consulo.fileEditor.TransferableFileEditorState;
+import consulo.fileEditor.FileEditorStateLevel;
 
 /**
  * @author Konstantin Bulenkov

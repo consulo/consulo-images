@@ -15,20 +15,22 @@
  */
 package org.intellij.images.completion;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.file.FileLookupInfoProvider;
-import com.intellij.util.indexing.FileBasedIndex;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.psi.file.FileLookupInfoProvider;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.index.ImageInfoIndex;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
  */
+@ExtensionImpl
 public class ImageLookupInfoProvider extends FileLookupInfoProvider {
 
   public Pair<String, String> getLookupInfo(@Nonnull VirtualFile file, Project project) {

@@ -15,15 +15,19 @@
  */
 package org.intellij.images.thumbnail;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.ide.ServiceManager;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.components.ServiceManager;
 
 /**
  * Thumbnail manager.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class ThumbnailManager {
 
   public static ThumbnailManager getManager(final Project project) {

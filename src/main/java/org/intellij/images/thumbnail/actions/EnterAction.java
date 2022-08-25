@@ -15,11 +15,11 @@
  */
 package org.intellij.images.thumbnail.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileEditor.FileEditorManager;
+import consulo.ui.ex.action.Presentation;
 import org.intellij.images.thumbnail.ThumbnailView;
 import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActionUtil;
 import org.intellij.images.fileTypes.ImageFileTypeManager;

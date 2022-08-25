@@ -21,17 +21,17 @@ package org.intellij.images.thumbnail.impl;
 import javax.annotation.Nonnull;
 import javax.swing.SwingUtilities;
 
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActions;
 import org.intellij.images.thumbnail.ThumbnailView;
 import org.intellij.images.vfs.IfsUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowManager;
-import icons.ImagesIcons;
+import consulo.project.Project;
+import consulo.ide.impl.idea.openapi.util.Disposer;
+import consulo.virtualFileSystem.VirtualFile;
+import org.intellij.images.ImagesIcons;
 
 /**
  * Thumbnail view.

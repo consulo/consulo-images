@@ -18,7 +18,7 @@
 
 package org.intellij.images.ui;
 
-import com.intellij.util.ui.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import org.intellij.images.editor.ImageDocument;
 
 import javax.swing.*;

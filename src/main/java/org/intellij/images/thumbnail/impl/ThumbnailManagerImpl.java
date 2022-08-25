@@ -15,14 +15,15 @@
  */
 package org.intellij.images.thumbnail.impl;
 
-import javax.annotation.Nonnull;
+import consulo.annotation.component.ServiceImpl;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
 import org.intellij.images.thumbnail.ThumbnailManager;
 import org.intellij.images.thumbnail.ThumbnailView;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
+
+import javax.annotation.Nonnull;
 
 /**
  * Thumbail manager.
@@ -30,6 +31,7 @@ import com.intellij.openapi.project.Project;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 @Singleton
+@ServiceImpl
 final class ThumbnailManagerImpl extends ThumbnailManager implements Disposable {
   private final Project project;
   private ThumbnailView thumbnailView;

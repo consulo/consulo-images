@@ -15,53 +15,47 @@
  */
 package org.intellij.images.fileTypes.impl;
 
-import com.intellij.ide.highlighter.XmlLikeFileType;
-import com.intellij.images.localize.ImagesLocalize;
-import com.intellij.openapi.fileTypes.UIBasedFileType;
+import consulo.images.localize.ImagesLocalize;
 import consulo.images.svg.SVGLanguage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import icons.ImagesIcons;
+import consulo.virtualFileSystem.fileType.UIBasedFileType;
+import consulo.xml.ide.highlighter.XmlLikeFileType;
+import org.intellij.images.ImagesIcons;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
-public final class SvgFileType extends XmlLikeFileType implements UIBasedFileType
-{
-	public static final SvgFileType INSTANCE = new SvgFileType();
+public final class SvgFileType extends XmlLikeFileType implements UIBasedFileType {
+  public static final SvgFileType INSTANCE = new SvgFileType();
 
-	private SvgFileType()
-	{
-		super(SVGLanguage.INSTANCE);
-	}
+  private SvgFileType() {
+    super(SVGLanguage.INSTANCE);
+  }
 
-	@Nonnull
-	@Override
-	public String getId()
-	{
-		return "SVG";
-	}
+  @Nonnull
+  @Override
+  public String getId() {
+    return "SVG";
+  }
 
-	@Nonnull
-	@Override
-	public LocalizeValue getDescription()
-	{
-		return ImagesLocalize.svgFileTypeDescription();
-	}
+  @Nonnull
+  @Override
+  public LocalizeValue getDescription() {
+    return ImagesLocalize.svgFileTypeDescription();
+  }
 
-	@Nonnull
-	@Override
-	public String getDefaultExtension()
-	{
-		return "svg";
-	}
+  @Nonnull
+  @Override
+  public String getDefaultExtension() {
+    return "svg";
+  }
 
-	@Nonnull
-	@Override
-	public Image getIcon()
-	{
-		return ImagesIcons.ImagesFileType;
-	}
+  @Nonnull
+  @Override
+  public Image getIcon() {
+    return ImagesIcons.ImagesFileType;
+  }
 }

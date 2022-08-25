@@ -15,8 +15,8 @@
  */
 package org.intellij.images;
 
+import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
-import com.intellij.AbstractBundle;
 
 /**
  * @author max

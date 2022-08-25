@@ -15,8 +15,8 @@
  */
 package org.intellij.images.editor.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;

@@ -1,9 +1,9 @@
 package consulo.images;
 
-import com.intellij.openapi.editor.colors.EditorColorKey;
-import com.intellij.ui.JBColor;
-import consulo.awt.TargetAWT;
+import consulo.colorScheme.EditorColorKey;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.color.RGBColor;
+import consulo.ui.ex.JBColor;
 import consulo.ui.style.StandardColors;
 
 /**

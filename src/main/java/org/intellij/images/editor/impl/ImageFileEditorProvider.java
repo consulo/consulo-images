@@ -15,67 +15,61 @@
  */
 package org.intellij.images.editor.impl;
 
-import javax.annotation.Nonnull;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorPolicy;
+import consulo.fileEditor.FileEditorProvider;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
-
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.jetbrains.annotations.NonNls;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorPolicy;
-import com.intellij.openapi.fileEditor.FileEditorProvider;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.VirtualFile;
+
+import javax.annotation.Nonnull;
 
 /**
  * Image editor provider.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-final class ImageFileEditorProvider implements FileEditorProvider, DumbAware
-{
-	@NonNls
-	private static final String EDITOR_TYPE_ID = "images";
+@ExtensionImpl
+final class ImageFileEditorProvider implements FileEditorProvider, DumbAware {
+  @NonNls
+  private static final String EDITOR_TYPE_ID = "images";
 
-	private final ImageFileTypeManager typeManager;
+  private final ImageFileTypeManager typeManager;
 
-	@Inject
-	ImageFileEditorProvider(ImageFileTypeManager typeManager)
-	{
-		this.typeManager = typeManager;
-	}
+  @Inject
+  ImageFileEditorProvider(ImageFileTypeManager typeManager) {
+    this.typeManager = typeManager;
+  }
 
-	@Override
-	public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file)
-	{
-		return typeManager.isImage(file);
-	}
+  @Override
+  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
+    return typeManager.isImage(file);
+  }
 
-	@Override
-	@Nonnull
-	public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file)
-	{
-		return new ImageFileEditorImpl(project, file);
-	}
+  @Override
+  @Nonnull
+  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    return new ImageFileEditorImpl(project, file);
+  }
 
-	@Override
-	public void disposeEditor(@Nonnull FileEditor editor)
-	{
-		Disposer.dispose(editor);
-	}
+  @Override
+  public void disposeEditor(@Nonnull FileEditor editor) {
+    consulo.ide.impl.idea.openapi.util.Disposer.dispose(editor);
+  }
 
-	@Override
-	@Nonnull
-	public String getEditorTypeId()
-	{
-		return EDITOR_TYPE_ID;
-	}
+  @Override
+  @Nonnull
+  public String getEditorTypeId() {
+    return EDITOR_TYPE_ID;
+  }
 
-	@Override
-	@Nonnull
-	public FileEditorPolicy getPolicy()
-	{
-		return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
-	}
+  @Override
+  @Nonnull
+  public FileEditorPolicy getPolicy() {
+    return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
+  }
 }

@@ -15,7 +15,7 @@
  */
 package org.intellij.images.options;
 
-import com.intellij.ui.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

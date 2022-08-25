@@ -19,14 +19,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>consulo</groupId>
-		<artifactId>arch.ide-provided</artifactId>
-		<version>2-SNAPSHOT</version>
+		<artifactId>arch.ide-api-provided</artifactId>
+		<version>3-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
 	<groupId>consulo.plugin</groupId>
 	<artifactId>com.intellij.images</artifactId>
-	<version>2-SNAPSHOT</version>
+	<version>3-SNAPSHOT</version>
 	<packaging>consulo-plugin</packaging>
 
 	<properties>
@@ -49,10 +49,9 @@
 			<plugin>
 				<groupId>consulo.maven</groupId>
 				<artifactId>maven-consulo-plugin</artifactId>
-				<version>2-SNAPSHOT</version>
 				<extensions>true</extensions>
 				<configuration>
-					<repositoryChannel>nightly</repositoryChannel>
+					<repositoryChannel>valhalla</repositoryChannel>
 					<dependencies>
 						<dependency>com.intellij.xml</dependency>
 						<dependency>consulo.library.batik</dependency>
@@ -86,6 +85,13 @@
 		<dependency>
 			<groupId>consulo.plugin.library</groupId>
 			<artifactId>consulo.library.batik</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>consulo</groupId>
+			<artifactId>consulo-ide-impl</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>

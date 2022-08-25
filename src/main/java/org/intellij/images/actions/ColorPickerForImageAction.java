@@ -15,9 +15,8 @@
  */
 package org.intellij.images.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.Application;
-import com.intellij.ui.ShowColorPickerAction;
+import consulo.ide.impl.idea.ui.ShowColorPickerAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author Konstantin Bulenkov

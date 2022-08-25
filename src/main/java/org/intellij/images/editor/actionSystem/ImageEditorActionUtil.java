@@ -15,7 +15,7 @@
  */
 package org.intellij.images.editor.actionSystem;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import org.intellij.images.ui.ImageComponentDecorator;
 
 import javax.annotation.Nullable;

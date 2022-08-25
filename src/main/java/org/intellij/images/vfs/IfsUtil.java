@@ -20,19 +20,17 @@
 
 package org.intellij.images.vfs;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.LogicalRoot;
-import com.intellij.util.LogicalRootsManager;
 import com.intellij.util.SVGLoader;
-import com.intellij.util.ui.JBUI.ScaleContext;
+import consulo.logging.Logger;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.ui.ex.awt.JBUI;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SoftReference;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.common.bytesource.ByteSourceArray;
 import org.apache.commons.imaging.formats.ico.IcoImageParser;
@@ -55,7 +53,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
-import static com.intellij.util.ui.JBUI.ScaleType.OBJ_SCALE;
+import static consulo.ui.ex.awt.JBUI.ScaleType.OBJ_SCALE;
 
 /**
  * Image loader utility.
@@ -132,7 +130,7 @@ public final class IfsUtil
 					file.putUserData(FORMAT_KEY, SVG_FORMAT);
 					file.putUserData(IMAGE_PROVIDER_REF_KEY, new SoftReference<>(new ImageDocument.CachedScaledImageProvider()
 					{
-						ScaleContext.Cache<BufferedImage> cache = new ScaleContext.Cache<>((ctx) ->
+						JBUI.ScaleContext.Cache<BufferedImage> cache = new JBUI.ScaleContext.Cache<>((ctx) ->
 						{
 							try
 							{
@@ -154,7 +152,7 @@ public final class IfsUtil
 						@Override
 						public BufferedImage apply(Double zoom, Component ancestor)
 						{
-							ScaleContext ctx = ScaleContext.create(ancestor);
+							JBUI.ScaleContext ctx = JBUI.ScaleContext.create(ancestor);
 							ctx.update(OBJ_SCALE.of(zoom));
 							return cache.getOrProvide(ctx);
 						}
@@ -234,12 +232,6 @@ public final class IfsUtil
 
 	public static String getReferencePath(Project project, VirtualFile file)
 	{
-		final LogicalRoot logicalRoot = LogicalRootsManager.getLogicalRootsManager(project).findLogicalRoot(file);
-		if(logicalRoot != null)
-		{
-			return getRelativePath(file, logicalRoot.getVirtualFile());
-		}
-
 		ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
 		VirtualFile sourceRoot = fileIndex.getSourceRootForFile(file);
 		if(sourceRoot != null)
@@ -262,6 +254,6 @@ public final class IfsUtil
 		{
 			return file.getPath();
 		}
-		return "/" + VfsUtilCore.getRelativePath(file, root, '/');
+		return "/" + VirtualFileUtil.getRelativePath(file, root, '/');
 	}
 }

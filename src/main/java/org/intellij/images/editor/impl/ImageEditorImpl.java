@@ -15,182 +15,165 @@
  */
 package org.intellij.images.editor.impl;
 
-import javax.annotation.Nonnull;
-import javax.swing.JComponent;
-
+import consulo.application.Application;
+import consulo.fileEditor.FileEditorManager;
+import consulo.project.Project;
+import consulo.virtualFileSystem.RefreshQueue;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileListener;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import org.intellij.images.editor.ImageDocument;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
 import org.intellij.images.vfs.IfsUtil;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileEvent;
-import com.intellij.openapi.vfs.VirtualFileListener;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
-import com.intellij.openapi.vfs.newvfs.RefreshQueue;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
 
 /**
  * Image viewer implementation.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public final class ImageEditorImpl implements ImageEditor
-{
-	private final Project project;
-	private final VirtualFile file;
-	private final ImageEditorUI editorUI;
-	private boolean disposed;
+public final class ImageEditorImpl implements ImageEditor {
+  private final Project project;
+  private final VirtualFile file;
+  private final ImageEditorUI editorUI;
+  private boolean disposed;
 
-	public ImageEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file)
-	{
-		this.project = project;
-		this.file = file;
+  public ImageEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file) {
+    this.project = project;
+    this.file = file;
 
-		editorUI = new ImageEditorUI(this);
-		Disposer.register(this, editorUI);
+    editorUI = new ImageEditorUI(this);
+    consulo.ide.impl.idea.openapi.util.Disposer.register(this, editorUI);
 
-		VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener()
-		{
-			@Override
-			public void propertyChanged(@Nonnull VirtualFilePropertyEvent event)
-			{
-				ImageEditorImpl.this.propertyChanged(event);
-			}
+    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
+      @Override
+      public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+        ImageEditorImpl.this.propertyChanged(event);
+      }
 
-			@Override
-			public void contentsChanged(@Nonnull VirtualFileEvent event)
-			{
-				ImageEditorImpl.this.contentsChanged(event);
-			}
-		}, this);
+      @Override
+      public void contentsChanged(@Nonnull VirtualFileEvent event) {
+        ImageEditorImpl.this.contentsChanged(event);
+      }
+    }, this);
 
-		setValue(file);
-	}
+    setValue(file);
+  }
 
-	public void setValue(VirtualFile file)
-	{
-		try
-		{
-			editorUI.setImageProvider(IfsUtil.getImageProvider(file), IfsUtil.getFormat(file));
-		}
-		catch(Exception e)
-		{
-			//     Error loading image file
-			editorUI.setImageProvider(null, null);
-		}
-	}
+  public void setValue(VirtualFile file) {
+    try {
+      editorUI.setImageProvider(IfsUtil.getImageProvider(file), IfsUtil.getFormat(file));
+    } catch (Exception e) {
+      //     Error loading image file
+      editorUI.setImageProvider(null, null);
+    }
+  }
 
-	public boolean isValid()
-	{
-		ImageDocument document = editorUI.getImageComponent().getDocument();
-		return document.getValue() != null;
-	}
+  @Override
+	public boolean isValid() {
+    ImageDocument document = editorUI.getImageComponent().getDocument();
+    return document.getValue() != null;
+  }
 
-	public ImageEditorUI getComponent()
-	{
-		return editorUI;
-	}
+  @Override
+	public ImageEditorUI getComponent() {
+    return editorUI;
+  }
 
-	public JComponent getContentComponent()
-	{
-		return editorUI.getImageComponent();
-	}
+  @Override
+	public JComponent getContentComponent() {
+    return editorUI.getImageComponent();
+  }
 
+  @Override
 	@Nonnull
-	public VirtualFile getFile()
-	{
-		return file;
-	}
+  public VirtualFile getFile() {
+    return file;
+  }
 
+  @Override
 	@Nonnull
-	public Project getProject()
-	{
-		return project;
-	}
+  public Project getProject() {
+    return project;
+  }
 
-	public ImageDocument getDocument()
-	{
-		return editorUI.getImageComponent().getDocument();
-	}
+  @Override
+	public ImageDocument getDocument() {
+    return editorUI.getImageComponent().getDocument();
+  }
 
-	public void setTransparencyChessboardVisible(boolean visible)
-	{
-		editorUI.getImageComponent().setTransparencyChessboardVisible(visible);
-		editorUI.repaint();
-	}
+  @Override
+	public void setTransparencyChessboardVisible(boolean visible) {
+    editorUI.getImageComponent().setTransparencyChessboardVisible(visible);
+    editorUI.repaint();
+  }
 
-	public boolean isTransparencyChessboardVisible()
-	{
-		return editorUI.getImageComponent().isTransparencyChessboardVisible();
-	}
+  @Override
+	public boolean isTransparencyChessboardVisible() {
+    return editorUI.getImageComponent().isTransparencyChessboardVisible();
+  }
 
-	public boolean isEnabledForActionPlace(String place)
-	{
-		// Disable for thumbnails action
-		return !ThumbnailViewActions.ACTION_PLACE.equals(place);
-	}
+  @Override
+	public boolean isEnabledForActionPlace(String place) {
+    // Disable for thumbnails action
+    return !ThumbnailViewActions.ACTION_PLACE.equals(place);
+  }
 
-	public void setGridVisible(boolean visible)
-	{
-		editorUI.getImageComponent().setGridVisible(visible);
-		editorUI.repaint();
-	}
+  @Override
+	public void setGridVisible(boolean visible) {
+    editorUI.getImageComponent().setGridVisible(visible);
+    editorUI.repaint();
+  }
 
-	public boolean isGridVisible()
-	{
-		return editorUI.getImageComponent().isGridVisible();
-	}
+  @Override
+	public boolean isGridVisible() {
+    return editorUI.getImageComponent().isGridVisible();
+  }
 
-	public boolean isDisposed()
-	{
-		return disposed;
-	}
+  @Override
+	public boolean isDisposed() {
+    return disposed;
+  }
 
-	public ImageZoomModel getZoomModel()
-	{
-		return editorUI.getZoomModel();
-	}
+  @Override
+	public ImageZoomModel getZoomModel() {
+    return editorUI.getZoomModel();
+  }
 
-	public void dispose()
-	{
-		disposed = true;
-	}
+  @Override
+	public void dispose() {
+    disposed = true;
+  }
 
-	void propertyChanged(@Nonnull VirtualFilePropertyEvent event)
-	{
-		if(file.equals(event.getFile()))
-		{
-			// Change document
-			file.refresh(true, false, () ->
-			{
-				if(ImageFileTypeManager.getInstance().isImage(file))
-				{
-					setValue(file);
-				}
-				else
-				{
-					setValue(null);
-					// Close editor
-					FileEditorManager editorManager = FileEditorManager.getInstance(project);
-					editorManager.closeFile(file);
-				}
-			});
-		}
-	}
+  void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+    if (file.equals(event.getFile())) {
+      // Change document
+      file.refresh(true, false, () ->
+      {
+        if (ImageFileTypeManager.getInstance().isImage(file)) {
+          setValue(file);
+        } else {
+          setValue(null);
+          // Close editor
+          FileEditorManager editorManager = FileEditorManager.getInstance(project);
+          editorManager.closeFile(file);
+        }
+      });
+    }
+  }
 
-	void contentsChanged(@Nonnull VirtualFileEvent event)
-	{
-		if(file.equals(event.getFile()))
-		{
-			// Change document
-			Runnable postRunnable = () -> setValue(file);
-			RefreshQueue.getInstance().refresh(true, false, postRunnable, ModalityState.current(), file);
-		}
-	}
+  void contentsChanged(@Nonnull VirtualFileEvent event) {
+    if (file.equals(event.getFile())) {
+      // Change document
+      Runnable postRunnable = () -> setValue(file);
+      RefreshQueue.getInstance().refresh(true, false, postRunnable, Application.get().getCurrentModalityState(), file);
+    }
+  }
 }

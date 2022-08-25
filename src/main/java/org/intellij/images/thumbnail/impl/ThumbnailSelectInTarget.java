@@ -15,15 +15,19 @@
  */
 package org.intellij.images.thumbnail.impl;
 
-import com.intellij.ide.SelectInContext;
-import com.intellij.ide.SelectInTarget;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.project.Project;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInTarget;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.project.Project;
+import jakarta.inject.Inject;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.thumbnail.ThumbnailManager;
 import org.intellij.images.thumbnail.ThumbnailView;
 
+@ExtensionImpl
 final class ThumbnailSelectInTarget implements SelectInTarget {
+  @Inject
   public ThumbnailSelectInTarget() {
   }
 

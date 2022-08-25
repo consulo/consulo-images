@@ -15,17 +15,17 @@
  */
 package org.intellij.images.options.impl;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.inject.Singleton;
-
 import org.intellij.images.options.Options;
 import org.intellij.images.options.OptionsManager;
 import org.jdom.Element;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
 
 /**
  * Options configurable manager.
@@ -33,42 +33,33 @@ import com.intellij.openapi.util.WriteExternalException;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 @Singleton
+@ServiceImpl
 @State(name = "Images.OptionsManager", storages = {@Storage(value = "images.support.xml", roamingType = RoamingType.DISABLED)})
-public class OptionsManagerImpl extends OptionsManager implements PersistentStateComponent<Element>
-{
-	private final OptionsImpl options = new OptionsImpl();
+public class OptionsManagerImpl extends OptionsManager implements PersistentStateComponent<Element> {
+  private final OptionsImpl options = new OptionsImpl();
 
-	@Override
-	public Options getOptions()
-	{
-		return options;
-	}
+  @Override
+  public Options getOptions() {
+    return options;
+  }
 
-	@Override
-	public Element getState()
-	{
-		Element element = new Element("state");
-		try
-		{
-			options.writeExternal(element);
-		}
-		catch(WriteExternalException e)
-		{
-			throw new RuntimeException(e);
-		}
-		return element;
-	}
+  @Override
+  public Element getState() {
+    Element element = new Element("state");
+    try {
+      options.writeExternal(element);
+    } catch (WriteExternalException e) {
+      throw new RuntimeException(e);
+    }
+    return element;
+  }
 
-	@Override
-	public void loadState(final Element state)
-	{
-		try
-		{
-			options.readExternal(state);
-		}
-		catch(InvalidDataException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
+  @Override
+  public void loadState(final Element state) {
+    try {
+      options.readExternal(state);
+    } catch (InvalidDataException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

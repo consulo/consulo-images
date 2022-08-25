@@ -17,10 +17,10 @@ package org.intellij.images.editor;
 
 import javax.swing.JComponent;
 
+import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.images.ui.ImageComponentDecorator;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
 
 /**
  * Image viewer.

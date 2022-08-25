@@ -15,9 +15,9 @@
  */
 package org.intellij.images.actions;
 
+import consulo.ui.ex.action.ToggleAction;
 import org.intellij.images.ui.ImageComponentDecorator;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * Show/hide background action.

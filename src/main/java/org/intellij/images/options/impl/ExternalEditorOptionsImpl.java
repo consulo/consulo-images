@@ -18,8 +18,8 @@
 
 package org.intellij.images.options.impl;
 
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.JDOMExternalizer;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.JDOMExternalizer;
 import org.intellij.images.options.ExternalEditorOptions;
 import org.jdom.Element;
 

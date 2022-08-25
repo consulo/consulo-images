@@ -15,8 +15,8 @@
  */
 package org.intellij.images.editor.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
 import org.intellij.images.ui.ImageComponentDecorator;

@@ -15,17 +15,17 @@
  */
 package org.intellij.images.thumbnail;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.images.ImagesBundle;
 import org.intellij.images.ui.ImageComponentDecorator;
 
 import javax.annotation.Nonnull;
 
 /**
- * Thumbnail thumbnail is a component with thumbnails for a set of {@link com.intellij.openapi.vfs.VirtualFile}.
+ * Thumbnail thumbnail is a component with thumbnails for a set of {@link VirtualFile}.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
@@ -36,7 +36,7 @@ public interface ThumbnailView extends Disposable, ImageComponentDecorator
 	String TOOLWINDOW_ID = ImagesBundle.message("thumbnails.toolwindow.name");
 
 	@Nonnull
-	Project getProject();
+  Project getProject();
 
 	/**
 	 * Add virtual files to view

@@ -15,46 +15,50 @@
  */
 package org.intellij.images.actions;
 
-import java.awt.Image;
+import com.intellij.util.SVGLoader;
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
+import consulo.language.editor.CommonDataKeys;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.virtualFileSystem.VirtualFile;
+import org.intellij.images.fileTypes.impl.SvgFileType;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
-import org.intellij.images.fileTypes.impl.SvgFileType;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.SVGLoader;
-
 /**
  * @author Konstantin Bulenkov
  */
-public class ConvertSvgToPngAction extends DumbAwareAction
-{
-	@Override
-	public void actionPerformed(AnActionEvent e)
-	{
-		VirtualFile svgFile = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
-		try
-		{
-			Image image = SVGLoader.load(new File(svgFile.getPath()).toURI().toURL(), 1f);
-			String path = svgFile.getPath();
-			ImageIO.write((BufferedImage) image, "png", new File(path + ".png"));
-		}
-		catch(IOException e1)
-		{
-			e1.printStackTrace();
-		}
-	}
+@ActionImpl(id = "Images.ConvertSvgToPng", parents = {
+    @ActionParentRef(value = @ActionRef(id = "ProjectViewPopupMenu"), anchor = ActionRefAnchor.AFTER, relatedToAction = @ActionRef(id = "EditSource"))
+})
+public class ConvertSvgToPngAction extends DumbAwareAction {
+  public ConvertSvgToPngAction() {
+    super("Convert to PNG");
+  }
 
-	@Override
-	public void update(AnActionEvent e)
-	{
-		VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
-		boolean enabled = file != null && file.getFileType() == SvgFileType.INSTANCE;
-		e.getPresentation().setEnabledAndVisible(enabled);
-	}
+  @Override
+  public void actionPerformed(AnActionEvent e) {
+    VirtualFile svgFile = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
+    try {
+      Image image = SVGLoader.load(new File(svgFile.getPath()).toURI().toURL(), 1f);
+      String path = svgFile.getPath();
+      ImageIO.write((BufferedImage) image, "png", new File(path + ".png"));
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
+  }
+
+  @Override
+  public void update(AnActionEvent e) {
+    VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+    boolean enabled = file != null && file.getFileType() == SvgFileType.INSTANCE;
+    e.getPresentation().setEnabledAndVisible(enabled);
+  }
 }

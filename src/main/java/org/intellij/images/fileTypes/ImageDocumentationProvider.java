@@ -15,14 +15,15 @@
  */
 package org.intellij.images.fileTypes;
 
-import com.intellij.lang.documentation.AbstractDocumentationProvider;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileWithId;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.util.indexing.FileBasedIndex;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.project.DumbService;
+import consulo.application.util.SystemInfo;
+import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.editor.documentation.AbstractDocumentationProvider;
+import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.images.index.ImageInfoIndex;
 import javax.annotation.Nullable;
 
@@ -32,6 +33,7 @@ import java.net.URISyntaxException;
 /**
  * @author spleaner
  */
+@ExtensionImpl
 public class ImageDocumentationProvider extends AbstractDocumentationProvider {
   private static final int MAX_IMAGE_SIZE = 300;
 

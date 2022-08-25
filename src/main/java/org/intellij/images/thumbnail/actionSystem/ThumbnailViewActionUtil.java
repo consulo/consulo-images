@@ -15,9 +15,9 @@
  */
 package org.intellij.images.thumbnail.actionSystem;
 
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import org.intellij.images.thumbnail.ThumbnailView;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
 
 /**
  * Thumbnail view actions utility.

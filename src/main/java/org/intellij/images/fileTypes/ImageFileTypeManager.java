@@ -15,37 +15,37 @@
  */
 package org.intellij.images.fileTypes;
 
-import java.util.Collection;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.ide.ServiceManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
-
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
+import java.util.Collection;
 
 /**
  * File type manager.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public abstract class ImageFileTypeManager
-{
-	@Nonnull
-	public static ImageFileTypeManager getInstance()
-	{
-		return ServiceManager.getService(ImageFileTypeManager.class);
-	}
+@ServiceAPI(ComponentScope.APPLICATION)
+public abstract class ImageFileTypeManager {
+  @Nonnull
+  public static ImageFileTypeManager getInstance() {
+    return ServiceManager.getService(ImageFileTypeManager.class);
+  }
 
-	/**
-	 * Check that file is image.
-	 *
-	 * @param file File to check
-	 * @return Return <code>true</code> if image file is file with Images file type
-	 */
-	public abstract boolean isImage(@Nonnull VirtualFile file);
+  /**
+   * Check that file is image.
+   *
+   * @param file File to check
+   * @return Return <code>true</code> if image file is file with Images file type
+   */
+  public abstract boolean isImage(@Nonnull VirtualFile file);
 
-	@Nonnull
-	public abstract FileType getImageFileType();
+  @Nonnull
+  public abstract FileType getImageFileType();
 
-	public abstract Collection<FileType> getFileTypes();
+  public abstract Collection<FileType> getFileTypes();
 }

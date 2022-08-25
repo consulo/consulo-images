@@ -15,16 +15,15 @@
  */
 package org.intellij.images.options.impl;
 
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.JDOMExternalizer;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.images.ImageColorKeys;
 import consulo.ui.color.ColorValue;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.JDOMExternalizer;
 import org.intellij.images.options.GridOptions;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.beans.PropertyChangeSupport;
 
 /**
@@ -32,143 +31,116 @@ import java.beans.PropertyChangeSupport;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-final class GridOptionsImpl implements GridOptions, JDOMExternalizable
-{
-	private boolean showDefault;
-	private int lineMinZoomFactor = DEFAULT_LINE_ZOOM_FACTOR;
-	private int lineSpan = DEFAULT_LINE_SPAN;
-	private final PropertyChangeSupport propertyChangeSupport;
+final class GridOptionsImpl implements GridOptions, JDOMExternalizable {
+  private boolean showDefault;
+  private int lineMinZoomFactor = DEFAULT_LINE_ZOOM_FACTOR;
+  private int lineSpan = DEFAULT_LINE_SPAN;
+  private final PropertyChangeSupport propertyChangeSupport;
 
-	GridOptionsImpl(PropertyChangeSupport propertyChangeSupport)
-	{
-		this.propertyChangeSupport = propertyChangeSupport;
-	}
+  GridOptionsImpl(PropertyChangeSupport propertyChangeSupport) {
+    this.propertyChangeSupport = propertyChangeSupport;
+  }
 
-	@Override
-	public boolean isShowDefault()
-	{
-		return showDefault;
-	}
+  @Override
+  public boolean isShowDefault() {
+    return showDefault;
+  }
 
-	@Override
-	public int getLineZoomFactor()
-	{
-		return lineMinZoomFactor;
-	}
+  @Override
+  public int getLineZoomFactor() {
+    return lineMinZoomFactor;
+  }
 
-	@Override
-	public int getLineSpan()
-	{
-		return lineSpan;
-	}
+  @Override
+  public int getLineSpan() {
+    return lineSpan;
+  }
 
-	@Nonnull
-	@Override
-	public ColorValue getLineColor()
-	{
-		ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.GRID_LINE_COLOR_KEY);
-		return color != null ? color : ImageColorKeys.GRID_LINE_COLOR_KEY.getDefaultColorValue();
-	}
+  @Nonnull
+  @Override
+  public ColorValue getLineColor() {
+    ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.GRID_LINE_COLOR_KEY);
+    return color != null ? color : ImageColorKeys.GRID_LINE_COLOR_KEY.getDefaultColorValue();
+  }
 
-	void setShowDefault(boolean showDefault)
-	{
-		boolean oldValue = this.showDefault;
-		if(oldValue != showDefault)
-		{
-			this.showDefault = showDefault;
-			propertyChangeSupport.firePropertyChange(ATTR_SHOW_DEFAULT, oldValue, this.showDefault);
-		}
-	}
+  void setShowDefault(boolean showDefault) {
+    boolean oldValue = this.showDefault;
+    if (oldValue != showDefault) {
+      this.showDefault = showDefault;
+      propertyChangeSupport.firePropertyChange(ATTR_SHOW_DEFAULT, oldValue, this.showDefault);
+    }
+  }
 
-	void setLineMinZoomFactor(int lineMinZoomFactor)
-	{
-		int oldValue = this.lineMinZoomFactor;
-		if(oldValue != lineMinZoomFactor)
-		{
-			this.lineMinZoomFactor = lineMinZoomFactor;
-			propertyChangeSupport.firePropertyChange(ATTR_LINE_ZOOM_FACTOR, oldValue, this.lineMinZoomFactor);
-		}
-	}
+  void setLineMinZoomFactor(int lineMinZoomFactor) {
+    int oldValue = this.lineMinZoomFactor;
+    if (oldValue != lineMinZoomFactor) {
+      this.lineMinZoomFactor = lineMinZoomFactor;
+      propertyChangeSupport.firePropertyChange(ATTR_LINE_ZOOM_FACTOR, oldValue, this.lineMinZoomFactor);
+    }
+  }
 
-	void setLineSpan(int lineSpan)
-	{
-		int oldValue = this.lineSpan;
-		if(oldValue != lineSpan)
-		{
-			this.lineSpan = lineSpan;
-			propertyChangeSupport.firePropertyChange(ATTR_LINE_SPAN, oldValue, this.lineSpan);
-		}
-	}
+  void setLineSpan(int lineSpan) {
+    int oldValue = this.lineSpan;
+    if (oldValue != lineSpan) {
+      this.lineSpan = lineSpan;
+      propertyChangeSupport.firePropertyChange(ATTR_LINE_SPAN, oldValue, this.lineSpan);
+    }
+  }
 
-	@Override
-	public void inject(GridOptions options)
-	{
-		setShowDefault(options.isShowDefault());
-		setLineMinZoomFactor(options.getLineZoomFactor());
-		setLineSpan(options.getLineSpan());
-	}
+  @Override
+  public void inject(GridOptions options) {
+    setShowDefault(options.isShowDefault());
+    setLineMinZoomFactor(options.getLineZoomFactor());
+    setLineSpan(options.getLineSpan());
+  }
 
-	@Override
-	public boolean setOption(String name, Object value)
-	{
-		if(ATTR_SHOW_DEFAULT.equals(name))
-		{
-			setShowDefault((Boolean) value);
-		}
-		else if(ATTR_LINE_ZOOM_FACTOR.equals(name))
-		{
-			setLineMinZoomFactor((Integer) value);
-		}
-		else if(ATTR_LINE_SPAN.equals(name))
-		{
-			setLineSpan((Integer) value);
-		}
-		else
-		{
-			return false;
-		}
-		return true;
-	}
+  @Override
+  public boolean setOption(String name, Object value) {
+    if (ATTR_SHOW_DEFAULT.equals(name)) {
+      setShowDefault((Boolean) value);
+    } else if (ATTR_LINE_ZOOM_FACTOR.equals(name)) {
+      setLineMinZoomFactor((Integer) value);
+    } else if (ATTR_LINE_SPAN.equals(name)) {
+      setLineSpan((Integer) value);
+    } else {
+      return false;
+    }
+    return true;
+  }
 
-	@Override
-	public void readExternal(Element element)
-	{
-		showDefault = JDOMExternalizer.readBoolean(element, ATTR_SHOW_DEFAULT);
-		lineMinZoomFactor = JDOMExternalizer.readInteger(element, ATTR_LINE_ZOOM_FACTOR, DEFAULT_LINE_ZOOM_FACTOR);
-		lineSpan = JDOMExternalizer.readInteger(element, ATTR_LINE_SPAN, DEFAULT_LINE_SPAN);
-	}
+  @Override
+  public void readExternal(Element element) {
+    showDefault = JDOMExternalizer.readBoolean(element, ATTR_SHOW_DEFAULT);
+    lineMinZoomFactor = JDOMExternalizer.readInteger(element, ATTR_LINE_ZOOM_FACTOR, DEFAULT_LINE_ZOOM_FACTOR);
+    lineSpan = JDOMExternalizer.readInteger(element, ATTR_LINE_SPAN, DEFAULT_LINE_SPAN);
+  }
 
-	@Override
-	public void writeExternal(Element element)
-	{
-		JDOMExternalizer.write(element, ATTR_SHOW_DEFAULT, showDefault);
-		JDOMExternalizer.write(element, ATTR_LINE_ZOOM_FACTOR, lineMinZoomFactor);
-		JDOMExternalizer.write(element, ATTR_LINE_SPAN, lineSpan);
-	}
+  @Override
+  public void writeExternal(Element element) {
+    JDOMExternalizer.write(element, ATTR_SHOW_DEFAULT, showDefault);
+    JDOMExternalizer.write(element, ATTR_LINE_ZOOM_FACTOR, lineMinZoomFactor);
+    JDOMExternalizer.write(element, ATTR_LINE_SPAN, lineSpan);
+  }
 
-	public boolean equals(Object obj)
-	{
-		if(this == obj)
-		{
-			return true;
-		}
-		if(!(obj instanceof GridOptions))
-		{
-			return false;
-		}
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof GridOptions)) {
+      return false;
+    }
 
-		GridOptions otherOptions = (GridOptions) obj;
-		return lineMinZoomFactor == otherOptions.getLineZoomFactor() &&
-				lineSpan == otherOptions.getLineSpan() &&
-				showDefault == otherOptions.isShowDefault();
-	}
+    GridOptions otherOptions = (GridOptions) obj;
+    return lineMinZoomFactor == otherOptions.getLineZoomFactor() &&
+        lineSpan == otherOptions.getLineSpan() &&
+        showDefault == otherOptions.isShowDefault();
+  }
 
-	public int hashCode()
-	{
-		int result;
-		result = (showDefault ? 1 : 0);
-		result = 29 * result + lineMinZoomFactor;
-		result = 29 * result + lineSpan;
-		return result;
-	}
+  public int hashCode() {
+    int result;
+    result = (showDefault ? 1 : 0);
+    result = 29 * result + lineMinZoomFactor;
+    result = 29 * result + lineSpan;
+    return result;
+  }
 }
