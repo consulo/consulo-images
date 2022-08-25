@@ -1,0 +1,146 @@
+<consulo-plugin url="https://github.com/consulo/consulo-images">
+	<id>com.intellij.images</id>
+	<name>Images</name>
+	<vendor>JetBrains</vendor>
+	<version>SNAPSHOT</version>
+	<depends>consulo.library.batik</depends>
+	<depends optional="true">com.intellij.xml</depends>
+	<tags>
+		<tag>editor</tag>
+	</tags>
+
+	<optionalFeatures>
+		<optionalFeature id="svg.desktop.awt">
+			<depends>consulo.desktop</depends>
+			<depends>com.intellij.xml</depends>
+			<depends>consulo.library.batik</depends>
+		</optionalFeature>
+
+		<optionalFeature id="svg.web">
+			<depends>consulo.web</depends>
+			<depends>com.intellij.xml</depends>
+		</optionalFeature>
+
+		<!--we need this since we have different platform implementations-->
+		<optionalFeature id="svg.analyzer">
+			<depends>consulo.repo.analyzer</depends>
+			<depends>com.intellij.xml</depends>
+		</optionalFeature>
+	</optionalFeatures>
+
+	<actions>
+		<action id="images.color.picker" class="consulo.images.impl.action.ColorPickerForImageAction" text="Show Color Picker">
+			<add-to-group anchor="after" group-id="ProjectViewPopupMenu" relative-to-action="EditSource"/>
+		</action>
+		<action class="consulo.images.impl.action.EditExternallyAction"
+				id="Images.EditExternaly"
+				text="Open Image in External Editor">
+			<keyboard-shortcut first-keystroke="control alt F4" keymap="$default"/>
+			<add-to-group anchor="after" group-id="ProjectViewPopupMenu" relative-to-action="EditSource"/>
+		</action>
+		<action class="consulo.images.impl.action.ShowThumbnailsAction"
+				id="Images.ShowThumbnails" text="Show Image Thumbnails">
+			<keyboard-shortcut first-keystroke="shift control T" keymap="$default"/>
+			<add-to-group anchor="after" group-id="ProjectViewPopupMenu" relative-to-action="AddToFavorites"/>
+			<add-to-group anchor="after" group-id="NavbarPopupMenu" relative-to-action="AddToFavorites"/>
+		</action>
+		<action class="consulo.images.impl.action.ToggleTransparencyChessboardAction"
+				id="Images.ToggleTransparencyChessboard"
+				icon="consulo.images.ImagesIconGroup@toggletransparencychessboard"
+				text="Show Chessboard"
+				description="Show a chessboard on transparent image parts">
+		</action>
+		<group id="Images.EditorToolbar">
+			<reference id="Images.ToggleTransparencyChessboard"/>
+			<action class="org.intellij.images.editor.actions.ToggleGridAction"
+					id="Images.Editor.ToggleGrid"
+					icon="consulo.platform.base.PlatformIconGroup@graph.grid"
+					text="Show Grid">
+				<keyboard-shortcut first-keystroke="control QUOTE" keymap="$default"/>
+			</action>
+			<separator/>
+			<action class="org.intellij.images.editor.actions.ZoomInAction"
+					id="Images.Editor.ZoomIn"
+					icon="consulo.platform.base.PlatformIconGroup@graph.zoomin"
+					text="Zoom In"
+					use-shortcut-of="ExpandAll"/>
+			<action class="org.intellij.images.editor.actions.ZoomOutAction"
+					id="Images.Editor.ZoomOut"
+					icon="consulo.platform.base.PlatformIconGroup@graph.zoomout"
+					text="Zoom Out"
+					use-shortcut-of="CollapseAll"/>
+			<action class="org.intellij.images.editor.actions.ActualSizeAction"
+					id="Images.Editor.ActualSize"
+					icon="consulo.platform.base.PlatformIconGroup@graph.actualzoom"
+					text="Zoom to Actual Size">
+				<keyboard-shortcut first-keystroke="control DIVIDE" keymap="$default"/>
+				<keyboard-shortcut first-keystroke="control SLASH" keymap="$default"/>
+			</action>
+		</group>
+		<group id="Images.EditorPopupMenu">
+			<reference id="CutCopyPasteGroup"/>
+			<separator/>
+			<reference id="FindUsages"/>
+			<reference id="RefactoringMenu"/>
+			<separator/>
+			<reference id="Images.EditorToolbar"/>
+			<separator/>
+			<reference id="CloseEditor"/>
+			<separator/>
+			<reference id="AddToFavorites"/>
+			<separator/>
+			<reference id="VersionControlsGroup"/>
+			<separator/>
+			<reference id="images.color.picker"/>
+			<reference id="Images.EditExternaly"/>
+			<reference id="ExternalToolsGroup"/>
+		</group>
+		<group id="Images.ThumbnailsToolbar">
+			<action class="org.intellij.images.thumbnail.actions.UpFolderAction"
+					id="Images.Thumbnails.UpFolder"
+					text="Parent Folder"
+					description="Show image thumbnails from the containing folder"
+					icon="consulo.platform.base.PlatformIconGroup@nodes.upfolder">
+				<keyboard-shortcut first-keystroke="BACK_SPACE" keymap="$default"/>
+			</action>
+			<action class="org.intellij.images.thumbnail.actions.ToggleRecursiveAction"
+					id="Images.Thumbnails.ToggleRecursive"
+					text="Recursive"
+					description="Toggle whether to show the images from subfolders recursively"
+					icon="consulo.platform.base.PlatformIconGroup@objectbrowser.flattenpackages">
+				<keyboard-shortcut first-keystroke="control MULTIPLY" keymap="$default"/>
+			</action>
+			<separator/>
+			<reference id="Images.ToggleTransparencyChessboard"/>
+			<separator/>
+			<action class="org.intellij.images.thumbnail.actions.HideThumbnailsAction"
+					id="Images.Thumbnails.Hide"
+					text="Hide"
+					description="Hide image thumbnails"
+					icon="consulo.platform.base.PlatformIconGroup@actions.cancel" use-shortcut-of="CloseContent"/>
+		</group>
+		<group id="Images.ThumbnailsPopupMenu">
+			<reference id="CutCopyPasteGroup"/>
+			<reference id="EditSource"/>
+			<action class="org.intellij.images.thumbnail.actions.EnterAction"
+					id="Images.Thumbnails.EnterAction">
+				<keyboard-shortcut first-keystroke="ENTER" keymap="$default"/>
+			</action>
+			<separator/>
+			<reference id="Images.ThumbnailsToolbar"/>
+			<separator/>
+			<reference id="FindUsages"/>
+			<reference id="RefactoringMenu"/>
+			<separator/>
+			<reference id="AddToFavorites"/>
+			<separator/>
+			<reference id="$Delete"/>
+			<separator/>
+			<reference id="VersionControlsGroup"/>
+			<reference id="CompareTwoFiles"/>
+			<separator/>
+			<reference id="Images.EditExternaly"/>
+			<reference id="ExternalToolsGroup"/>
+		</group>
+	</actions>
+</consulo-plugin>
