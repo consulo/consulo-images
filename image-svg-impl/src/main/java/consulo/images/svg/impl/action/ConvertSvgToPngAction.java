@@ -19,14 +19,14 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
-import consulo.images.svg.internal.SVGConvertService;
+import consulo.application.Application;
 import consulo.images.svg.SVGFileType;
+import consulo.images.svg.internal.SVGFileProcessor;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 
 import java.io.File;
 
@@ -37,12 +37,9 @@ import java.io.File;
     @ActionParentRef(value = @ActionRef(id = "ProjectViewPopupMenu"), anchor = ActionRefAnchor.AFTER, relatedToAction = @ActionRef(id = "EditSource"))
 })
 public class ConvertSvgToPngAction extends DumbAwareAction {
-  private final Provider<SVGConvertService> mySvgConvertServiceProvider;
-
   @Inject
-  public ConvertSvgToPngAction(Provider<SVGConvertService> svgConvertServiceProvider) {
+  public ConvertSvgToPngAction() {
     super("Convert to PNG");
-    mySvgConvertServiceProvider = svgConvertServiceProvider;
   }
 
   @RequiredUIAccess
@@ -52,14 +49,17 @@ public class ConvertSvgToPngAction extends DumbAwareAction {
 
     String path = svgFile.getPath();
 
-    mySvgConvertServiceProvider.get().convert(svgFile, new File(path + ".png"));
+    for (SVGFileProcessor service : Application.get().getExtensionPoint(SVGFileProcessor.class)) {
+      service.convert(svgFile, new File(path + ".png"));
+      break;
+    }
   }
 
   @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     VirtualFile svgFile = e.getData(VirtualFile.KEY);
-    boolean enabled = svgFile != null && svgFile.getFileType() == SVGFileType.INSTANCE;
+    boolean enabled = svgFile != null && svgFile.getFileType() == SVGFileType.INSTANCE && Application.get().getExtensionPoint(SVGFileProcessor.class).hasAnyExtensions();
     e.getPresentation().setEnabledAndVisible(enabled);
   }
 }

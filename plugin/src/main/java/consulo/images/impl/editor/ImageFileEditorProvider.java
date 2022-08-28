@@ -37,8 +37,6 @@ import javax.annotation.Nonnull;
  */
 @ExtensionImpl
 final class ImageFileEditorProvider implements FileEditorProvider, DumbAware {
-  private static final String EDITOR_TYPE_ID = "images";
-
   private final ImageFileTypeManager typeManager;
 
   @Inject
@@ -48,7 +46,7 @@ final class ImageFileEditorProvider implements FileEditorProvider, DumbAware {
 
   @Override
   public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return typeManager.isImage(file);
+    return typeManager.getBinaryImageFileType() == file.getFileType();
   }
 
   @RequiredUIAccess
@@ -66,7 +64,7 @@ final class ImageFileEditorProvider implements FileEditorProvider, DumbAware {
   @Override
   @Nonnull
   public String getEditorTypeId() {
-    return EDITOR_TYPE_ID;
+    return "images";
   }
 
   @Override

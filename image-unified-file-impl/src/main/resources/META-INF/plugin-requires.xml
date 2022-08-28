@@ -1,0 +1,11 @@
+<consulo-plugin-requires>
+    <plugins>
+        <plugin>consulo.web</plugin>
+    </plugins>
+    <plugins>
+        <plugin>consulo.desktop.swt</plugin>
+    </plugins>
+    <plugins>
+        <plugin>consulo.repo.analyzer</plugin>
+    </plugins>
+</consulo-plugin-requires>

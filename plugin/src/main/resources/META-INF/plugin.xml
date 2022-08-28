@@ -3,30 +3,38 @@
 	<name>Images</name>
 	<vendor>JetBrains</vendor>
 	<version>SNAPSHOT</version>
-	<depends>consulo.library.batik</depends>
+
+	<!--optional dependencies - see plugin-requires inside each jar-->
+	<depends optional="true">consulo.repo.analyzer</depends>
+	<depends optional="true">consulo.web</depends>
+	<depends optional="true">consulo.desktop.swt</depends>
+	<depends optional="true">consulo.desktop.awt</depends>
+
+	<depends optional="true">consulo.library.batik</depends>
 	<depends optional="true">com.intellij.xml</depends>
+
 	<tags>
 		<tag>editor</tag>
 	</tags>
 
-	<optionalFeatures>
-		<optionalFeature id="svg.desktop.awt">
+	<optional-features>
+		<optional-feature id="svg.desktop.awt">
 			<depends>consulo.desktop</depends>
 			<depends>com.intellij.xml</depends>
 			<depends>consulo.library.batik</depends>
-		</optionalFeature>
+		</optional-feature>
 
-		<optionalFeature id="svg.web">
+		<optional-feature id="svg.web">
 			<depends>consulo.web</depends>
 			<depends>com.intellij.xml</depends>
-		</optionalFeature>
+		</optional-feature>
 
 		<!--we need this since we have different platform implementations-->
-		<optionalFeature id="svg.analyzer">
+		<optional-feature id="svg.analyzer">
 			<depends>consulo.repo.analyzer</depends>
 			<depends>com.intellij.xml</depends>
-		</optionalFeature>
-	</optionalFeatures>
+		</optional-feature>
+	</optional-features>
 
 	<actions>
 		<action id="images.color.picker" class="consulo.images.impl.action.ColorPickerForImageAction" text="Show Color Picker">

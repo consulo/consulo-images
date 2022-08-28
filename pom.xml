@@ -45,6 +45,7 @@
 		<module>image-api</module>
 		<module>image-desktop-awt-impl</module>
 		<module>image-svg-api</module>
+		<module>image-unified-file-impl</module>
 		<module>image-svg-impl</module>
 		<module>image-svg-desktop-awt-impl</module>
 		<module>plugin</module>

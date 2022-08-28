@@ -45,7 +45,13 @@ public abstract class ImageFileTypeManager {
   public abstract boolean isImage(@Nonnull VirtualFile file);
 
   @Nonnull
-  public abstract FileType getImageFileType();
+  @Deprecated
+  public FileType getImageFileType() {
+    return getBinaryImageFileType();
+  }
+
+  @Nonnull
+  public abstract FileType getBinaryImageFileType();
 
   public abstract Collection<FileType> getFileTypes();
 }

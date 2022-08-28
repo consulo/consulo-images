@@ -1,0 +1,7 @@
+<consulo-plugin-requires>
+    <plugins>
+        <plugin>com.intellij.xml</plugin>
+        <plugin>consulo.library.batik</plugin>
+        <plugin>consulo.desktop.awt</plugin>
+    </plugins>
+</consulo-plugin-requires>
