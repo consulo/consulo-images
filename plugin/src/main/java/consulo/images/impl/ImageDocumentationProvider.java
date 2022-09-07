@@ -16,18 +16,18 @@
 package consulo.images.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import org.intellij.images.util.ImageInfo;
-import consulo.language.psi.stub.FileBasedIndex;
-import consulo.project.DumbService;
 import consulo.application.util.SystemInfo;
-import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.images.impl.index.ImageInfoIndex;
+import consulo.language.editor.documentation.UnrestrictedDocumentationProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
-import consulo.language.editor.documentation.AbstractDocumentationProvider;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.project.DumbService;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.images.impl.index.ImageInfoIndex;
-import javax.annotation.Nullable;
+import consulo.virtualFileSystem.VirtualFileWithId;
+import org.intellij.images.util.ImageInfo;
 
+import javax.annotation.Nullable;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -35,7 +35,7 @@ import java.net.URISyntaxException;
  * @author spleaner
  */
 @ExtensionImpl
-public class ImageDocumentationProvider extends AbstractDocumentationProvider {
+public class ImageDocumentationProvider implements UnrestrictedDocumentationProvider {
   private static final int MAX_IMAGE_SIZE = 300;
 
   @Override
