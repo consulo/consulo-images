@@ -12,6 +12,7 @@ module com.intellij.images_image.api {
   exports consulo.images.editor;
   exports consulo.images.icon;
   exports consulo.images.localize;
+  exports consulo.images.ui;
   exports org.intellij.images;
   exports org.intellij.images.editor;
   exports org.intellij.images.editor.actionSystem;
