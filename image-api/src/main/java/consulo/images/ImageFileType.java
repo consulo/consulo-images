@@ -1,0 +1,21 @@
+package consulo.images;
+
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import org.intellij.images.util.ImageInfo;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * @author VISTALL
+ * @since 25-Aug-22
+ */
+public interface ImageFileType extends FileType {
+  @Nullable
+  ImageInfo getImageInfo(@Nonnull byte[] content);
+
+  default double getImageMaxZoomFactor(@Nonnull VirtualFile file, @Nonnull Object uiComponent) {
+    return Double.MAX_VALUE;
+  }
+}
