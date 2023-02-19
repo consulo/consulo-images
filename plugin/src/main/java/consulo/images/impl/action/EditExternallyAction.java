@@ -17,13 +17,13 @@
 package consulo.images.impl.action;
 
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.execution.util.ExecUtil;
 import consulo.images.impl.setting.ImagesOptionsConfigurable;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.EnvironmentUtil;
+import consulo.process.local.ExecUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
