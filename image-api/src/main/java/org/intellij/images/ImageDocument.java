@@ -68,6 +68,7 @@ public interface ImageDocument {
   /**
    * Returns an image represented in the provided scale.
    */
+  @Nullable
   BufferedImage getValue(double scale);
 
   /**

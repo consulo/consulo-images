@@ -113,16 +113,17 @@ public class ImageComponentUI extends ComponentUI {
     RenderingHints oldHints = g2d.getRenderingHints();
 
     BufferedImage image = document.getValue(ic.getZoomFactor());
-
-    if (size.width > image.getWidth() && size.height > image.getHeight()) {
-      // disable any kind of source image manipulation when resizing
-      g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-      g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-    } else {
-      g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-      g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    if (image != null) {
+      if (size.width > image.getWidth() && size.height > image.getHeight()) {
+        // disable any kind of source image manipulation when resizing
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+      } else {
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+      }
+      UIUtil.drawImage(g, image, new Rectangle(0, 0, size.width, size.height), ic);
     }
-    UIUtil.drawImage(g, image, new Rectangle(0, 0, size.width, size.height), ic);
 
     g2d.setRenderingHints(oldHints);
   }
