@@ -42,9 +42,9 @@
 		</action>
 		<action class="consulo.images.impl.action.EditExternallyAction"
 				id="Images.EditExternaly"
-				text="Open Image in External Editor">
+				text="External Editor">
 			<keyboard-shortcut first-keystroke="control alt F4" keymap="$default"/>
-			<add-to-group anchor="after" group-id="ProjectViewPopupMenu" relative-to-action="EditSource"/>
+			<add-to-group anchor="last" group-id="RevealGroup"/>
 		</action>
 		<action class="consulo.images.impl.action.ShowThumbnailsAction"
 				id="Images.ShowThumbnails" text="Show Image Thumbnails">
