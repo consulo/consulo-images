@@ -3,6 +3,7 @@
 	<name>Images</name>
 	<vendor>JetBrains</vendor>
 	<version>SNAPSHOT</version>
+	<localize>consulo.images.ImagesLocalize</localize>
 
 	<!--optional dependencies - see plugin-requires inside each jar-->
 	<depends optional="true">consulo.repo.analyzer</depends>
@@ -52,39 +53,6 @@
 			<add-to-group anchor="after" group-id="ProjectViewPopupMenu" relative-to-action="AddToFavorites"/>
 			<add-to-group anchor="after" group-id="NavbarPopupMenu" relative-to-action="AddToFavorites"/>
 		</action>
-		<action class="consulo.images.impl.action.ToggleTransparencyChessboardAction"
-				id="Images.ToggleTransparencyChessboard"
-				icon="consulo.images.ImagesIconGroup@toggletransparencychessboard"
-				text="Show Chessboard"
-				description="Show a chessboard on transparent image parts">
-		</action>
-		<group id="Images.EditorToolbar">
-			<reference id="Images.ToggleTransparencyChessboard"/>
-			<action class="org.intellij.images.editor.actions.ToggleGridAction"
-					id="Images.Editor.ToggleGrid"
-					icon="consulo.platform.base.PlatformIconGroup@graph.grid"
-					text="Show Grid">
-				<keyboard-shortcut first-keystroke="control QUOTE" keymap="$default"/>
-			</action>
-			<separator/>
-			<action class="org.intellij.images.editor.actions.ZoomInAction"
-					id="Images.Editor.ZoomIn"
-					icon="consulo.platform.base.PlatformIconGroup@graph.zoomin"
-					text="Zoom In"
-					use-shortcut-of="ExpandAll"/>
-			<action class="org.intellij.images.editor.actions.ZoomOutAction"
-					id="Images.Editor.ZoomOut"
-					icon="consulo.platform.base.PlatformIconGroup@graph.zoomout"
-					text="Zoom Out"
-					use-shortcut-of="CollapseAll"/>
-			<action class="org.intellij.images.editor.actions.ActualSizeAction"
-					id="Images.Editor.ActualSize"
-					icon="consulo.platform.base.PlatformIconGroup@graph.actualzoom"
-					text="Zoom to Actual Size">
-				<keyboard-shortcut first-keystroke="control DIVIDE" keymap="$default"/>
-				<keyboard-shortcut first-keystroke="control SLASH" keymap="$default"/>
-			</action>
-		</group>
 		<group id="Images.EditorPopupMenu">
 			<reference id="CutCopyPasteGroup"/>
 			<separator/>

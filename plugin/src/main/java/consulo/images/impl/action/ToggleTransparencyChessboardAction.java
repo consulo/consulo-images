@@ -15,7 +15,11 @@
  */
 package consulo.images.impl.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.images.icon.ImagesIconGroup;
 import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nullable;
 import org.intellij.images.ui.ImageComponentDecorator;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -25,7 +29,14 @@ import consulo.ui.ex.action.AnActionEvent;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  * @see org.intellij.images.ui.ImageComponentDecorator#setTransparencyChessboardVisible
  */
+@ActionImpl(id = "Images.ToggleTransparencyChessboard")
 public final class ToggleTransparencyChessboardAction extends ToggleAction {
+  @Nullable
+  @Override
+  protected Image getTemplateIcon() {
+    return ImagesIconGroup.toggletransparencychessboard();
+  }
+
   public boolean isSelected(AnActionEvent e) {
     ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
     return decorator != null && decorator.isEnabledForActionPlace(e.getPlace()) && decorator.isTransparencyChessboardVisible();

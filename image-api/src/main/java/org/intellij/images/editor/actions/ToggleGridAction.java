@@ -15,8 +15,12 @@
  */
 package org.intellij.images.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nullable;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
 import org.intellij.images.ui.ImageComponentDecorator;
@@ -29,7 +33,15 @@ import javax.annotation.Nonnull;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  * @see ImageEditor#setGridVisible
  */
+@ActionImpl(id = "Images.Editor.ToggleGrid")
+// TODO <keyboard-shortcut first-keystroke="control QUOTE" keymap="$default"/>
 public final class ToggleGridAction extends ToggleAction {
+  @Nullable
+  @Override
+  protected Image getTemplateIcon() {
+    return PlatformIconGroup.graphGrid();
+  }
+
   @Override
   public boolean isSelected(@Nonnull AnActionEvent e) {
     ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);

@@ -15,9 +15,15 @@
  */
 package org.intellij.images.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nullable;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
@@ -31,7 +37,14 @@ import javax.annotation.Nonnull;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  * @see ImageEditor#getZoomModel
  */
+@ActionImpl(id = "Images.Editor.ZoomIn", shortcutFrom = @ActionRef(id = IdeActions.ACTION_EXPAND_ALL))
 public final class ZoomInAction extends AnAction {
+  @Nullable
+  @Override
+  protected Image getTemplateIcon() {
+    return PlatformIconGroup.graphZoomin();
+  }
+
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {

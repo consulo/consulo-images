@@ -15,9 +15,13 @@
  */
 package org.intellij.images.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nullable;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
@@ -32,7 +36,16 @@ import javax.annotation.Nonnull;
  * @see ImageEditor#getZoomModel()
  * @see ImageZoomModel#setZoomFactor
  */
+@ActionImpl(id = "Images.Editor.ActualSize")
+// TODO <keyboard-shortcut first-keystroke="control DIVIDE" keymap="$default"/>
+// TODO <keyboard-shortcut first-keystroke="control SLASH"keymap="$default"/>
 public final class ActualSizeAction extends AnAction {
+  @Nullable
+  @Override
+  protected Image getTemplateIcon() {
+    return PlatformIconGroup.graphActualzoom();
+  }
+
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
