@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scheme>
+  <colors>
+    <option name="IMAGES_WHITE_CELL_COLOR" value="FFFFFF"/>
+    <option name="IMAGES_BLACK_CELL_COLOR" value="d1d1d1"/>
+    <option name="IMAGES_GRID_LINE_COLOR" value="C0C0C0"/>
+  </colors>
+</scheme>

@@ -25,6 +25,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeSupport;
+import java.util.Objects;
 
 /**
  * Grid options implementation.
@@ -60,7 +61,7 @@ final class GridOptionsImpl implements GridOptions, JDOMExternalizable {
   @Override
   public ColorValue getLineColor() {
     ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.GRID_LINE_COLOR_KEY);
-    return color != null ? color : ImageColorKeys.GRID_LINE_COLOR_KEY.getDefaultColorValue();
+    return Objects.requireNonNull(color, "Grid Color required");
   }
 
   void setShowDefault(boolean showDefault) {

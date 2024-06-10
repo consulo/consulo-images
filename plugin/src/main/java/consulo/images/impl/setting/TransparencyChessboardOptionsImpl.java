@@ -25,6 +25,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeSupport;
+import java.util.Objects;
 
 /**
  * Background options implementation.
@@ -54,14 +55,14 @@ final class TransparencyChessboardOptionsImpl implements TransparencyChessboardO
   @Override
   public ColorValue getWhiteColor() {
     ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.WHITE_CELL_COLOR_KEY);
-    return color != null ? color : ImageColorKeys.WHITE_CELL_COLOR_KEY.getDefaultColorValue();
+    return Objects.requireNonNull(color, "White color required");
   }
 
   @Nonnull
   @Override
   public ColorValue getBlackColor() {
     ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.BLACK_CELL_COLOR_KEY);
-    return color != null ? color : ImageColorKeys.BLACK_CELL_COLOR_KEY.getDefaultColorValue();
+    return Objects.requireNonNull(color, "BlackCell color required");
   }
 
   void setShowDefault(boolean showDefault) {
