@@ -43,7 +43,7 @@ public class BinaryImageFileType implements ImageFileType {
 
   @Override
   @Nullable
-  public ImageInfo getImageInfo(@Nonnull byte[] content) {
+  public ImageInfo getImageInfo(@Nonnull String filePath, @Nonnull byte[] content) {
     return ImageInfoReader.getInfo(content);
   }
 }

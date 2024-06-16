@@ -36,6 +36,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.weisj</groupId>
+            <artifactId>jsvg</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>com.intellij.images-image.svg-api</artifactId>
             <version>${project.version}</version>

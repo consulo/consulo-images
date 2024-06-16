@@ -66,9 +66,9 @@ public final class SVGFileType extends XmlLikeFileType implements UIBasedFileTyp
 
   @Override
   @Nullable
-  public ImageInfo getImageInfo(@Nonnull byte[] content) {
+  public ImageInfo getImageInfo(@Nonnull String filePath, @Nonnull byte[] content) {
     for (SVGFileProcessor processor : Application.get().getExtensionPoint(SVGFileProcessor.class)) {
-      return processor.getImageInfo(content);
+      return processor.getImageInfo(filePath, content);
     }
     return null;
   }

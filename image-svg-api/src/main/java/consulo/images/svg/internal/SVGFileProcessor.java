@@ -18,7 +18,7 @@ public interface SVGFileProcessor {
   void convert(VirtualFile svgFile, File pngFile);
 
   @Nullable
-  ImageInfo getImageInfo(@Nonnull byte[] content);
+  ImageInfo getImageInfo(String filePath, @Nonnull byte[] content);
 
   double getImageMaxZoomFactor(@Nonnull VirtualFile file, @Nonnull Object component);
 }

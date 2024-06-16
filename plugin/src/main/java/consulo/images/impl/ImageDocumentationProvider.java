@@ -47,10 +47,10 @@ public class ImageDocumentationProvider implements UnrestrictedDocumentationProv
       if (file instanceof VirtualFileWithId && !DumbService.isDumb(element.getProject())) {
         ImageInfoIndex.processValues(file, new FileBasedIndex.ValueProcessor<ImageInfo>() {
           public boolean process(VirtualFile file, ImageInfo value) {
-            int imageWidth = value.width;
-            int imageHeight = value.height;
+            int imageWidth = value.width();
+            int imageHeight = value.height();
 
-            int maxSize = Math.max(value.width, value.height);
+            int maxSize = Math.max(value.width(), value.height());
             if (maxSize > MAX_IMAGE_SIZE) {
               double scaleFactor = (double)MAX_IMAGE_SIZE / (double)maxSize;
               imageWidth *= scaleFactor;
@@ -63,7 +63,7 @@ public class ImageDocumentationProvider implements UnrestrictedDocumentationProv
               }
               final String url = new URI("file", null, path, null).toString();
               result[0] = String.format("<html><body><img src=\"%s\" width=\"%s\" height=\"%s\"><p>%sx%s, %sbpp</p><body></html>", url, imageWidth,
-                                   imageHeight, value.width, value.height, value.bpp);
+                                   imageHeight, value.width(), value.height(), value.bpp());
             }
             catch (URISyntaxException e) {
               // nothing

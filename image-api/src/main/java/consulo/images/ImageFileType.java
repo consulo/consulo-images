@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
  */
 public interface ImageFileType extends FileType {
   @Nullable
-  ImageInfo getImageInfo(@Nonnull byte[] content);
+  ImageInfo getImageInfo(@Nonnull String filePath, @Nonnull byte[] content);
 
   default double getImageMaxZoomFactor(@Nonnull VirtualFile file, @Nonnull Object uiComponent) {
     return Double.MAX_VALUE;

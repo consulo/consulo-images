@@ -53,14 +53,16 @@ public class ImageInfoIndex extends SingleEntryFileBasedIndexExtension<ImageInfo
     ourMaxImageSize = maxImageSize * 1024 * 1024;
   }
 
+  private static int VERSION = 7;
+
   public static final ID<Integer, ImageInfo> INDEX_ID = ID.create("ImageFileInfoIndex");
 
   private final DataExternalizer<ImageInfo> myValueExternalizer = new DataExternalizer<ImageInfo>() {
     @Override
     public void save(final DataOutput out, final ImageInfo info) throws IOException {
-      DataInputOutputUtil.writeINT(out, info.width);
-      DataInputOutputUtil.writeINT(out, info.height);
-      DataInputOutputUtil.writeINT(out, info.bpp);
+      DataInputOutputUtil.writeINT(out, info.width());
+      DataInputOutputUtil.writeINT(out, info.height());
+      DataInputOutputUtil.writeINT(out, info.bpp());
     }
 
     @Override
@@ -74,7 +76,7 @@ public class ImageInfoIndex extends SingleEntryFileBasedIndexExtension<ImageInfo
     protected ImageInfo computeValue(@Nonnull FileContent inputData) {
       FileType fileType = inputData.getFileType();
       if (fileType instanceof ImageFileType imageFileType) {
-        return imageFileType.getImageInfo(inputData.getContent());
+        return imageFileType.getImageInfo(inputData.getFile().getPath(), inputData.getContent());
       }
       return null;
     }
@@ -118,7 +120,6 @@ public class ImageInfoIndex extends SingleEntryFileBasedIndexExtension<ImageInfo
   @Override
   public int getVersion() {
     Collection<FileType> fileTypes = ImageFileTypeManager.getInstance().getFileTypes();
-    return 6 + fileTypes.size();
+    return VERSION + fileTypes.size();
   }
-
 }

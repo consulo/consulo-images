@@ -1,11 +1,12 @@
 package consulo.images.svg.desktop.awt.impl;
 
+import com.github.weisj.jsvg.SVGDocument;
+import com.github.weisj.jsvg.geometry.size.FloatSize;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.images.svg.internal.SVGFileProcessor;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.JBUI;
 import consulo.util.io.UnsyncByteArrayInputStream;
-import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 import org.intellij.images.util.ImageInfo;
@@ -34,19 +35,25 @@ public class SVGFileProcessorImpl implements SVGFileProcessor {
     try {
       Image image = SVGLoader.load(new File(svgFile.getPath()).toURI().toURL(), 1f);
       ImageIO.write((BufferedImage) image, "png", pngFile);
-    } catch (IOException e1) {
-      LOG.warn(e1);
+    } catch (IOException e) {
+      LOG.warn("File: " + svgFile.getPath(), e);
     }
   }
 
   @Override
   @Nullable
-  public ImageInfo getImageInfo(@Nonnull byte[] content) {
+  public ImageInfo getImageInfo(String filePath, @Nonnull byte[] content) {
     try {
-      Couple<Integer> info = SVGLoader.loadInfo(null, new UnsyncByteArrayInputStream(content), 1f);
-      return new ImageInfo(info.getFirst(), info.getSecond(), 0);
+      com.github.weisj.jsvg.parser.SVGLoader svgLoader = new com.github.weisj.jsvg.parser.SVGLoader();
+
+      SVGDocument document = svgLoader.load(new UnsyncByteArrayInputStream(content));
+      if (document == null) {
+        return null;
+      }
+      FloatSize size = document.size();
+      return new ImageInfo((int)size.getWidth(), (int)size.getHeight(), 0);
     } catch (Throwable t) {
-      Logger.getInstance(SVGFileProcessorImpl.class).warn(t);
+      LOG.warn("File: " + filePath, t);
     }
     return null;
   }
@@ -57,7 +64,7 @@ public class SVGFileProcessorImpl implements SVGFileProcessor {
       URL url = new File(file.getPath()).toURI().toURL();
       return Math.max(1, SVGLoader.getMaxZoomFactor(url, new ByteArrayInputStream(file.contentsToByteArray()), JBUI.ScaleContext.create((java.awt.Component) uiComponent)));
     } catch (Throwable t) {
-      Logger.getInstance(SVGFileProcessorImpl.class).warn(t);
+      LOG.warn("File: " + file.getPath(), t);
     }
     return Double.MAX_VALUE;
   }

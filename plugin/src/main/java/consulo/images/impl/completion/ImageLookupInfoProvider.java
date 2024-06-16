@@ -17,14 +17,12 @@ package consulo.images.impl.completion;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.psi.file.FileLookupInfoProvider;
-import org.intellij.images.util.ImageInfo;
-import consulo.language.psi.stub.FileBasedIndex;
+import consulo.images.impl.index.ImageInfoIndex;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
-import consulo.images.impl.index.ImageInfoIndex;
 
 import javax.annotation.Nonnull;
 
@@ -36,12 +34,9 @@ public class ImageLookupInfoProvider extends FileLookupInfoProvider {
 
   public Pair<String, String> getLookupInfo(@Nonnull VirtualFile file, Project project) {
     final String[] s = new String[] {null};
-    ImageInfoIndex.processValues(file, new FileBasedIndex.ValueProcessor<ImageInfo>() {
-      @SuppressWarnings({"HardCodedStringLiteral"})
-      public boolean process(VirtualFile file, ImageInfo value) {
-        s[0] = String.format("%sx%s", value.width, value.height);
-        return true;
-      }
+    ImageInfoIndex.processValues(file, (file1, value) -> {
+      s[0] = String.format("%sx%s", value.width(), value.height());
+      return true;
     }, project);
 
     return s[0] == null ? null : new Pair<String, String>(file.getName(), s[0]);
@@ -50,6 +45,6 @@ public class ImageLookupInfoProvider extends FileLookupInfoProvider {
   @Nonnull
   @Override
   public FileType[] getFileTypes() {
-    return new FileType[]{ImageFileTypeManager.getInstance().getImageFileType()};
+    return ImageFileTypeManager.getInstance().getFileTypes().toArray(FileType.EMPTY_ARRAY);
   }
 }
