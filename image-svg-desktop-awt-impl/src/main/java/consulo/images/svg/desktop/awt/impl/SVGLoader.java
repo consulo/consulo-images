@@ -28,10 +28,7 @@ import org.apache.batik.anim.dom.SVGOMAnimatedLength;
 import org.apache.batik.anim.dom.SVGOMRectElement;
 import org.apache.batik.bridge.UserAgent;
 import org.apache.batik.dom.AbstractDocument;
-import org.apache.batik.transcoder.SVGAbstractTranscoder;
-import org.apache.batik.transcoder.TranscoderException;
-import org.apache.batik.transcoder.TranscoderInput;
-import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.*;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.Document;
@@ -229,6 +226,22 @@ public class SVGLoader {
   private BufferedImage createImage() throws TranscoderException {
     Size size = mySize.scaleToMaxSize();
     MyTranscoder r = new MyTranscoder();
+    r.setErrorHandler(new ErrorHandler() {
+      @Override
+      public void error(TranscoderException ex) throws TranscoderException {
+        LOG.warn(ex);
+      }
+
+      @Override
+      public void fatalError(TranscoderException ex) throws TranscoderException {
+        LOG.warn(ex);
+      }
+
+      @Override
+      public void warning(TranscoderException ex) throws TranscoderException {
+        LOG.warn(ex);
+      }
+    });
     r.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, (float) size.width);
     r.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, (float) size.height);
     r.transcode(myInput, null);
