@@ -4,12 +4,8 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorPolicy;
-import consulo.fileEditor.FileEditorProvider;
-import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.*;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.ide.impl.idea.openapi.fileEditor.TextEditorWithPreview;
 import consulo.images.editor.ImageFileEditorImpl;
 import consulo.images.svg.SVGFileType;
 import consulo.images.svg.internal.SVGFileProcessor;
@@ -18,6 +14,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 import org.intellij.images.editor.ImageFileEditor;
 
 import javax.annotation.Nonnull;
@@ -28,6 +25,13 @@ import javax.annotation.Nonnull;
  */
 @ExtensionImpl
 public class SVGFileEditorProvider implements FileEditorProvider, DumbAware {
+  private final TextEditorWithPreviewFactory myTextEditorWithPreviewFactory;
+
+  @Inject
+  public SVGFileEditorProvider(TextEditorWithPreviewFactory textEditorWithPreviewFactory) {
+    myTextEditorWithPreviewFactory = textEditorWithPreviewFactory;
+  }
+
   @Override
   public boolean accept(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
     return virtualFile.getFileType() == SVGFileType.INSTANCE && project.getApplication().getExtensionPoint(SVGFileProcessor.class).hasAnyExtensions();
@@ -50,7 +54,7 @@ public class SVGFileEditorProvider implements FileEditorProvider, DumbAware {
             500);
       }
     }, editor);
-    return new TextEditorWithPreview(editor, viewer, "SvgEditor");
+    return myTextEditorWithPreviewFactory.create(editor, viewer, "SvgEditor");
   }
 
   @Nonnull
