@@ -39,13 +39,7 @@
             <groupId>com.github.weisj</groupId>
             <artifactId>jsvg</artifactId>
         </dependency>
-        
-        <dependency>
-            <groupId>org.w3c.css</groupId>
-            <artifactId>sac</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>com.intellij.images-image.svg-api</artifactId>
