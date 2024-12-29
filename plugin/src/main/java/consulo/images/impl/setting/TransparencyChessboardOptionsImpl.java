@@ -23,7 +23,7 @@ import consulo.util.xml.serializer.JDOMExternalizer;
 import org.intellij.images.options.TransparencyChessboardOptions;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 

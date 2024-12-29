@@ -9,7 +9,7 @@ import consulo.language.psi.PsiFile;
 import consulo.xml.lang.xml.XMLParserDefinition;
 import consulo.xml.psi.impl.source.xml.XmlFileImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

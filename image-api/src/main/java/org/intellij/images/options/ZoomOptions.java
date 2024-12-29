@@ -17,7 +17,7 @@ package org.intellij.images.options;
 
 import consulo.ui.Size;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Options for zooming feature.

@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.images.ImagesBundle;
 import org.intellij.images.ui.ImageComponentDecorator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Thumbnail thumbnail is a component with thumbnails for a set of {@link VirtualFile}.

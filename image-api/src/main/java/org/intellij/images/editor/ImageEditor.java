@@ -22,7 +22,7 @@ import kava.beans.PropertyChangeListener;
 import org.intellij.images.ImageDocument;
 import org.intellij.images.ui.ImageComponentDecorator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

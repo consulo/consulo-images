@@ -27,8 +27,8 @@ import consulo.virtualFileSystem.fileType.UIBasedFileType;
 import consulo.xml.ide.highlighter.XmlLikeFileType;
 import org.intellij.images.util.ImageInfo;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov

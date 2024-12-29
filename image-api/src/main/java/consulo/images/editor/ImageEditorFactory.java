@@ -5,7 +5,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.images.editor.ImageEditor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

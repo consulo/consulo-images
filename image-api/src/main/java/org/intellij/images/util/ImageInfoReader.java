@@ -17,8 +17,8 @@ package org.intellij.images.util;
 
 import consulo.util.io.UnsyncByteArrayInputStream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;

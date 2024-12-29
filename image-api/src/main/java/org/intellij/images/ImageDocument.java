@@ -17,7 +17,7 @@ package org.intellij.images;
 
 import org.intellij.images.editor.ImageEditor;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -11,8 +11,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 import org.intellij.images.util.ImageInfo;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -28,7 +28,7 @@ import org.intellij.images.options.GridOptions;
 import org.intellij.images.options.TransparencyChessboardOptions;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

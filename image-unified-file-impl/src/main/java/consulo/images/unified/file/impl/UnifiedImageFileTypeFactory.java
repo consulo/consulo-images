@@ -5,7 +5,7 @@ import consulo.images.BinaryImageFileType;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * This factory used for registering known image file types. AWT implementation didn't use this class

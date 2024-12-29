@@ -24,7 +24,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import jakarta.inject.Singleton;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.stream.Stream;
 
