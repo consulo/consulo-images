@@ -33,27 +33,27 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 final class ThumbnailManagerImpl extends ThumbnailManager implements Disposable {
-  private final Project project;
-  private ThumbnailView thumbnailView;
+    private final Project project;
+    private ThumbnailView thumbnailView;
 
-  @Inject
-  ThumbnailManagerImpl(Project project) {
-    this.project = project;
-  }
-
-  @Override
-  @Nonnull
-  public final ThumbnailView getThumbnailView() {
-    if (thumbnailView == null) {
-      thumbnailView = new ThumbnailViewImpl(project);
+    @Inject
+    ThumbnailManagerImpl(Project project) {
+        this.project = project;
     }
-    return thumbnailView;
-  }
 
-  public void dispose() {
-    if (thumbnailView != null) {
-      thumbnailView.dispose();
-      thumbnailView = null;
+    @Override
+    @Nonnull
+    public final ThumbnailView getThumbnailView() {
+        if (thumbnailView == null) {
+            thumbnailView = new ThumbnailViewImpl(project);
+        }
+        return thumbnailView;
     }
-  }
+
+    public void dispose() {
+        if (thumbnailView != null) {
+            thumbnailView.dispose();
+            thumbnailView = null;
+        }
+    }
 }

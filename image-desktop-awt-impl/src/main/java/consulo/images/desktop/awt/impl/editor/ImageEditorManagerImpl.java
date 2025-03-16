@@ -24,6 +24,7 @@ import jakarta.inject.Singleton;
 import org.intellij.images.options.*;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -35,35 +36,35 @@ import java.awt.image.BufferedImage;
  */
 @Singleton
 @ServiceImpl
-public final class ImageEditorManagerImpl implements EmbeddedImageViewFactory
-{
-	@Nonnull
-	@Override
-	public Component createViewer(@Nonnull Image uiImage)
-	{
-		Icon icon = TargetAWT.to(uiImage);
+public final class ImageEditorManagerImpl implements EmbeddedImageViewFactory {
+    @Nonnull
+    @Override
+    public Component createViewer(@Nonnull Image uiImage) {
+        Icon icon = TargetAWT.to(uiImage);
 
-		final int w = icon.getIconWidth();
-		final int h = icon.getIconHeight();
-		final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(w, h, Transparency.TRANSLUCENT);
-		final Graphics2D g = image.createGraphics();
-		icon.paintIcon(null, g, 0, 0);
-		g.dispose();
+        final int w = icon.getIconWidth();
+        final int h = icon.getIconHeight();
+        final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment()
+            .getDefaultScreenDevice()
+            .getDefaultConfiguration()
+            .createCompatibleImage(w, h, Transparency.TRANSLUCENT);
+        final Graphics2D g = image.createGraphics();
+        icon.paintIcon(null, g, 0, 0);
+        g.dispose();
 
-		return TargetAWT.wrap(createImageEditorUI(image));
-	}
+        return TargetAWT.wrap(createImageEditorUI(image));
+    }
 
-	@Nonnull
-	public static ImageEditorUI createImageEditorUI(BufferedImage image)
-	{
-		ImageEditorUI ui = new ImageEditorUI(null);
-		Options options = OptionsManager.getInstance().getOptions();
-		EditorOptions editorOptions = options.getEditorOptions();
-		GridOptions gridOptions = editorOptions.getGridOptions();
-		TransparencyChessboardOptions transparencyChessboardOptions = editorOptions.getTransparencyChessboardOptions();
-		ui.getImageComponent().setGridVisible(gridOptions.isShowDefault());
-		ui.getImageComponent().setTransparencyChessboardVisible(transparencyChessboardOptions.isShowDefault());
-		ui.setImageProvider((scale, ancestor) -> image, null);
-		return ui;
-	}
+    @Nonnull
+    public static ImageEditorUI createImageEditorUI(BufferedImage image) {
+        ImageEditorUI ui = new ImageEditorUI(null);
+        Options options = OptionsManager.getInstance().getOptions();
+        EditorOptions editorOptions = options.getEditorOptions();
+        GridOptions gridOptions = editorOptions.getGridOptions();
+        TransparencyChessboardOptions transparencyChessboardOptions = editorOptions.getTransparencyChessboardOptions();
+        ui.getImageComponent().setGridVisible(gridOptions.isShowDefault());
+        ui.getImageComponent().setTransparencyChessboardVisible(transparencyChessboardOptions.isShowDefault());
+        ui.setImageProvider((scale, ancestor) -> image, null);
+        return ui;
+    }
 }

@@ -17,16 +17,16 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 public class ImageEditorFactoryImpl implements ImageEditorFactory {
-  private final Project myProject;
+    private final Project myProject;
 
-  @Inject
-  public ImageEditorFactoryImpl(Project project) {
-    myProject = project;
-  }
+    @Inject
+    public ImageEditorFactoryImpl(Project project) {
+        myProject = project;
+    }
 
-  @Override
-  @Nonnull
-  public ImageEditor create(@Nonnull VirtualFile imageFile) {
-    return new ImageEditorImpl(myProject, imageFile);
-  }
+    @Override
+    @Nonnull
+    public ImageEditor create(@Nonnull VirtualFile imageFile) {
+        return new ImageEditorImpl(myProject, imageFile);
+    }
 }
