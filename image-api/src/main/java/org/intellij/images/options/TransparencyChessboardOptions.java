@@ -17,6 +17,7 @@ package org.intellij.images.options;
 
 import consulo.ui.color.ColorValue;
 
+import consulo.ui.ex.JBColor;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
@@ -34,8 +35,8 @@ public interface TransparencyChessboardOptions extends Cloneable {
     String ATTR_BLACK_COLOR = ATTR_PREFIX + "blackColor";
 
     int DEFAULT_CELL_SIZE = 5;
-    Color DEFAULT_WHITE_COLOR = Color.WHITE;
-    Color DEFAULT_BLACK_COLOR = Color.LIGHT_GRAY;
+    Color DEFAULT_WHITE_COLOR = JBColor.WHITE;
+    Color DEFAULT_BLACK_COLOR = JBColor.LIGHT_GRAY;
 
     boolean isShowDefault();
 

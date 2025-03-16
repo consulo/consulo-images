@@ -16,14 +16,17 @@
 package consulo.images.impl.action;
 
 import consulo.ide.impl.idea.ui.ShowColorPickerAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class ColorPickerForImageAction extends ShowColorPickerAction {
     @Override
-    public void update(AnActionEvent e) {
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
         EditExternallyAction.doUpdate(e);
     }
 }

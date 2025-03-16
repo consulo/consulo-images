@@ -127,23 +127,18 @@ final class GridOptionsImpl implements GridOptions, JDOMExternalizable {
         JDOMExternalizer.write(element, ATTR_LINE_SPAN, lineSpan);
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof GridOptions)) {
-            return false;
-        }
-
-        GridOptions otherOptions = (GridOptions)obj;
-        return lineMinZoomFactor == otherOptions.getLineZoomFactor() &&
-            lineSpan == otherOptions.getLineSpan() &&
-            showDefault == otherOptions.isShowDefault();
+        return this == obj
+            || obj instanceof GridOptions otherOptions
+            && lineMinZoomFactor == otherOptions.getLineZoomFactor()
+            && lineSpan == otherOptions.getLineSpan()
+            && showDefault == otherOptions.isShowDefault();
     }
 
+    @Override
     public int hashCode() {
-        int result;
-        result = (showDefault ? 1 : 0);
+        int result = (showDefault ? 1 : 0);
         result = 29 * result + lineMinZoomFactor;
         result = 29 * result + lineSpan;
         return result;

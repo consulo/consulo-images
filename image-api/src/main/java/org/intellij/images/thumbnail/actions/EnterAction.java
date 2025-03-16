@@ -16,10 +16,12 @@
 package org.intellij.images.thumbnail.actions;
 
 import consulo.fileEditor.FileEditorManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.thumbnail.ThumbnailView;
 import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActionUtil;
@@ -30,7 +32,9 @@ import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActionUtil;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public final class EnterAction extends AnAction {
-    public void actionPerformed(AnActionEvent e) {
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         ThumbnailView view = ThumbnailViewActionUtil.getVisibleThumbnailView(e);
         if (view != null) {
             VirtualFile[] selection = view.getSelection();
@@ -49,29 +53,25 @@ public final class EnterAction extends AnAction {
         }
     }
 
-    public void update(AnActionEvent e) {
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         if (ThumbnailViewActionUtil.setEnabled(e)) {
             Presentation presentation = e.getPresentation();
             ThumbnailView view = ThumbnailViewActionUtil.getVisibleThumbnailView(e);
             VirtualFile[] selection = view.getSelection();
-            if (selection.length > 0) {
-                if (selection.length == 1 && selection[0].isDirectory()) {
-                    presentation.setVisible(true);
+            if (selection.length == 1 && selection[0].isDirectory()) {
+                presentation.setVisible(true);
+            }
+            else if (selection.length > 0) {
+                boolean notImages = false;
+                ImageFileTypeManager typeManager = ImageFileTypeManager.getInstance();
+                for (VirtualFile file : selection) {
+                    notImages |= !typeManager.isImage(file);
                 }
-                else if (selection.length > 0) {
-                    boolean notImages = false;
-                    ImageFileTypeManager typeManager = ImageFileTypeManager.getInstance();
-                    for (VirtualFile file : selection) {
-                        notImages |= !typeManager.isImage(file);
-                    }
-                    presentation.setEnabled(!notImages);
-                    presentation.setVisible(false);
-                }
-                else {
-                    presentation.setVisible(false);
-                    presentation.setEnabled(false);
-                }
+                presentation.setEnabled(!notImages);
+                presentation.setVisible(false);
             }
             else {
                 presentation.setVisible(false);

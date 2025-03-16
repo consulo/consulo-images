@@ -26,6 +26,7 @@ import org.intellij.images.options.ExternalEditorOptions;
 import org.jdom.Element;
 
 import java.beans.PropertyChangeSupport;
+import java.util.Objects;
 
 /**
  * External editor options.
@@ -47,7 +48,8 @@ final class ExternalEditorOptionsImpl implements ExternalEditorOptions, JDOMExte
 
     void setExecutablePath(String executablePath) {
         String oldValue = this.executablePath;
-        if (oldValue != null && !oldValue.equals(executablePath) || oldValue == null && executablePath != null) {
+        if (oldValue != null && !oldValue.equals(executablePath)
+            || oldValue == null && executablePath != null) {
             this.executablePath = executablePath;
             propertyChangeSupport.firePropertyChange(ATTR_EXECUTABLE_PATH, oldValue, this.executablePath);
         }
@@ -84,22 +86,14 @@ final class ExternalEditorOptionsImpl implements ExternalEditorOptions, JDOMExte
         JDOMExternalizer.write(element, ATTR_EXECUTABLE_PATH, executablePath);
     }
 
+    @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ExternalEditorOptions)) {
-            return false;
-        }
-
-        ExternalEditorOptions otherOptions = (ExternalEditorOptions)o;
-
-        return executablePath != null ?
-            executablePath.equals(otherOptions.getExecutablePath()) :
-            otherOptions.getExecutablePath() == null;
-
+        return this == o
+            || o instanceof ExternalEditorOptions otherOptions
+            && Objects.equals(executablePath, otherOptions.getExecutablePath());
     }
 
+    @Override
     public int hashCode() {
         return executablePath != null ? executablePath.hashCode() : 0;
     }

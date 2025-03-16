@@ -132,7 +132,7 @@ public class SVGLoader {
             if (value == null || value.isEmpty()) {
                 return null;
             }
-            List<String> values = new ArrayList<String>(4);
+            List<String> values = new ArrayList<>(4);
             for (String token : StringUtil.tokenize(value, ", ")) {
                 values.add(token);
             }

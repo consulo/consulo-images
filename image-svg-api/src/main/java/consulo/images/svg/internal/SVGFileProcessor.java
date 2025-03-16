@@ -12,7 +12,7 @@ import java.io.File;
 
 /**
  * @author VISTALL
- * @since 25-Aug-22
+ * @since 2022-08-25
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SVGFileProcessor {

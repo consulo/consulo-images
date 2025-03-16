@@ -18,6 +18,7 @@ package consulo.images.impl.setting;
 import consulo.ui.Size;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.JDOMExternalizer;
+import jakarta.annotation.Nonnull;
 import org.intellij.images.options.ZoomOptions;
 import org.jdom.Element;
 
@@ -49,6 +50,7 @@ final class ZoomOptionsImpl implements ZoomOptions, JDOMExternalizable {
         return smartZooming;
     }
 
+    @Nonnull
     @Override
     public Size getPrefferedSize() {
         return new Size(prefferedWidth, prefferedHeight);
@@ -149,12 +151,15 @@ final class ZoomOptionsImpl implements ZoomOptions, JDOMExternalizable {
         ZoomOptions otherOptions = (ZoomOptions)obj;
 
         Size prefferedSize = otherOptions.getPrefferedSize();
-        return prefferedHeight == prefferedSize.getHeight() && prefferedWidth == prefferedSize.getWidth() && smartZooming == otherOptions.isSmartZooming() && wheelZooming == otherOptions.isWheelZooming();
+        return prefferedHeight == prefferedSize.getHeight()
+            && prefferedWidth == prefferedSize.getWidth()
+            && smartZooming == otherOptions.isSmartZooming()
+            && wheelZooming == otherOptions.isWheelZooming();
     }
 
+    @Override
     public int hashCode() {
-        int result;
-        result = (wheelZooming ? 1 : 0);
+        int result = (wheelZooming ? 1 : 0);
         result = 29 * result + (smartZooming ? 1 : 0);
         result = 29 * result + prefferedWidth;
         result = 29 * result + prefferedHeight;

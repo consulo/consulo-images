@@ -17,11 +17,14 @@ package consulo.images.impl.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.images.icon.ImagesIconGroup;
+import consulo.images.localize.ImagesLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.images.ui.ImageComponentDecorator;
-import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * Show/hide background action.
@@ -37,11 +40,13 @@ public final class ToggleTransparencyChessboardAction extends ToggleAction {
         return ImagesIconGroup.toggletransparencychessboard();
     }
 
+    @Override
     public boolean isSelected(AnActionEvent e) {
         ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
         return decorator != null && decorator.isEnabledForActionPlace(e.getPlace()) && decorator.isTransparencyChessboardVisible();
     }
 
+    @Override
     public void setSelected(AnActionEvent e, boolean state) {
         ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
         if (decorator != null && decorator.isEnabledForActionPlace(e.getPlace())) {
@@ -49,10 +54,14 @@ public final class ToggleTransparencyChessboardAction extends ToggleAction {
         }
     }
 
-    public void update(final AnActionEvent e) {
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
         e.getPresentation().setEnabled(decorator != null && decorator.isEnabledForActionPlace(e.getPlace()));
-        e.getPresentation().setText(isSelected(e) ? "Hide Chessboard" : "Show Chessboard");
+        e.getPresentation().setTextValue(
+            isSelected(e) ? ImagesLocalize.actionEditorHideChessboardText() : ImagesLocalize.actionEditorShowChessboardText()
+        );
     }
 }

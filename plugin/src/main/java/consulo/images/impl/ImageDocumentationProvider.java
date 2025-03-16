@@ -16,17 +16,14 @@
 package consulo.images.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.util.SystemInfo;
 import consulo.images.impl.index.ImageInfoIndex;
 import consulo.language.editor.documentation.UnrestrictedDocumentationProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
-import consulo.language.psi.stub.FileBasedIndex;
+import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
-import org.intellij.images.util.ImageInfo;
-
 import jakarta.annotation.Nullable;
 
 import java.net.URI;
@@ -41,13 +38,14 @@ public class ImageDocumentationProvider implements UnrestrictedDocumentationProv
 
     @Override
     public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
-        final String[] result = new String[]{null};
+        String[] result = new String[]{null};
 
-        if (element instanceof PsiFileSystemItem && !((PsiFileSystemItem)element).isDirectory()) {
-            final VirtualFile file = ((PsiFileSystemItem)element).getVirtualFile();
+        if (element instanceof PsiFileSystemItem fileSystemItem && !fileSystemItem.isDirectory()) {
+            VirtualFile file = fileSystemItem.getVirtualFile();
             if (file instanceof VirtualFileWithId && !DumbService.isDumb(element.getProject())) {
-                ImageInfoIndex.processValues(file, new FileBasedIndex.ValueProcessor<ImageInfo>() {
-                    public boolean process(VirtualFile file, ImageInfo value) {
+                ImageInfoIndex.processValues(
+                    file,
+                    (file1, value) -> {
                         int imageWidth = value.width();
                         int imageHeight = value.height();
 
@@ -58,11 +56,11 @@ public class ImageDocumentationProvider implements UnrestrictedDocumentationProv
                             imageHeight *= scaleFactor;
                         }
                         try {
-                            String path = file.getPath();
-                            if (SystemInfo.isWindows) {
+                            String path = file1.getPath();
+                            if (Platform.current().os().isWindows()) {
                                 path = "/" + path;
                             }
-                            final String url = new URI("file", null, path, null).toString();
+                            String url = new URI("file", null, path, null).toString();
                             result[0] = String.format(
                                 "<html><body><img src=\"%s\" width=\"%s\" height=\"%s\"><p>%sx%s, %sbpp</p><body></html>",
                                 url,
@@ -77,8 +75,9 @@ public class ImageDocumentationProvider implements UnrestrictedDocumentationProv
                             // nothing
                         }
                         return true;
-                    }
-                }, element.getProject());
+                    },
+                    element.getProject()
+                );
             }
         }
 

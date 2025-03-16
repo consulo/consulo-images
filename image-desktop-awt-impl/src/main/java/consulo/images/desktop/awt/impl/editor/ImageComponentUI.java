@@ -21,6 +21,7 @@
 package consulo.images.desktop.awt.impl.editor;
 
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.paint.LinePainter2D;
 import org.intellij.images.ImageDocument;
 
 import javax.swing.*;
@@ -39,9 +40,9 @@ public class ImageComponentUI extends ComponentUI {
     private ImageComponentUI(JComponent c) {
         c.addPropertyChangeListener(evt -> {
             String name = evt.getPropertyName();
-            if (ImageComponent.TRANSPARENCY_CHESSBOARD_BLACK_COLOR_PROP.equals(name) ||
-                ImageComponent.TRANSPARENCY_CHESSBOARD_WHITE_COLOR_PROP.equals(name) ||
-                ImageComponent.TRANSPARENCY_CHESSBOARD_CELL_SIZE_PROP.equals(name)) {
+            if (ImageComponent.TRANSPARENCY_CHESSBOARD_BLACK_COLOR_PROP.equals(name)
+                || ImageComponent.TRANSPARENCY_CHESSBOARD_WHITE_COLOR_PROP.equals(name)
+                || ImageComponent.TRANSPARENCY_CHESSBOARD_CELL_SIZE_PROP.equals(name)) {
                 pattern = null;
             }
         });
@@ -133,17 +134,20 @@ public class ImageComponentUI extends ComponentUI {
         BufferedImage image = ic.getDocument().getValue();
         int imageWidth = image.getWidth();
         int imageHeight = image.getHeight();
-        double zoomX = (double)size.width / (double)imageWidth;
-        double zoomY = (double)size.height / (double)imageHeight;
+        double zoomX = (double)size.width / imageWidth;
+        double zoomY = (double)size.height / imageHeight;
         double zoomFactor = (zoomX + zoomY) / 2.0d;
         if (zoomFactor >= ic.getGridLineZoomFactor()) {
-            g.setColor(ic.getGridLineColor());
+            Graphics2D g2d = (Graphics2D)g;
+            g2d.setColor(ic.getGridLineColor());
             int ls = ic.getGridLineSpan();
             for (int dx = ls; dx < imageWidth; dx += ls) {
-                UIUtil.drawLine(g, (int)((double)dx * zoomX), 0, (int)((double)dx * zoomX), size.height);
+                int x1 = (int)((double)dx * zoomX);
+                LinePainter2D.paint(g2d, x1, 0, x1, size.height);
             }
             for (int dy = ls; dy < imageHeight; dy += ls) {
-                UIUtil.drawLine(g, 0, (int)((double)dy * zoomY), size.width, (int)((double)dy * zoomY));
+                int y1 = (int)((double)dy * zoomY);
+                LinePainter2D.paint(g2d, 0, y1, size.width, y1);
             }
         }
     }

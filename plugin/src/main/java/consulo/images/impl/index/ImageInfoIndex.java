@@ -26,12 +26,10 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.intellij.images.fileTypes.ImageFileTypeManager;
-import org.intellij.images.util.ImageInfo;
-import org.intellij.images.util.ImageInfoReader;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.images.fileTypes.ImageFileTypeManager;
+import org.intellij.images.util.ImageInfo;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -50,30 +48,30 @@ public class ImageInfoIndex extends SingleEntryFileBasedIndexExtension<ImageInfo
         try {
             maxImageSize = Integer.parseInt(System.getProperty("idea.max.image.filesize", Integer.toString(maxImageSize)), 10);
         }
-        catch (NumberFormatException ex) {
+        catch (NumberFormatException ignore) {
         }
         ourMaxImageSize = maxImageSize * 1024 * 1024;
     }
 
-    private static int VERSION = 7;
+    private static final int VERSION = 7;
 
     public static final ID<Integer, ImageInfo> INDEX_ID = ID.create("ImageFileInfoIndex");
 
-    private final DataExternalizer<ImageInfo> myValueExternalizer = new DataExternalizer<ImageInfo>() {
+    private final DataExternalizer<ImageInfo> myValueExternalizer = new DataExternalizer<>() {
         @Override
-        public void save(final DataOutput out, final ImageInfo info) throws IOException {
+        public void save(DataOutput out, ImageInfo info) throws IOException {
             DataInputOutputUtil.writeINT(out, info.width());
             DataInputOutputUtil.writeINT(out, info.height());
             DataInputOutputUtil.writeINT(out, info.bpp());
         }
 
         @Override
-        public ImageInfo read(final DataInput in) throws IOException {
+        public ImageInfo read(DataInput in) throws IOException {
             return new ImageInfo(DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in));
         }
     };
 
-    private final SingleEntryIndexer<ImageInfo> myDataIndexer = new SingleEntryIndexer<ImageInfo>(false) {
+    private final SingleEntryIndexer<ImageInfo> myDataIndexer = new SingleEntryIndexer<>(false) {
         @Override
         protected ImageInfo computeValue(@Nonnull FileContent inputData) {
             FileType fileType = inputData.getFileType();

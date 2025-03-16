@@ -16,7 +16,7 @@ import java.io.IOException;
 
 /**
  * @author VISTALL
- * @since 25-Aug-22
+ * @since 2022-08-25
  */
 @ExtensionImpl
 public class IconImageProcessor implements ImageProcessor {
@@ -31,7 +31,7 @@ public class IconImageProcessor implements ImageProcessor {
     @Nullable
     public Pair<String, ImageDocument.ScaledImageProvider> read(@Nonnull VirtualFile file) throws IOException {
         try {
-            final BufferedImage image = ICO_IMAGE_PARSER.getBufferedImage(new ByteSourceArray(file.contentsToByteArray()), null);
+            BufferedImage image = ICO_IMAGE_PARSER.getBufferedImage(new ByteSourceArray(file.contentsToByteArray()), null);
 
             return Pair.create(IfsUtil.ICO_FORMAT, (scale, ancestor) -> image);
         }

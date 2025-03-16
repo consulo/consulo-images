@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.psi.file.FileLookupInfoProvider;
 import consulo.images.impl.index.ImageInfoIndex;
 import consulo.project.Project;
+import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -31,14 +32,19 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ImageLookupInfoProvider extends FileLookupInfoProvider {
+    @Override
     public Pair<String, String> getLookupInfo(@Nonnull VirtualFile file, Project project) {
-        final String[] s = new String[]{null};
-        ImageInfoIndex.processValues(file, (file1, value) -> {
-            s[0] = String.format("%sx%s", value.width(), value.height());
-            return true;
-        }, project);
+        String[] s = new String[]{null};
+        ImageInfoIndex.processValues(
+            file,
+            (file1, value) -> {
+                s[0] = String.format("%sx%s", value.width(), value.height());
+                return true;
+            },
+            project
+        );
 
-        return s[0] == null ? null : new Pair<String, String>(file.getName(), s[0]);
+        return s[0] == null ? null : Couple.of(file.getName(), s[0]);
     }
 
     @Nonnull

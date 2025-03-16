@@ -13,30 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * $Id$
- */
-
 package consulo.images.desktop.awt.impl.editor;
 
+import consulo.images.localize.ImagesLocalize;
 import consulo.ui.ex.awt.JBUI.ScaleContext;
 import consulo.util.collection.Lists;
-import org.intellij.images.ImagesBundle;
+import jakarta.annotation.Nullable;
 import org.intellij.images.ImageDocument;
 import org.intellij.images.options.GridOptions;
 import org.intellij.images.options.TransparencyChessboardOptions;
-import org.jetbrains.annotations.NonNls;
-
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import static consulo.ui.ex.awt.JBUI.ScaleType.OBJ_SCALE;
@@ -49,32 +40,21 @@ import static consulo.ui.ex.awt.JBUI.ScaleType.OBJ_SCALE;
 public class ImageComponent extends JComponent {
     public static final int IMAGE_INSETS = 2;
 
-    @NonNls
     public static final String TRANSPARENCY_CHESSBOARD_CELL_SIZE_PROP = "TransparencyChessboard.cellSize";
-    @NonNls
     public static final String TRANSPARENCY_CHESSBOARD_WHITE_COLOR_PROP = "TransparencyChessboard.whiteColor";
-    @NonNls
     public static final String TRANSPARENCY_CHESSBOARD_BLACK_COLOR_PROP = "TransparencyChessboard.blackColor";
-    @NonNls
     private static final String TRANSPARENCY_CHESSBOARD_VISIBLE_PROP = "TransparencyChessboard.visible";
-    @NonNls
     private static final String GRID_LINE_ZOOM_FACTOR_PROP = "Grid.lineZoomFactor";
-    @NonNls
     private static final String GRID_LINE_SPAN_PROP = "Grid.lineSpan";
-    @NonNls
     private static final String GRID_LINE_COLOR_PROP = "Grid.lineColor";
-    @NonNls
     private static final String GRID_VISIBLE_PROP = "Grid.visible";
-    @NonNls
     private static final String FILE_SIZE_VISIBLE_PROP = "FileSize.visible";
-    @NonNls
     private static final String FILE_NAME_VISIBLE_PROP = "FileName.visible";
 
     /**
      * @see #getUIClassID
      * @see #readObject
      */
-    @NonNls
     private static final String uiClassID = "ImageComponentUI";
 
     static {
@@ -224,7 +204,7 @@ public class ImageComponent extends JComponent {
     public String getDescription() {
         BufferedImage image = getDocument().getValue();
         if (image != null) {
-            return ImagesBundle.message("icon.dimensions", image.getWidth(), image.getHeight(), image.getColorModel().getPixelSize());
+            return ImagesLocalize.iconDimensions(image.getWidth(), image.getHeight(), image.getColorModel().getPixelSize()).get();
         }
         return null;
     }
@@ -267,12 +247,9 @@ public class ImageComponent extends JComponent {
 
         public ImageDocumentImpl(Component component) {
             myComponent = component;
-            myComponent.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent e) {
-                    if (e.getPropertyName().equals("ancestor") && e.getNewValue() == null && imageProvider != null) {
-                        imageProvider.clearCache();
-                    }
+            myComponent.addPropertyChangeListener(e -> {
+                if (e.getPropertyName().equals("ancestor") && e.getNewValue() == null && imageProvider != null) {
+                    imageProvider.clearCache();
                 }
             });
         }
@@ -313,10 +290,9 @@ public class ImageComponent extends JComponent {
 
         @Override
         public void setValue(ScaledImageProvider imageProvider) {
-            this.imageProvider = imageProvider instanceof CachedScaledImageProvider ?
-                (CachedScaledImageProvider)imageProvider :
-                imageProvider != null ? (zoom, ancestor) -> imageProvider.apply(zoom, ancestor) :
-                    null;
+            this.imageProvider = imageProvider instanceof CachedScaledImageProvider cachedScaledImageProvider
+                ? cachedScaledImageProvider
+                : imageProvider != null ? imageProvider::apply : null;
 
             cachedBounds.clear();
             fireChangeEvent(new ChangeEvent(this));

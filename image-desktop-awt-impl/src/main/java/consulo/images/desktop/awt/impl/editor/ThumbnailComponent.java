@@ -21,7 +21,6 @@
 package consulo.images.desktop.awt.impl.editor;
 
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 
@@ -31,22 +30,16 @@ import javax.swing.*;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public class ThumbnailComponent extends JComponent {
-    @NonNls
     private static final String FORMAT_PROP = "format";
-    @NonNls
     private static final String FILE_SIZE_PROP = "fileSize";
-    @NonNls
     private static final String FILE_NAME_PROP = "fileName";
-    @NonNls
     private static final String DIRECTORY_PROP = "directory";
-    @NonNls
     private static final String IMAGES_COUNT_PROP = "imagesCount";
 
     /**
      * @see #getUIClassID
      * @see #readObject
      */
-    @NonNls
     private static final String uiClassID = "ThumbnailComponentUI";
 
     static {
@@ -92,7 +85,7 @@ public class ThumbnailComponent extends JComponent {
         long oldValue = this.fileSize;
         if (oldValue != fileSize) {
             this.fileSize = fileSize;
-            firePropertyChange(FILE_SIZE_PROP, new Long(oldValue), new Long(this.fileSize));
+            firePropertyChange(FILE_SIZE_PROP, oldValue, this.fileSize);
         }
     }
 
@@ -136,10 +129,12 @@ public class ThumbnailComponent extends JComponent {
         return StringUtil.formatFileSize(fileSize);
     }
 
+    @Override
     public void updateUI() {
         setUI(UIManager.getUI(this));
     }
 
+    @Override
     public String getUIClassID() {
         return uiClassID;
     }

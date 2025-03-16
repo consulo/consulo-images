@@ -25,6 +25,7 @@ import org.intellij.images.options.ZoomOptions;
 import org.jdom.Element;
 
 import java.beans.PropertyChangeSupport;
+import java.util.Objects;
 
 /**
  * Editor options implementation.
@@ -90,27 +91,17 @@ final class EditorOptionsImpl implements EditorOptions, JDOMExternalizable {
         ((JDOMExternalizable)zoomOptions).writeExternal(element);
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof EditorOptions)) {
-            return false;
-        }
-        EditorOptions otherOptions = (EditorOptions)obj;
-        GridOptions gridOptions = otherOptions.getGridOptions();
-        TransparencyChessboardOptions chessboardOptions = otherOptions.getTransparencyChessboardOptions();
-        ZoomOptions zoomOptions = otherOptions.getZoomOptions();
-        return gridOptions != null && gridOptions.equals(getGridOptions()) &&
-            chessboardOptions != null && chessboardOptions.equals(getTransparencyChessboardOptions()) &&
-            zoomOptions != null && zoomOptions.equals(getZoomOptions());
+        return obj == this
+            || obj instanceof EditorOptions otherOptions
+            && Objects.equals(getGridOptions(), otherOptions.getGridOptions())
+            && Objects.equals(getTransparencyChessboardOptions(), otherOptions.getTransparencyChessboardOptions())
+            && Objects.equals(getZoomOptions(), otherOptions.getZoomOptions());
     }
 
+    @Override
     public int hashCode() {
-        int result;
-        result = (gridOptions != null ? gridOptions.hashCode() : 0);
-        result = 29 * result + (transparencyChessboardOptions != null ? transparencyChessboardOptions.hashCode() : 0);
-        result = 29 * result + (zoomOptions != null ? zoomOptions.hashCode() : 0);
-        return result;
+        return Objects.hash(gridOptions, transparencyChessboardOptions, zoomOptions);
     }
 }

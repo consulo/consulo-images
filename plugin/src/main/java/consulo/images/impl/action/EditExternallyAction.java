@@ -16,10 +16,9 @@
 
 package consulo.images.impl.action;
 
-import consulo.application.util.SystemInfo;
 import consulo.images.impl.setting.ImagesOptionsConfigurable;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.images.localize.ImagesLocalize;
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.EnvironmentUtil;
@@ -34,7 +33,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.intellij.images.ImagesBundle;
+import jakarta.annotation.Nonnull;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.options.Options;
 import org.intellij.images.options.OptionsManager;
@@ -53,8 +52,8 @@ public final class EditExternallyAction extends AnAction {
     @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(CommonDataKeys.PROJECT);
-        VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+        Project project = e.getData(Project.KEY);
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
         if (files == null) {
             return;
         }
@@ -69,8 +68,8 @@ public final class EditExternallyAction extends AnAction {
                 catch (IOException e1) {
                     Messages.showErrorDialog(
                         project,
-                        ImagesBundle.message("error.empty.external.editor.path"),
-                        ImagesBundle.message("error.title.empty.external.editor.path")
+                        ImagesLocalize.errorEmptyExternalEditorPath().get(),
+                        ImagesLocalize.errorTitleEmptyExternalEditorPath().get()
                     );
 
                     ImagesOptionsConfigurable.show(project);
@@ -81,7 +80,7 @@ public final class EditExternallyAction extends AnAction {
         else {
             Map<String, String> env = EnvironmentUtil.getEnvironmentMap();
             for (String varName : env.keySet()) {
-                if (SystemInfo.isWindows) {
+                if (Platform.current().os().isWindows()) {
                     executablePath = StringUtil.replace(executablePath, "%" + varName + "%", env.get(varName), true);
                 }
                 else {
@@ -91,8 +90,8 @@ public final class EditExternallyAction extends AnAction {
             executablePath = FileUtil.toSystemDependentName(executablePath);
             File executable = new File(executablePath);
             GeneralCommandLine commandLine = new GeneralCommandLine();
-            final String path = executable.exists() ? executable.getAbsolutePath() : executablePath;
-            if (SystemInfo.isMac) {
+            String path = executable.exists() ? executable.getAbsolutePath() : executablePath;
+            if (Platform.current().os().isMac()) {
                 commandLine.setExePath(ExecUtil.getOpenCommandPath());
                 commandLine.addParameter("-a");
                 commandLine.addParameter(path);
@@ -113,20 +112,21 @@ public final class EditExternallyAction extends AnAction {
                 commandLine.createProcess();
             }
             catch (ExecutionException ex) {
-                Messages.showErrorDialog(project, ex.getLocalizedMessage(), ImagesBundle.message("error.title.launching.external.editor"));
+                Messages.showErrorDialog(project, ex.getLocalizedMessage(), ImagesLocalize.errorTitleLaunchingExternalEditor().get());
                 ImagesOptionsConfigurable.show(project);
             }
         }
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
         doUpdate(e);
     }
 
     static void doUpdate(AnActionEvent e) {
-        VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
-        final boolean isEnabled = isImages(files);
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        boolean isEnabled = isImages(files);
         if (e.getPlace().equals(ActionPlaces.PROJECT_VIEW_POPUP)) {
             e.getPresentation().setVisible(isEnabled);
         }

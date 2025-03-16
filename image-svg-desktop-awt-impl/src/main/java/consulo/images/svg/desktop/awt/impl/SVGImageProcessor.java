@@ -7,12 +7,11 @@ import consulo.images.svg.SVGFileType;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.JBUI;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import org.intellij.images.ImageDocument;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.images.ImageDocument;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -24,7 +23,7 @@ import java.net.URL;
 
 /**
  * @author VISTALL
- * @since 25-Aug-22
+ * @since 2022-08-25
  */
 @ExtensionImpl
 public class SVGImageProcessor implements ImageProcessor {
@@ -38,7 +37,7 @@ public class SVGImageProcessor implements ImageProcessor {
     @Override
     @Nullable
     public Pair<String, ImageDocument.ScaledImageProvider> read(@Nonnull VirtualFile file) throws IOException {
-        final Ref<URL> url = Ref.create();
+        SimpleReference<URL> url = SimpleReference.create();
         try {
             url.set(new File(file.getPath()).toURI().toURL());
         }

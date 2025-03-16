@@ -22,11 +22,11 @@ public class ImageIOFileTypeProvider extends FileTypeFactory {
     public void createFileTypes(@Nonnull FileTypeConsumer fileTypeConsumer) {
         ImageIO.scanForPlugins();
 
-        final Set<String> processed = new HashSet<>();
+        Set<String> processed = new HashSet<>();
 
-        final String[] readerFormatNames = ImageIO.getReaderFormatNames();
+        String[] readerFormatNames = ImageIO.getReaderFormatNames();
         for (String format : readerFormatNames) {
-            final String ext = format.toLowerCase();
+            String ext = format.toLowerCase();
             processed.add(ext);
         }
 

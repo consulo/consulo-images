@@ -42,13 +42,13 @@ public final class ImageEditorManagerImpl implements EmbeddedImageViewFactory {
     public Component createViewer(@Nonnull Image uiImage) {
         Icon icon = TargetAWT.to(uiImage);
 
-        final int w = icon.getIconWidth();
-        final int h = icon.getIconHeight();
-        final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment()
+        int w = icon.getIconWidth();
+        int h = icon.getIconHeight();
+        BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment()
             .getDefaultScreenDevice()
             .getDefaultConfiguration()
             .createCompatibleImage(w, h, Transparency.TRANSLUCENT);
-        final Graphics2D g = image.createGraphics();
+        Graphics2D g = image.createGraphics();
         icon.paintIcon(null, g, 0, 0);
         g.dispose();
 

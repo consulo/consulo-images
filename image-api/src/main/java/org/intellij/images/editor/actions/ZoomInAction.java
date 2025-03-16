@@ -55,7 +55,7 @@ public final class ZoomInAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
         e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomIn());
     }

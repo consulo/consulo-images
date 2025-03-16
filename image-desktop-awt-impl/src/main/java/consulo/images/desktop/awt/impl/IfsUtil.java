@@ -59,10 +59,8 @@ public final class IfsUtil {
      * Load image data for file and put user data attributes into file.
      *
      * @param file File
-     * @return true if file image is loaded.
-     * @throws java.io.IOException if image can not be loaded
      */
-    private static boolean refresh(@Nonnull VirtualFile file) throws IOException {
+    private static void refresh(@Nonnull VirtualFile file) {
         Long loadedTimeStamp = file.getUserData(TIMESTAMP_KEY);
         SoftReference<ScaledImageProvider> imageProviderRef = file.getUserData(IMAGE_PROVIDER_REF_KEY);
         if (loadedTimeStamp == null || loadedTimeStamp != file.getTimeStamp() || SoftReference.dereference(imageProviderRef) == null) {
@@ -91,7 +89,6 @@ public final class IfsUtil {
                 file.putUserData(TIMESTAMP_KEY, file.getTimeStamp());
             }
         }
-        return false;
     }
 
     @Nullable
@@ -109,7 +106,7 @@ public final class IfsUtil {
     }
 
     @Nullable
-    public static ScaledImageProvider getImageProvider(@Nonnull VirtualFile file) throws IOException {
+    public static ScaledImageProvider getImageProvider(@Nonnull VirtualFile file) {
         refresh(file);
         SoftReference<ScaledImageProvider> imageProviderRef = file.getUserData(IMAGE_PROVIDER_REF_KEY);
         return SoftReference.dereference(imageProviderRef);
@@ -120,7 +117,7 @@ public final class IfsUtil {
     }
 
     @Nullable
-    public static String getFormat(@Nonnull VirtualFile file) throws IOException {
+    public static String getFormat(@Nonnull VirtualFile file) {
         refresh(file);
         return file.getUserData(FORMAT_KEY);
     }
@@ -140,7 +137,7 @@ public final class IfsUtil {
         return file.getPath();
     }
 
-    private static String getRelativePath(final VirtualFile file, final VirtualFile root) {
+    private static String getRelativePath(VirtualFile file, VirtualFile root) {
         if (root.equals(file)) {
             return file.getPath();
         }

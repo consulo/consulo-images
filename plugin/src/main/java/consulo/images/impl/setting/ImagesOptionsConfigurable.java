@@ -31,13 +31,13 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 11/28/2020
+ * @since 2020-11-28
  */
 @ExtensionImpl
 public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties implements SearchableConfigurable, ApplicationConfigurable {
     @RequiredUIAccess
     public static void show(Project project) {
-        final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
+        ShowSettingsUtil util = ShowSettingsUtil.getInstance();
         util.showSettingsDialog(project, ImagesOptionsConfigurable.class);
     }
 
@@ -147,9 +147,12 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
 
             FileChooserTextBoxBuilder.Controller controller = fileChooserTextBoxBuilder.build();
 
-            propertyBuilder.add(controller::getValue, controller::setValue, () ->
-                options.getExternalEditorOptions().getExecutablePath(), it ->
-                options.getExternalEditorOptions().setOption(ExternalEditorOptions.ATTR_EXECUTABLE_PATH, it));
+            propertyBuilder.add(
+                controller::getValue,
+                controller::setValue,
+                () -> options.getExternalEditorOptions().getExecutablePath(),
+                it -> options.getExternalEditorOptions().setOption(ExternalEditorOptions.ATTR_EXECUTABLE_PATH, it)
+            );
 
             externalEditorLayout.add(LabeledBuilder.filled(ImagesLocalize.externalEditorExecutablePath(), controller.getComponent()));
 
@@ -173,6 +176,6 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Image Viewer";
+        return ImagesLocalize.settingsPageName().get();
     }
 }

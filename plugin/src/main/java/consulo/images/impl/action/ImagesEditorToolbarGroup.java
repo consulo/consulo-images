@@ -12,7 +12,7 @@ import org.intellij.images.editor.actions.ZoomOutAction;
 
 /**
  * @author VISTALL
- * @since 06/06/2024
+ * @since 2024-06-06
  */
 @ActionImpl(id = ImageEditorActions.GROUP_TOOLBAR, children = {
     @ActionRef(type = ToggleTransparencyChessboardAction.class),

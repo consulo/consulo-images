@@ -15,6 +15,7 @@
  */
 package consulo.images.desktop.awt.impl.editor;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -22,16 +23,16 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.images.ImageFileType;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.images.localize.ImagesLocalize;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.project.Project;
 import consulo.ui.Size;
 import consulo.ui.ex.CopyPasteSupport;
 import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -39,25 +40,23 @@ import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.style.StyleManager;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.images.ImageDocument;
 import org.intellij.images.ImageDocument.ScaledImageProvider;
-import org.intellij.images.ImagesBundle;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActions;
 import org.intellij.images.options.*;
 import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
 import org.intellij.images.ui.ImageComponentDecorator;
-import org.jetbrains.annotations.NonNls;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -80,11 +79,8 @@ import java.util.function.Supplier;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, ImageComponentDecorator, Disposable {
-    @NonNls
     private static final String IMAGE_PANEL = "image";
-    @NonNls
     private static final String ERROR_PANEL = "error";
-    @NonNls
     private static final String ZOOM_FACTOR_PROP = "ImageEditor.zoomFactor";
 
     @Nullable
@@ -115,7 +111,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
             @Override
             protected PsiElement[] getSelectedElements() {
                 DataContext dataContext = DataManager.getInstance().getDataContext(ImageEditorUI.this);
-                return ObjectUtil.notNull(dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY), PsiElement.EMPTY_ARRAY);
+                return ObjectUtil.notNull(dataContext.getData(PsiElement.KEY_OF_ARRAY), PsiElement.EMPTY_ARRAY);
             }
         } : null;
         deleteProvider = new DeleteHandler.DefaultDeleteProvider();
@@ -157,8 +153,9 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
         toolbarPanel.addMouseListener(new FocusRequester());
 
         JLabel errorLabel = new JBLabel(
-            ImagesBundle.message("error.broken.image.file.format"),
-            Messages.getErrorIcon(), SwingConstants.CENTER
+            ImagesLocalize.errorBrokenImageFileFormat().get(),
+            UIUtil.getErrorIcon(),
+            SwingConstants.CENTER
         );
 
         JPanel errorPanel = new JPanel(new BorderLayout());
@@ -194,17 +191,20 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
             ColorModel colorModel = image.getColorModel();
             String format = document.getFormat();
             if (format == null) {
-                format = editor != null ? ImagesBundle.message("unknown.format") : "";
+                format = editor != null ? ImagesLocalize.unknownFormat().get() : "";
             }
             else {
                 format = format.toUpperCase(Locale.ENGLISH);
             }
             VirtualFile file = editor != null ? editor.getFile() : null;
             infoLabel.setText(
-                ImagesBundle.message("image.info",
-                    image.getWidth(), image.getHeight(), format,
-                    colorModel.getPixelSize(), file != null ? StringUtil.formatFileSize(file.getLength()) : ""
-                )
+                ImagesLocalize.imageInfo(
+                    image.getWidth(),
+                    image.getHeight(),
+                    format,
+                    colorModel.getPixelSize(),
+                    file != null ? StringUtil.formatFileSize(file.getLength()) : ""
+                ).get()
             );
         }
         else {
@@ -301,24 +301,21 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
     private final class ImageContainerPane extends JBLayeredPane {
         private final ImageComponent imageComponent;
 
-        public ImageContainerPane(final ImageComponent imageComponent) {
+        public ImageContainerPane(ImageComponent imageComponent) {
             this.imageComponent = imageComponent;
             add(imageComponent);
 
             putClientProperty(
                 Magnificator.CLIENT_PROPERTY_KEY,
-                new Magnificator() {
-                    @Override
-                    public Point magnify(double scale, Point at) {
-                        Point locationBefore = imageComponent.getLocation();
-                        ImageZoomModel model = editor != null ? editor.getZoomModel() : getZoomModel();
-                        double factor = model.getZoomFactor();
-                        model.setZoomFactor(scale * factor);
-                        return new Point(
-                            ((int)((at.x - Math.max(scale > 1.0 ? locationBefore.x : 0, 0)) * scale)),
-                            ((int)((at.y - Math.max(scale > 1.0 ? locationBefore.y : 0, 0)) * scale))
-                        );
-                    }
+                (Magnificator)(scale, at) -> {
+                    Point locationBefore = imageComponent.getLocation();
+                    ImageZoomModel model = editor != null ? editor.getZoomModel() : getZoomModel();
+                    double factor = model.getZoomFactor();
+                    model.setZoomFactor(scale * factor);
+                    return new Point(
+                        ((int)((at.x - Math.max(scale > 1.0 ? locationBefore.x : 0, 0)) * scale)),
+                        ((int)((at.y - Math.max(scale > 1.0 ? locationBefore.y : 0, 0)) * scale))
+                    );
                 }
             );
         }
@@ -345,7 +342,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
         @Override
         protected void paintComponent(@Nonnull Graphics g) {
             super.paintComponent(g);
-            if (UIUtil.isUnderDarcula()) {
+            if (StyleManager.get().getCurrentStyle().isDark()) {
                 g.setColor(UIUtil.getControlColor().brighter());
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
@@ -563,7 +560,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
     private void updateImageComponentSize() {
         Rectangle bounds = imageComponent.getDocument().getBounds();
         if (bounds != null) {
-            final double zoom = getZoomModel().getZoomFactor();
+            double zoom = getZoomModel().getZoomFactor();
             imageComponent.setCanvasSize((int)Math.ceil(bounds.width * zoom), (int)Math.ceil(bounds.height * zoom));
         }
     }
@@ -609,33 +606,34 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
     @Nullable
     @Override
+    @RequiredReadAction
     public Object getData(@Nonnull Key<?> dataId) {
-        if (CommonDataKeys.PROJECT == dataId) {
+        if (Project.KEY == dataId) {
             return editor != null ? editor.getProject() : null;
         }
-        else if (CommonDataKeys.VIRTUAL_FILE == dataId) {
+        else if (VirtualFile.KEY == dataId) {
             return editor != null ? editor.getFile() : null;
         }
-        else if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
+        else if (VirtualFile.KEY_OF_ARRAY == dataId) {
             return editor != null ? new VirtualFile[]{editor.getFile()} : VirtualFile.EMPTY_ARRAY;
         }
-        else if (CommonDataKeys.PSI_FILE == dataId) {
+        else if (PsiFile.KEY == dataId) {
             return findPsiFile();
         }
-        else if (CommonDataKeys.PSI_ELEMENT == dataId) {
+        else if (PsiElement.KEY == dataId) {
             return findPsiFile();
         }
-        else if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+        else if (PsiElement.KEY_OF_ARRAY == dataId) {
             PsiElement psi = findPsiFile();
             return psi != null ? new PsiElement[]{psi} : PsiElement.EMPTY_ARRAY;
         }
-        else if (PlatformDataKeys.COPY_PROVIDER == dataId && copyPasteSupport != null) {
+        else if (CopyProvider.KEY == dataId && copyPasteSupport != null) {
             return this;
         }
-        else if (PlatformDataKeys.CUT_PROVIDER == dataId && copyPasteSupport != null) {
+        else if (CutProvider.KEY == dataId && copyPasteSupport != null) {
             return copyPasteSupport.getCutProvider();
         }
-        else if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
+        else if (DeleteProvider.KEY == dataId) {
             return deleteProvider;
         }
         else if (ImageComponentDecorator.DATA_KEY == dataId) {
@@ -646,6 +644,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
     }
 
     @Nullable
+    @RequiredReadAction
     private PsiFile findPsiFile() {
         VirtualFile file = editor != null ? editor.getFile() : null;
         return file != null && file.isValid() ? PsiManager.getInstance(editor.getProject()).findFile(file) : null;

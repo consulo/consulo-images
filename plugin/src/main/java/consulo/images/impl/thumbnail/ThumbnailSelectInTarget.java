@@ -31,16 +31,18 @@ final class ThumbnailSelectInTarget implements SelectInTarget {
     public ThumbnailSelectInTarget() {
     }
 
+    @Override
     public boolean canSelect(SelectInContext context) {
         VirtualFile virtualFile = context.getVirtualFile();
         return ImageFileTypeManager.getInstance().isImage(virtualFile) && virtualFile.getParent() != null;
     }
 
-    public void selectIn(SelectInContext context, final boolean requestFocus) {
+    @Override
+    public void selectIn(SelectInContext context, boolean requestFocus) {
         VirtualFile virtualFile = context.getVirtualFile();
         VirtualFile parent = virtualFile.getParent();
         if (parent != null) {
-            final Project project = context.getProject();
+            Project project = context.getProject();
             ThumbnailView thumbnailView = ThumbnailManager.getManager(project).getThumbnailView();
             thumbnailView.setRoot(parent);
             thumbnailView.setVisible(true);
@@ -49,18 +51,22 @@ final class ThumbnailSelectInTarget implements SelectInTarget {
         }
     }
 
+    @Override
     public String toString() {
         return getToolWindowId();
     }
 
+    @Override
     public String getToolWindowId() {
         return ThumbnailView.TOOLWINDOW_ID;
     }
 
+    @Override
     public String getMinorViewId() {
         return null;
     }
 
+    @Override
     public float getWeight() {
         return 10;
     }

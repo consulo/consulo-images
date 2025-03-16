@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 25-Aug-22
+ * @since 2022-08-25
  */
 module com.intellij.images_image.svg.impl {
     requires com.intellij.images_image.api;

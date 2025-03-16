@@ -5,7 +5,7 @@ import consulo.xml.lang.xml.XMLLanguage;
 
 /**
  * @author VISTALL
- * @since 10/12/2021
+ * @since 2021-12-10
  */
 public class SVGLanguage extends Language {
     public static final SVGLanguage INSTANCE = new SVGLanguage();

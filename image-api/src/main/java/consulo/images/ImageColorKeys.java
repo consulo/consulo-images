@@ -4,7 +4,7 @@ import consulo.colorScheme.EditorColorKey;
 
 /**
  * @author VISTALL
- * @since 11/28/2020
+ * @since 2020-11-28
  */
 public interface ImageColorKeys {
     EditorColorKey WHITE_CELL_COLOR_KEY = EditorColorKey.createColorKey("IMAGES_WHITE_CELL_COLOR");

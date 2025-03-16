@@ -16,13 +16,12 @@
 package org.intellij.images.thumbnail;
 
 import consulo.disposer.Disposable;
+import consulo.images.localize.ImagesLocalize;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.intellij.images.ImagesBundle;
-import org.intellij.images.ui.ImageComponentDecorator;
-
 import jakarta.annotation.Nonnull;
+import org.intellij.images.ui.ImageComponentDecorator;
 
 /**
  * Thumbnail thumbnail is a component with thumbnails for a set of {@link VirtualFile}.
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public interface ThumbnailView extends Disposable, ImageComponentDecorator {
     Key<ThumbnailView> DATA_KEY = Key.create(ThumbnailView.class.getName());
 
-    String TOOLWINDOW_ID = ImagesBundle.message("thumbnails.toolwindow.name");
+    String TOOLWINDOW_ID = "Thumbnails";
 
     @Nonnull
     Project getProject();

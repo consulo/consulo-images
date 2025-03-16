@@ -13,7 +13,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 10/12/2021
+ * @since 2021-12-10
  */
 @ExtensionImpl
 public class SVGParserDefinition extends XMLParserDefinition {

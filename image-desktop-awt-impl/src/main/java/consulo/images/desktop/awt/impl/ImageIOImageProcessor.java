@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 /**
  * @author VISTALL
- * @since 25-Aug-22
+ * @since 2022-08-25
  */
 @ExtensionImpl(order = "last")
 public class ImageIOImageProcessor implements ImageProcessor {

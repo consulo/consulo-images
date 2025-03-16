@@ -20,6 +20,7 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.Application;
+import consulo.images.localize.ImagesLocalize;
 import consulo.images.svg.SVGFileType;
 import consulo.images.svg.internal.SVGFileProcessor;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -39,7 +40,7 @@ import java.io.File;
 public class ConvertSvgToPngAction extends DumbAwareAction {
     @Inject
     public ConvertSvgToPngAction() {
-        super("Convert to PNG");
+        super(ImagesLocalize.actionConvertSvgToPngText());
     }
 
     @RequiredUIAccess

@@ -16,7 +16,9 @@
 package org.intellij.images.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.images.localize.ImagesLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
@@ -57,10 +59,13 @@ public final class ToggleGridAction extends ToggleAction {
     }
 
     @Override
-    public void update(@Nonnull final AnActionEvent e) {
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
         e.getPresentation().setEnabled(decorator != null);
-        e.getPresentation().setText(isSelected(e) ? "Hide Grid" : "Show Grid");
+        e.getPresentation().setTextValue(
+            isSelected(e) ? ImagesLocalize.actionEditorHideGridText() : ImagesLocalize.actionEditorShowGridText()
+        );
     }
 }

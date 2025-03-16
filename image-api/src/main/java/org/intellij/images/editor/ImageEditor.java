@@ -64,10 +64,13 @@ public interface ImageEditor extends Disposable, ImageComponentDecorator {
      */
     boolean isDisposed();
 
+    @Override
     ImageZoomModel getZoomModel();
 
+    @Override
     void setGridVisible(boolean visible);
 
+    @Override
     boolean isGridVisible();
 
     default void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {

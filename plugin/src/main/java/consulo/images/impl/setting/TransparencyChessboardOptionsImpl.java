@@ -114,23 +114,17 @@ final class TransparencyChessboardOptionsImpl implements TransparencyChessboardO
         JDOMExternalizer.write(element, ATTR_CELL_SIZE, cellSize);
     }
 
+    @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof TransparencyChessboardOptions)) {
-            return false;
-        }
-
-        TransparencyChessboardOptions otherOptions = (TransparencyChessboardOptions)o;
-
-        return cellSize == otherOptions.getCellSize() && showDefault == otherOptions.isShowDefault();
-
+        return this == o
+            || o instanceof TransparencyChessboardOptions otherOptions
+            && cellSize == otherOptions.getCellSize()
+            && showDefault == otherOptions.isShowDefault();
     }
 
+    @Override
     public int hashCode() {
-        int result;
-        result = (showDefault ? 1 : 0);
+        int result = (showDefault ? 1 : 0);
         result = 29 * result + cellSize;
         return result;
     }

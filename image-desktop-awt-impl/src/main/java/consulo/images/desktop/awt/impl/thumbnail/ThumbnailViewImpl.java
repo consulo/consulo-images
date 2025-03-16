@@ -22,12 +22,13 @@ package consulo.images.desktop.awt.impl.thumbnail;
 
 import consulo.disposer.Disposer;
 import consulo.images.desktop.awt.impl.IfsUtil;
+import consulo.images.icon.ImagesIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.virtualFileSystem.VirtualFile;
-import org.intellij.images.ImagesIcons;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActions;
 import org.intellij.images.thumbnail.ThumbnailView;
@@ -49,13 +50,14 @@ final class ThumbnailViewImpl implements ThumbnailView {
     private VirtualFile root = null;
     private final ThumbnailViewUI myThubmnailViewUi;
 
+    @RequiredUIAccess
     public ThumbnailViewImpl(Project project) {
         this.project = project;
 
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
         myThubmnailViewUi = new ThumbnailViewUI(this);
         toolWindow = windowManager.registerToolWindow(TOOLWINDOW_ID, myThubmnailViewUi, ToolWindowAnchor.BOTTOM);
-        toolWindow.setIcon(ImagesIcons.ThumbnailToolWindow);
+        toolWindow.setIcon(ImagesIconGroup.thumbnailtoolwindow());
         setVisible(false);
     }
 
@@ -64,6 +66,7 @@ final class ThumbnailViewImpl implements ThumbnailView {
     }
 
     @Override
+    @RequiredUIAccess
     public void setRoot(@Nonnull VirtualFile root) {
         this.root = root;
         updateUI();
@@ -80,6 +83,7 @@ final class ThumbnailViewImpl implements ThumbnailView {
     }
 
     @Override
+    @RequiredUIAccess
     public void setRecursive(boolean recursive) {
         this.recursive = recursive;
         updateUI();
@@ -107,6 +111,7 @@ final class ThumbnailViewImpl implements ThumbnailView {
     }
 
     @Override
+    @RequiredUIAccess
     public void scrollToSelection() {
         if (isVisible()) {
             if (!toolWindow.isActive()) {
@@ -124,6 +129,7 @@ final class ThumbnailViewImpl implements ThumbnailView {
     }
 
     @Override
+    @RequiredUIAccess
     public void activate() {
         if (isVisible() && !toolWindow.isActive()) {
             toolWindow.activate(null);
@@ -131,6 +137,7 @@ final class ThumbnailViewImpl implements ThumbnailView {
     }
 
     @Override
+    @RequiredUIAccess
     public void setVisible(boolean visible) {
         toolWindow.setAvailable(visible, null);
         if (visible) {
@@ -142,6 +149,7 @@ final class ThumbnailViewImpl implements ThumbnailView {
         }
     }
 
+    @RequiredUIAccess
     private void updateUI() {
         if (isVisible()) {
             setTitle();
@@ -149,6 +157,7 @@ final class ThumbnailViewImpl implements ThumbnailView {
         }
     }
 
+    @RequiredUIAccess
     private void setTitle() {
         toolWindow.setTitle(root != null ? IfsUtil.getReferencePath(project, root) : null);
     }
@@ -178,6 +187,7 @@ final class ThumbnailViewImpl implements ThumbnailView {
     }
 
     @Override
+    @RequiredUIAccess
     public void dispose() {
         // Dispose UI
         Disposer.dispose(getUI());
@@ -203,12 +213,7 @@ final class ThumbnailViewImpl implements ThumbnailView {
     private final class LazyScroller implements Runnable {
         @Override
         public void run() {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    getUI().scrollToSelection();
-                }
-            });
+            SwingUtilities.invokeLater(() -> getUI().scrollToSelection());
         }
     }
 }

@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ThumbnailManager {
-    public static ThumbnailManager getManager(final Project project) {
+    public static ThumbnailManager getManager(Project project) {
         return project.getInstance(ThumbnailManager.class);
     }
 

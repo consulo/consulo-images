@@ -9,7 +9,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 05/12/2022
+ * @since 2022-12-05
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface EmbeddedImageViewFactory {

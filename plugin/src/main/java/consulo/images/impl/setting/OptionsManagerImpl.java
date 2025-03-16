@@ -56,7 +56,7 @@ public class OptionsManagerImpl extends OptionsManager implements PersistentStat
     }
 
     @Override
-    public void loadState(final Element state) {
+    public void loadState(Element state) {
         try {
             options.readExternal(state);
         }

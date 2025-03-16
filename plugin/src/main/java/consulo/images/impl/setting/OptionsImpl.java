@@ -25,6 +25,7 @@ import org.jdom.Element;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Objects;
 
 /**
  * Default options implementation.
@@ -46,67 +47,69 @@ final class OptionsImpl implements Options, JDOMExternalizable {
         externalEditorOptions = new ExternalEditorOptionsImpl(propertyChangeSupport);
     }
 
+    @Override
     public EditorOptions getEditorOptions() {
         return editorOptions;
     }
 
+    @Override
     public ExternalEditorOptions getExternalEditorOptions() {
         return externalEditorOptions;
     }
 
+    @Override
     public void inject(Options options) {
         editorOptions.inject(options.getEditorOptions());
         externalEditorOptions.inject(options.getExternalEditorOptions());
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
+    @Override
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
+    @Override
     public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
     }
 
+    @Override
     public boolean setOption(String name, Object value) {
         return editorOptions.setOption(name, value) || externalEditorOptions.setOption(name, value);
     }
 
+    @Override
     public void readExternal(Element element) throws InvalidDataException {
         ((JDOMExternalizable)editorOptions).readExternal(element);
         ((JDOMExternalizable)externalEditorOptions).readExternal(element);
     }
 
+    @Override
     public void writeExternal(Element element) throws WriteExternalException {
         ((JDOMExternalizable)editorOptions).writeExternal(element);
         ((JDOMExternalizable)externalEditorOptions).writeExternal(element);
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof Options)) {
-            return false;
-        }
-        Options otherOptions = (Options)obj;
-        EditorOptions editorOptions = otherOptions.getEditorOptions();
-        ExternalEditorOptions externalEditorOptions = otherOptions.getExternalEditorOptions();
-        return editorOptions != null && editorOptions.equals(getEditorOptions()) &&
-            externalEditorOptions != null && externalEditorOptions.equals(getExternalEditorOptions());
+        return obj == this
+            || obj instanceof Options otherOptions
+            && Objects.equals(getEditorOptions(), otherOptions.getEditorOptions())
+            && Objects.equals(getExternalEditorOptions(), otherOptions.getExternalEditorOptions());
     }
 
+    @Override
     public int hashCode() {
-        int result;
-        result = (editorOptions != null ? editorOptions.hashCode() : 0);
-        result = 29 * result + (externalEditorOptions != null ? externalEditorOptions.hashCode() : 0);
-        return result;
+        return Objects.hash(editorOptions, externalEditorOptions);
     }
 }

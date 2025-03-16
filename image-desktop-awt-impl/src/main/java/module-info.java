@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 25-Aug-22
+ * @since 2022-08-25
  */
 module com.intellij.images.desktop.awt.impl {
     requires java.desktop;
