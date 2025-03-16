@@ -13,31 +13,27 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 10/12/2021
+ * @since 2021-12-10
  */
 @ExtensionImpl
-public class SVGParserDefinition extends XMLParserDefinition
-{
-	private static final IFileElementType SVG_FILE = new IFileElementType(SVGLanguage.INSTANCE);
+public class SVGParserDefinition extends XMLParserDefinition {
+    private static final IFileElementType SVG_FILE = new IFileElementType(SVGLanguage.INSTANCE);
 
-	@Nonnull
-	@Override
-	public PsiFile createFile(FileViewProvider viewProvider)
-	{
-		return new XmlFileImpl(viewProvider, SVG_FILE);
-	}
+    @Nonnull
+    @Override
+    public PsiFile createFile(FileViewProvider viewProvider) {
+        return new XmlFileImpl(viewProvider, SVG_FILE);
+    }
 
-	@Nonnull
-	@Override
-	public IFileElementType getFileNodeType()
-	{
-		return SVG_FILE;
-	}
+    @Nonnull
+    @Override
+    public IFileElementType getFileNodeType() {
+        return SVG_FILE;
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return SVGLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return SVGLanguage.INSTANCE;
+    }
 }

@@ -1,7 +1,7 @@
 /**
  * @author VISTALL
- * @since 26-Aug-22
+ * @since 2022-08-26
  */
 module com.intellij.images_image.unified.file.impl {
-  requires com.intellij.images_image.api;
+    requires com.intellij.images_image.api;
 }

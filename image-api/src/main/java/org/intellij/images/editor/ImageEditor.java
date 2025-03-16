@@ -23,6 +23,7 @@ import org.intellij.images.ImageDocument;
 import org.intellij.images.ui.ImageComponentDecorator;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -31,44 +32,47 @@ import javax.swing.*;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public interface ImageEditor extends Disposable, ImageComponentDecorator {
-  VirtualFile getFile();
+    VirtualFile getFile();
 
-  void setValue(VirtualFile file);
+    void setValue(VirtualFile file);
 
-  Project getProject();
+    Project getProject();
 
-  ImageDocument getDocument();
+    ImageDocument getDocument();
 
-  JComponent getComponent();
+    JComponent getComponent();
 
-  /**
-   * Return the target of image editing area within entire component,
-   * returned by {@link #getComponent()}.
-   *
-   * @return Content component
-   */
-  JComponent getContentComponent();
+    /**
+     * Return the target of image editing area within entire component,
+     * returned by {@link #getComponent()}.
+     *
+     * @return Content component
+     */
+    JComponent getContentComponent();
 
-  /**
-   * Return <code>true</code> if editor show valid image.
-   *
-   * @return <code>true</code> if editor show valid image.
-   */
-  boolean isValid();
+    /**
+     * Return <code>true</code> if editor show valid image.
+     *
+     * @return <code>true</code> if editor show valid image.
+     */
+    boolean isValid();
 
-  /**
-   * Return <code>true</code> if editor is already disposed.
-   *
-   * @return <code>true</code> if editor is already disposed.
-   */
-  boolean isDisposed();
+    /**
+     * Return <code>true</code> if editor is already disposed.
+     *
+     * @return <code>true</code> if editor is already disposed.
+     */
+    boolean isDisposed();
 
-  ImageZoomModel getZoomModel();
+    @Override
+    ImageZoomModel getZoomModel();
 
-  void setGridVisible(boolean visible);
+    @Override
+    void setGridVisible(boolean visible);
 
-  boolean isGridVisible();
+    @Override
+    boolean isGridVisible();
 
-  default void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
-  }
+    default void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    }
 }

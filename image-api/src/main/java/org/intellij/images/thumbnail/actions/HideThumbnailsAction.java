@@ -18,8 +18,10 @@
 
 package org.intellij.images.thumbnail.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 import org.intellij.images.thumbnail.ThumbnailView;
 import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActionUtil;
 
@@ -29,14 +31,18 @@ import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActionUtil;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public final class HideThumbnailsAction extends AnAction {
-    public void actionPerformed(AnActionEvent e) {
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         ThumbnailView view = ThumbnailViewActionUtil.getVisibleThumbnailView(e);
         if (view != null) {
             view.setVisible(false);
         }
     }
 
-    public void update(AnActionEvent e) {
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         ThumbnailViewActionUtil.setEnabled(e);
     }

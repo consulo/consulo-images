@@ -11,9 +11,9 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class DarkAdditionalTextAttributesProvider implements AdditionalTextAttributesProvider {
-  @Nonnull
-  @Override
-  public String getColorSchemeName() {
-    return EditorColorsScheme.DARCULA_SCHEME_NAME;
-  }
+    @Nonnull
+    @Override
+    public String getColorSchemeName() {
+        return EditorColorsScheme.DARCULA_SCHEME_NAME;
+    }
 }

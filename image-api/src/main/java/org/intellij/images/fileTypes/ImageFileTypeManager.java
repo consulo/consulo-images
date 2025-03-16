@@ -22,6 +22,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 
 /**
@@ -31,27 +32,27 @@ import java.util.Collection;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ImageFileTypeManager {
-  @Nonnull
-  public static ImageFileTypeManager getInstance() {
-    return Application.get().getInstance(ImageFileTypeManager.class);
-  }
+    @Nonnull
+    public static ImageFileTypeManager getInstance() {
+        return Application.get().getInstance(ImageFileTypeManager.class);
+    }
 
-  /**
-   * Check that file is image.
-   *
-   * @param file File to check
-   * @return Return <code>true</code> if image file is file with Images file type
-   */
-  public abstract boolean isImage(@Nonnull VirtualFile file);
+    /**
+     * Check that file is image.
+     *
+     * @param file File to check
+     * @return Return <code>true</code> if image file is file with Images file type
+     */
+    public abstract boolean isImage(@Nonnull VirtualFile file);
 
-  @Nonnull
-  @Deprecated
-  public FileType getImageFileType() {
-    return getBinaryImageFileType();
-  }
+    @Nonnull
+    @Deprecated
+    public FileType getImageFileType() {
+        return getBinaryImageFileType();
+    }
 
-  @Nonnull
-  public abstract FileType getBinaryImageFileType();
+    @Nonnull
+    public abstract FileType getBinaryImageFileType();
 
-  public abstract Collection<FileType> getFileTypes();
+    public abstract Collection<FileType> getFileTypes();
 }

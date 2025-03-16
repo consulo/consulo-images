@@ -21,7 +21,7 @@ package org.intellij.images.thumbnail.actionSystem;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public interface ThumbnailViewActions {
-  String GROUP_POPUP = "Images.ThumbnailsPopupMenu";
-  String GROUP_TOOLBAR = "Images.ThumbnailsToolbar";
-  String ACTION_PLACE = "Images.Thumbnails";
+    String GROUP_POPUP = "Images.ThumbnailsPopupMenu";
+    String GROUP_TOOLBAR = "Images.ThumbnailsToolbar";
+    String ACTION_PLACE = "Images.Thumbnails";
 }

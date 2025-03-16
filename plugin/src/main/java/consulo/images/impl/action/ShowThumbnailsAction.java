@@ -15,13 +15,13 @@
  */
 package consulo.images.impl.action;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import org.intellij.images.thumbnail.ThumbnailManager;
 import org.intellij.images.thumbnail.ThumbnailView;
 
@@ -31,9 +31,11 @@ import org.intellij.images.thumbnail.ThumbnailView;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public final class ShowThumbnailsAction extends AnAction {
+    @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(CommonDataKeys.PROJECT);
-        VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+        Project project = e.getData(Project.KEY);
+        VirtualFile file = e.getData(VirtualFile.KEY);
         if (project != null && file != null && file.isDirectory()) {
             ThumbnailManager thumbnailManager = ThumbnailManager.getManager(project);
             ThumbnailView thumbnailView = thumbnailManager.getThumbnailView();
@@ -43,10 +45,12 @@ public final class ShowThumbnailsAction extends AnAction {
         }
     }
 
-    public void update(AnActionEvent e) {
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-        final boolean isEnabled = file != null && file.isDirectory();
+        VirtualFile file = e.getData(VirtualFile.KEY);
+        boolean isEnabled = file != null && file.isDirectory();
         if (e.getPlace().equals(ActionPlaces.PROJECT_VIEW_POPUP)) {
             e.getPresentation().setVisible(isEnabled);
         }

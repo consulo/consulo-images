@@ -22,70 +22,70 @@ package org.intellij.images.editor;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public interface ImageZoomModel {
-  int MACRO_ZOOM_POWER_LIMIT = 5;
-  int MICRO_ZOOM_POWER_LIMIT = 8;
-  double MACRO_ZOOM_RATIO = 2.0d;
-  double MICRO_ZOOM_RATIO = 1.5d;
-  double MACRO_ZOOM_LIMIT = Math.pow(MACRO_ZOOM_RATIO, MACRO_ZOOM_POWER_LIMIT);
-  double MICRO_ZOOM_LIMIT = Math.pow(1 / MICRO_ZOOM_RATIO, MICRO_ZOOM_POWER_LIMIT);
+    int MACRO_ZOOM_POWER_LIMIT = 5;
+    int MICRO_ZOOM_POWER_LIMIT = 8;
+    double MACRO_ZOOM_RATIO = 2.0d;
+    double MICRO_ZOOM_RATIO = 1.5d;
+    double MACRO_ZOOM_LIMIT = Math.pow(MACRO_ZOOM_RATIO, MACRO_ZOOM_POWER_LIMIT);
+    double MICRO_ZOOM_LIMIT = Math.pow(1 / MICRO_ZOOM_RATIO, MICRO_ZOOM_POWER_LIMIT);
 
-  double getZoomFactor();
+    double getZoomFactor();
 
-  void setZoomFactor(double zoomFactor);
+    void setZoomFactor(double zoomFactor);
 
-  void fitZoomToWindow();
+    void fitZoomToWindow();
 
-  void zoomOut();
+    void zoomOut();
 
-  void zoomIn();
+    void zoomIn();
 
-  void setZoomLevelChanged(boolean value);
+    void setZoomLevelChanged(boolean value);
 
-  boolean canZoomOut();
+    boolean canZoomOut();
 
-  boolean canZoomIn();
+    boolean canZoomIn();
 
-  boolean isZoomLevelChanged();
+    boolean isZoomLevelChanged();
 
-  ImageZoomModel STUB = new ImageZoomModel() {
-    @Override
-    public double getZoomFactor() {
-      return 1;
-    }
+    ImageZoomModel STUB = new ImageZoomModel() {
+        @Override
+        public double getZoomFactor() {
+            return 1;
+        }
 
-    @Override
-    public void setZoomFactor(double zoomFactor) {
-    }
+        @Override
+        public void setZoomFactor(double zoomFactor) {
+        }
 
-    @Override
-    public void zoomOut() {
-    }
+        @Override
+        public void zoomOut() {
+        }
 
-    @Override
-    public void zoomIn() {
-    }
+        @Override
+        public void zoomIn() {
+        }
 
-    @Override
-    public void setZoomLevelChanged(boolean value) {
-    }
+        @Override
+        public void setZoomLevelChanged(boolean value) {
+        }
 
-    @Override
-    public void fitZoomToWindow() {
-    }
+        @Override
+        public void fitZoomToWindow() {
+        }
 
-    @Override
-    public boolean canZoomOut() {
-      return false;
-    }
+        @Override
+        public boolean canZoomOut() {
+            return false;
+        }
 
-    @Override
-    public boolean canZoomIn() {
-      return false;
-    }
+        @Override
+        public boolean canZoomIn() {
+            return false;
+        }
 
-    @Override
-    public boolean isZoomLevelChanged() {
-      return false;
-    }
-  };
+        @Override
+        public boolean isZoomLevelChanged() {
+            return false;
+        }
+    };
 }

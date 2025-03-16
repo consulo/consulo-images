@@ -34,50 +34,50 @@ import jakarta.annotation.Nullable;
  * @author Konstantin Bulenkov
  */
 public final class SVGFileType extends XmlLikeFileType implements UIBasedFileType, ImageFileType {
-  public static final SVGFileType INSTANCE = new SVGFileType();
+    public static final SVGFileType INSTANCE = new SVGFileType();
 
-  private SVGFileType() {
-    super(SVGLanguage.INSTANCE);
-  }
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return "SVG";
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getDescription() {
-    return ImagesLocalize.svgFileTypeDescription();
-  }
-
-  @Nonnull
-  @Override
-  public String getDefaultExtension() {
-    return "svg";
-  }
-
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return ImagesIconGroup.imagesfiletype();
-  }
-
-  @Override
-  @Nullable
-  public ImageInfo getImageInfo(@Nonnull String filePath, @Nonnull byte[] content) {
-    for (SVGFileProcessor processor : Application.get().getExtensionPoint(SVGFileProcessor.class)) {
-      return processor.getImageInfo(filePath, content);
+    private SVGFileType() {
+        super(SVGLanguage.INSTANCE);
     }
-    return null;
-  }
 
-  @Override
-  public double getImageMaxZoomFactor(@Nonnull VirtualFile file, @Nonnull Object uiComponent) {
-    for (SVGFileProcessor processor : Application.get().getExtensionPoint(SVGFileProcessor.class)) {
-      return processor.getImageMaxZoomFactor(file, uiComponent);
+    @Nonnull
+    @Override
+    public String getId() {
+        return "SVG";
     }
-    return Double.MAX_VALUE;
-  }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return ImagesLocalize.svgFileTypeDescription();
+    }
+
+    @Nonnull
+    @Override
+    public String getDefaultExtension() {
+        return "svg";
+    }
+
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return ImagesIconGroup.imagesfiletype();
+    }
+
+    @Override
+    @Nullable
+    public ImageInfo getImageInfo(@Nonnull String filePath, @Nonnull byte[] content) {
+        for (SVGFileProcessor processor : Application.get().getExtensionPoint(SVGFileProcessor.class)) {
+            return processor.getImageInfo(filePath, content);
+        }
+        return null;
+    }
+
+    @Override
+    public double getImageMaxZoomFactor(@Nonnull VirtualFile file, @Nonnull Object uiComponent) {
+        for (SVGFileProcessor processor : Application.get().getExtensionPoint(SVGFileProcessor.class)) {
+            return processor.getImageMaxZoomFactor(file, uiComponent);
+        }
+        return Double.MAX_VALUE;
+    }
 }

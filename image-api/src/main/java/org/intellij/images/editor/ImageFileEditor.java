@@ -18,5 +18,5 @@ package org.intellij.images.editor;
 import consulo.fileEditor.FileEditor;
 
 public interface ImageFileEditor extends FileEditor {
-  ImageEditor getImageEditor();
+    ImageEditor getImageEditor();
 }

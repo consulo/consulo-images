@@ -16,10 +16,9 @@
 
 package consulo.images.impl.action;
 
-import consulo.application.util.SystemInfo;
 import consulo.images.impl.setting.ImagesOptionsConfigurable;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.images.localize.ImagesLocalize;
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.EnvironmentUtil;
@@ -34,7 +33,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.intellij.images.ImagesBundle;
+import jakarta.annotation.Nonnull;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.options.Options;
 import org.intellij.images.options.OptionsManager;
@@ -50,101 +49,104 @@ import java.util.Map;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public final class EditExternallyAction extends AnAction {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
-    if (files == null) {
-      return;
-    }
-    Options options = OptionsManager.getInstance().getOptions();
-    String executablePath = options.getExternalEditorOptions().getExecutablePath();
-    if (StringUtil.isEmpty(executablePath)) {
-      for (VirtualFile file : files) {
-        try {
-          // TODO replace it by impl from Platform
-          Desktop.getDesktop().open(VirtualFileUtil.virtualToIoFile(file));
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        if (files == null) {
+            return;
         }
-        catch (IOException e1) {
-          Messages.showErrorDialog(project,
-                                   ImagesBundle.message("error.empty.external.editor.path"),
-                                   ImagesBundle.message("error.title.empty.external.editor.path"));
+        Options options = OptionsManager.getInstance().getOptions();
+        String executablePath = options.getExternalEditorOptions().getExecutablePath();
+        if (StringUtil.isEmpty(executablePath)) {
+            for (VirtualFile file : files) {
+                try {
+                    // TODO replace it by impl from Platform
+                    Desktop.getDesktop().open(VirtualFileUtil.virtualToIoFile(file));
+                }
+                catch (IOException e1) {
+                    Messages.showErrorDialog(
+                        project,
+                        ImagesLocalize.errorEmptyExternalEditorPath().get(),
+                        ImagesLocalize.errorTitleEmptyExternalEditorPath().get()
+                    );
 
-          ImagesOptionsConfigurable.show(project);
-          break;
-        }
-      }
-    }
-    else {
-      Map<String, String> env = EnvironmentUtil.getEnvironmentMap();
-      for (String varName : env.keySet()) {
-        if (SystemInfo.isWindows) {
-          executablePath = StringUtil.replace(executablePath, "%" + varName + "%", env.get(varName), true);
+                    ImagesOptionsConfigurable.show(project);
+                    break;
+                }
+            }
         }
         else {
-          executablePath = StringUtil.replace(executablePath, "${" + varName + "}", env.get(varName), false);
+            Map<String, String> env = EnvironmentUtil.getEnvironmentMap();
+            for (String varName : env.keySet()) {
+                if (Platform.current().os().isWindows()) {
+                    executablePath = StringUtil.replace(executablePath, "%" + varName + "%", env.get(varName), true);
+                }
+                else {
+                    executablePath = StringUtil.replace(executablePath, "${" + varName + "}", env.get(varName), false);
+                }
+            }
+            executablePath = FileUtil.toSystemDependentName(executablePath);
+            File executable = new File(executablePath);
+            GeneralCommandLine commandLine = new GeneralCommandLine();
+            String path = executable.exists() ? executable.getAbsolutePath() : executablePath;
+            if (Platform.current().os().isMac()) {
+                commandLine.setExePath(ExecUtil.getOpenCommandPath());
+                commandLine.addParameter("-a");
+                commandLine.addParameter(path);
+            }
+            else {
+                commandLine.setExePath(path);
+            }
+
+            ImageFileTypeManager typeManager = ImageFileTypeManager.getInstance();
+            for (VirtualFile file : files) {
+                if (file.isInLocalFileSystem() && typeManager.isImage(file)) {
+                    commandLine.addParameter(VirtualFileUtil.virtualToIoFile(file).getAbsolutePath());
+                }
+            }
+            commandLine.setWorkDirectory(new File(executablePath).getParentFile());
+
+            try {
+                commandLine.createProcess();
+            }
+            catch (ExecutionException ex) {
+                Messages.showErrorDialog(project, ex.getLocalizedMessage(), ImagesLocalize.errorTitleLaunchingExternalEditor().get());
+                ImagesOptionsConfigurable.show(project);
+            }
         }
-      }
-      executablePath = FileUtil.toSystemDependentName(executablePath);
-      File executable = new File(executablePath);
-      GeneralCommandLine commandLine = new GeneralCommandLine();
-      final String path = executable.exists() ? executable.getAbsolutePath() : executablePath;
-      if (SystemInfo.isMac) {
-        commandLine.setExePath(ExecUtil.getOpenCommandPath());
-        commandLine.addParameter("-a");
-        commandLine.addParameter(path);
-      }
-      else {
-        commandLine.setExePath(path);
-      }
+    }
 
-      ImageFileTypeManager typeManager = ImageFileTypeManager.getInstance();
-      for (VirtualFile file : files) {
-        if (file.isInLocalFileSystem() && typeManager.isImage(file)) {
-          commandLine.addParameter(VirtualFileUtil.virtualToIoFile(file).getAbsolutePath());
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        doUpdate(e);
+    }
+
+    static void doUpdate(AnActionEvent e) {
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        boolean isEnabled = isImages(files);
+        if (e.getPlace().equals(ActionPlaces.PROJECT_VIEW_POPUP)) {
+            e.getPresentation().setVisible(isEnabled);
         }
-      }
-      commandLine.setWorkDirectory(new File(executablePath).getParentFile());
-
-      try {
-        commandLine.createProcess();
-      }
-      catch (ExecutionException ex) {
-        Messages.showErrorDialog(project, ex.getLocalizedMessage(), ImagesBundle.message("error.title.launching.external.editor"));
-        ImagesOptionsConfigurable.show(project);
-      }
-    }
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    doUpdate(e);
-  }
-
-  static void doUpdate(AnActionEvent e) {
-    VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
-    final boolean isEnabled = isImages(files);
-    if (e.getPlace().equals(ActionPlaces.PROJECT_VIEW_POPUP)) {
-      e.getPresentation().setVisible(isEnabled);
-    }
-    else {
-      e.getPresentation().setEnabled(isEnabled);
-    }
-  }
-
-  private static boolean isImages(VirtualFile[] files) {
-    boolean isImagesFound = false;
-    if (files != null) {
-      ImageFileTypeManager typeManager = ImageFileTypeManager.getInstance();
-      for (VirtualFile file : files) {
-        boolean isImage = typeManager.isImage(file);
-        isImagesFound |= isImage;
-        if (!file.isInLocalFileSystem() || !isImage) {
-          return false;
+        else {
+            e.getPresentation().setEnabled(isEnabled);
         }
-      }
     }
-    return isImagesFound;
-  }
+
+    private static boolean isImages(VirtualFile[] files) {
+        boolean isImagesFound = false;
+        if (files != null) {
+            ImageFileTypeManager typeManager = ImageFileTypeManager.getInstance();
+            for (VirtualFile file : files) {
+                boolean isImage = typeManager.isImage(file);
+                isImagesFound |= isImage;
+                if (!file.isInLocalFileSystem() || !isImage) {
+                    return false;
+                }
+            }
+        }
+        return isImagesFound;
+    }
 }

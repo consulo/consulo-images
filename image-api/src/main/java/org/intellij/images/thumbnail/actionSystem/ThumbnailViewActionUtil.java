@@ -43,7 +43,7 @@ public final class ThumbnailViewActionUtil {
     }
 
     public static ThumbnailView getThumbnailView(AnActionEvent e) {
-      return e.getData(ThumbnailView.DATA_KEY);
+        return e.getData(ThumbnailView.DATA_KEY);
     }
 
     /**

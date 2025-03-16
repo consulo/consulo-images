@@ -8,19 +8,20 @@ import org.intellij.images.ImageDocument;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 
 /**
  * @author VISTALL
- * @since 25-Aug-22
+ * @since 2022-08-25
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ImageProcessor {
-  boolean accept(@Nonnull VirtualFile file);
+    boolean accept(@Nonnull VirtualFile file);
 
-  /**
-   * Return pair format + imageProvider
-   */
-  @Nullable
-  Pair<String, ImageDocument.ScaledImageProvider> read(@Nonnull VirtualFile file) throws IOException;
+    /**
+     * Return pair format + imageProvider
+     */
+    @Nullable
+    Pair<String, ImageDocument.ScaledImageProvider> read(@Nonnull VirtualFile file) throws IOException;
 }

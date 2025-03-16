@@ -9,10 +9,10 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 25-Aug-22
+ * @since 2022-08-25
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ImageEditorFactory {
-  @Nonnull
-  ImageEditor create(@Nonnull VirtualFile imageFile);
+    @Nonnull
+    ImageEditor create(@Nonnull VirtualFile imageFile);
 }

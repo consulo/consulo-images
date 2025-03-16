@@ -24,23 +24,23 @@ import org.intellij.images.editor.ImageZoomModel;
  * @author Alexey Efimov
  */
 public interface ImageComponentDecorator {
-  Key<ImageComponentDecorator> DATA_KEY = Key.create(ImageComponentDecorator.class.getName());
+    Key<ImageComponentDecorator> DATA_KEY = Key.create(ImageComponentDecorator.class.getName());
 
-  void setTransparencyChessboardVisible(boolean visible);
+    void setTransparencyChessboardVisible(boolean visible);
 
-  boolean isTransparencyChessboardVisible();
+    boolean isTransparencyChessboardVisible();
 
-  /**
-   * Return <code>true</code> if this decorator is enabled for this action place.
-   *
-   * @param place Action place
-   * @return <code>true</code> is decorator is enabled
-   */
-  boolean isEnabledForActionPlace(String place);
+    /**
+     * Return <code>true</code> if this decorator is enabled for this action place.
+     *
+     * @param place Action place
+     * @return <code>true</code> is decorator is enabled
+     */
+    boolean isEnabledForActionPlace(String place);
 
-  ImageZoomModel getZoomModel();
+    ImageZoomModel getZoomModel();
 
-  void setGridVisible(boolean visible);
+    void setGridVisible(boolean visible);
 
-  boolean isGridVisible();
+    boolean isGridVisible();
 }

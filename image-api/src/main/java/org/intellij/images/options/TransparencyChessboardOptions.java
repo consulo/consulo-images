@@ -17,7 +17,9 @@ package org.intellij.images.options;
 
 import consulo.ui.color.ColorValue;
 
+import consulo.ui.ex.JBColor;
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 
 /**
@@ -26,27 +28,27 @@ import java.awt.*;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public interface TransparencyChessboardOptions extends Cloneable {
-  String ATTR_PREFIX = "Editor.TransparencyChessboard.";
-  String ATTR_SHOW_DEFAULT = ATTR_PREFIX + "showDefault";
-  String ATTR_CELL_SIZE = ATTR_PREFIX + "cellSize";
-  String ATTR_WHITE_COLOR = ATTR_PREFIX + "whiteColor";
-  String ATTR_BLACK_COLOR = ATTR_PREFIX + "blackColor";
+    String ATTR_PREFIX = "Editor.TransparencyChessboard.";
+    String ATTR_SHOW_DEFAULT = ATTR_PREFIX + "showDefault";
+    String ATTR_CELL_SIZE = ATTR_PREFIX + "cellSize";
+    String ATTR_WHITE_COLOR = ATTR_PREFIX + "whiteColor";
+    String ATTR_BLACK_COLOR = ATTR_PREFIX + "blackColor";
 
-  int DEFAULT_CELL_SIZE = 5;
-  Color DEFAULT_WHITE_COLOR = Color.WHITE;
-  Color DEFAULT_BLACK_COLOR = Color.LIGHT_GRAY;
+    int DEFAULT_CELL_SIZE = 5;
+    Color DEFAULT_WHITE_COLOR = JBColor.WHITE;
+    Color DEFAULT_BLACK_COLOR = JBColor.LIGHT_GRAY;
 
-  boolean isShowDefault();
+    boolean isShowDefault();
 
-  int getCellSize();
+    int getCellSize();
 
-  @Nonnull
-  ColorValue getWhiteColor();
+    @Nonnull
+    ColorValue getWhiteColor();
 
-  @Nonnull
-  ColorValue getBlackColor();
+    @Nonnull
+    ColorValue getBlackColor();
 
-  void inject(TransparencyChessboardOptions options);
+    void inject(TransparencyChessboardOptions options);
 
-  boolean setOption(String name, Object value);
+    boolean setOption(String name, Object value);
 }

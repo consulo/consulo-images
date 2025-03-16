@@ -39,26 +39,26 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "Images.Editor.ZoomOut", shortcutFrom = @ActionRef(id = IdeActions.ACTION_COLLAPSE_ALL))
 public final class ZoomOutAction extends AnAction {
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.graphZoomout();
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-    if (decorator != null) {
-      ImageZoomModel zoomModel = decorator.getZoomModel();
-      zoomModel.zoomOut();
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.graphZoomout();
     }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-    e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomOut());
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+        if (decorator != null) {
+            ImageZoomModel zoomModel = decorator.getZoomModel();
+            zoomModel.zoomOut();
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+        e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomOut());
+    }
 }

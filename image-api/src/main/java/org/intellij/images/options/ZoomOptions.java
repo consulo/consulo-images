@@ -25,22 +25,22 @@ import jakarta.annotation.Nonnull;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public interface ZoomOptions extends Cloneable {
-  String ATTR_PREFIX = "Editor.Zoom.";
-  String ATTR_WHEEL_ZOOMING = ATTR_PREFIX + "wheelZooming";
-  String ATTR_SMART_ZOOMING = ATTR_PREFIX + "smartZooming";
-  String ATTR_PREFFERED_WIDTH = ATTR_PREFIX + "prefferedWidth";
-  String ATTR_PREFFERED_HEIGHT = ATTR_PREFIX + "prefferedHeight";
+    String ATTR_PREFIX = "Editor.Zoom.";
+    String ATTR_WHEEL_ZOOMING = ATTR_PREFIX + "wheelZooming";
+    String ATTR_SMART_ZOOMING = ATTR_PREFIX + "smartZooming";
+    String ATTR_PREFFERED_WIDTH = ATTR_PREFIX + "prefferedWidth";
+    String ATTR_PREFFERED_HEIGHT = ATTR_PREFIX + "prefferedHeight";
 
-  Size DEFAULT_PREFFERED_SIZE = new Size(128, 128);
+    Size DEFAULT_PREFFERED_SIZE = new Size(128, 128);
 
-  boolean isWheelZooming();
+    boolean isWheelZooming();
 
-  boolean isSmartZooming();
+    boolean isSmartZooming();
 
-  @Nonnull
-  Size getPrefferedSize();
+    @Nonnull
+    Size getPrefferedSize();
 
-  void inject(ZoomOptions options);
+    void inject(ZoomOptions options);
 
-  boolean setOption(String name, Object value);
+    boolean setOption(String name, Object value);
 }

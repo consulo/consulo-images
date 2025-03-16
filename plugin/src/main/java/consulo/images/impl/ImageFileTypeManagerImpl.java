@@ -25,6 +25,7 @@ import jakarta.inject.Singleton;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.stream.Stream;
 
@@ -36,19 +37,19 @@ import java.util.stream.Stream;
 @Singleton
 @ServiceImpl
 public final class ImageFileTypeManagerImpl extends ImageFileTypeManager {
-  @Override
-  public Collection<FileType> getFileTypes() {
-    return Stream.of(FileTypeRegistry.getInstance().getRegisteredFileTypes()).filter(it -> it instanceof ImageFileType).toList();
-  }
+    @Override
+    public Collection<FileType> getFileTypes() {
+        return Stream.of(FileTypeRegistry.getInstance().getRegisteredFileTypes()).filter(it -> it instanceof ImageFileType).toList();
+    }
 
-  @Override
-  public boolean isImage(@Nonnull VirtualFile file) {
-    return file.getFileType() instanceof ImageFileType;
-  }
+    @Override
+    public boolean isImage(@Nonnull VirtualFile file) {
+        return file.getFileType() instanceof ImageFileType;
+    }
 
-  @Nonnull
-  @Override
-  public FileType getBinaryImageFileType() {
-    return BinaryImageFileType.INSTANCE;
-  }
+    @Nonnull
+    @Override
+    public FileType getBinaryImageFileType() {
+        return BinaryImageFileType.INSTANCE;
+    }
 }
