@@ -18,6 +18,7 @@ import jakarta.inject.Inject;
 import org.intellij.images.editor.ImageFileEditor;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -28,50 +29,58 @@ import java.util.concurrent.TimeUnit;
  */
 @ExtensionImpl
 public class SVGFileEditorProvider implements FileEditorProvider, DumbAware {
-  private final TextEditorWithPreviewFactory myTextEditorWithPreviewFactory;
-  private final ApplicationConcurrency myApplicationConcurrency;
+    private final TextEditorWithPreviewFactory myTextEditorWithPreviewFactory;
+    private final ApplicationConcurrency myApplicationConcurrency;
 
-  @Inject
-  public SVGFileEditorProvider(TextEditorWithPreviewFactory textEditorWithPreviewFactory, ApplicationConcurrency applicationConcurrency) {
-    myTextEditorWithPreviewFactory = textEditorWithPreviewFactory;
-    myApplicationConcurrency = applicationConcurrency;
-  }
+    @Inject
+    public SVGFileEditorProvider(TextEditorWithPreviewFactory textEditorWithPreviewFactory, ApplicationConcurrency applicationConcurrency) {
+        myTextEditorWithPreviewFactory = textEditorWithPreviewFactory;
+        myApplicationConcurrency = applicationConcurrency;
+    }
 
-  @Override
-  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
-    return virtualFile.getFileType() == SVGFileType.INSTANCE && project.getApplication().getExtensionPoint(SVGFileProcessor.class).hasAnyExtensions();
-  }
+    @Override
+    public boolean accept(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+        return virtualFile.getFileType() == SVGFileType.INSTANCE && project.getApplication()
+            .getExtensionPoint(SVGFileProcessor.class)
+            .hasAnyExtensions();
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    ImageFileEditor viewer = new ImageFileEditorImpl(project, file);
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+        ImageFileEditor viewer = new ImageFileEditorImpl(project, file);
 
-    TextEditor editor = (TextEditor) TextEditorProvider.getInstance().createEditor(project, file);
-    editor.getEditor().getDocument().addDocumentListener(new DocumentListener() {
-      private Future<?> myFuture = CompletableFuture.completedFuture(null);
+        TextEditor editor = (TextEditor)TextEditorProvider.getInstance().createEditor(project, file);
+        editor.getEditor().getDocument().addDocumentListener(
+            new DocumentListener() {
+                private Future<?> myFuture = CompletableFuture.completedFuture(null);
 
-      @Override
-      public void documentChanged(DocumentEvent event) {
-        myFuture.cancel(false);
-        myFuture = myApplicationConcurrency.getScheduledExecutorService().schedule(() -> {
-          viewer.getImageEditor().setValue(new LightVirtualFile("preview.svg", file.getFileType(), event.getDocument().getText()));
-        }, 500, TimeUnit.MILLISECONDS);
-      }
-    }, editor);
-    return myTextEditorWithPreviewFactory.create(editor, viewer, "SvgEditor");
-  }
+                @Override
+                public void documentChanged(DocumentEvent event) {
+                    myFuture.cancel(false);
+                    myFuture = myApplicationConcurrency.getScheduledExecutorService().schedule(
+                        () -> viewer.getImageEditor()
+                            .setValue(new LightVirtualFile("preview.svg", file.getFileType(), event.getDocument().getText())),
+                        500,
+                        TimeUnit.MILLISECONDS
+                    );
+                }
+            },
+            editor
+        );
+        return myTextEditorWithPreviewFactory.create(editor, viewer, "SvgEditor");
+    }
 
-  @Nonnull
-  @Override
-  public String getEditorTypeId() {
-    return "svg.images";
-  }
+    @Nonnull
+    @Override
+    public String getEditorTypeId() {
+        return "svg.images";
+    }
 
-  @Nonnull
-  @Override
-  public FileEditorPolicy getPolicy() {
-    return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
-  }
+    @Nonnull
+    @Override
+    public FileEditorPolicy getPolicy() {
+        return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
+    }
 }

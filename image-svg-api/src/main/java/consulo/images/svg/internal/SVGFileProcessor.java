@@ -7,6 +7,7 @@ import org.intellij.images.util.ImageInfo;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 /**
@@ -15,10 +16,10 @@ import java.io.File;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SVGFileProcessor {
-  void convert(VirtualFile svgFile, File pngFile);
+    void convert(VirtualFile svgFile, File pngFile);
 
-  @Nullable
-  ImageInfo getImageInfo(String filePath, @Nonnull byte[] content);
+    @Nullable
+    ImageInfo getImageInfo(String filePath, @Nonnull byte[] content);
 
-  double getImageMaxZoomFactor(@Nonnull VirtualFile file, @Nonnull Object component);
+    double getImageMaxZoomFactor(@Nonnull VirtualFile file, @Nonnull Object component);
 }

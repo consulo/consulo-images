@@ -8,9 +8,9 @@ import consulo.xml.lang.xml.XMLLanguage;
  * @since 10/12/2021
  */
 public class SVGLanguage extends Language {
-  public static final SVGLanguage INSTANCE = new SVGLanguage();
+    public static final SVGLanguage INSTANCE = new SVGLanguage();
 
-  private SVGLanguage() {
-    super(XMLLanguage.INSTANCE, "SVG", "image/svg+xml");
-  }
+    private SVGLanguage() {
+        super(XMLLanguage.INSTANCE, "SVG", "image/svg+xml");
+    }
 }

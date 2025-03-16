@@ -13,8 +13,8 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class SVGImageFileTypeProvider extends FileTypeFactory {
-  @Override
-  public void createFileTypes(@Nonnull FileTypeConsumer fileTypeConsumer) {
-    fileTypeConsumer.consume(SVGFileType.INSTANCE);
-  }
+    @Override
+    public void createFileTypes(@Nonnull FileTypeConsumer fileTypeConsumer) {
+        fileTypeConsumer.consume(SVGFileType.INSTANCE);
+    }
 }

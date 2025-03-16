@@ -16,10 +16,10 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class UnifiedImageFileTypeFactory extends FileTypeFactory {
-  private static final String KNOWN_EXTENSIONS = "png;gif;jpg;jpeg;bmp;ico;tif;tiff";
+    private static final String KNOWN_EXTENSIONS = "png;gif;jpg;jpeg;bmp;ico;tif;tiff";
 
-  @Override
-  public void createFileTypes(@Nonnull FileTypeConsumer fileTypeConsumer) {
-    fileTypeConsumer.consume(BinaryImageFileType.INSTANCE, KNOWN_EXTENSIONS);
-  }
+    @Override
+    public void createFileTypes(@Nonnull FileTypeConsumer fileTypeConsumer) {
+        fileTypeConsumer.consume(BinaryImageFileType.INSTANCE, KNOWN_EXTENSIONS);
+    }
 }

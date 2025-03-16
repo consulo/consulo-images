@@ -37,29 +37,31 @@ import java.io.File;
     @ActionParentRef(value = @ActionRef(id = "ProjectViewPopupMenu"), anchor = ActionRefAnchor.AFTER, relatedToAction = @ActionRef(id = "EditSource"))
 })
 public class ConvertSvgToPngAction extends DumbAwareAction {
-  @Inject
-  public ConvertSvgToPngAction() {
-    super("Convert to PNG");
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    VirtualFile svgFile = e.getRequiredData(VirtualFile.KEY);
-
-    String path = svgFile.getPath();
-
-    for (SVGFileProcessor service : Application.get().getExtensionPoint(SVGFileProcessor.class)) {
-      service.convert(svgFile, new File(path + ".png"));
-      break;
+    @Inject
+    public ConvertSvgToPngAction() {
+        super("Convert to PNG");
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent e) {
-    VirtualFile svgFile = e.getData(VirtualFile.KEY);
-    boolean enabled = svgFile != null && svgFile.getFileType() == SVGFileType.INSTANCE && Application.get().getExtensionPoint(SVGFileProcessor.class).hasAnyExtensions();
-    e.getPresentation().setEnabledAndVisible(enabled);
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        VirtualFile svgFile = e.getRequiredData(VirtualFile.KEY);
+
+        String path = svgFile.getPath();
+
+        for (SVGFileProcessor service : Application.get().getExtensionPoint(SVGFileProcessor.class)) {
+            service.convert(svgFile, new File(path + ".png"));
+            break;
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void update(AnActionEvent e) {
+        VirtualFile svgFile = e.getData(VirtualFile.KEY);
+        boolean enabled = svgFile != null
+            && svgFile.getFileType() == SVGFileType.INSTANCE
+            && Application.get().getExtensionPoint(SVGFileProcessor.class).hasAnyExtensions();
+        e.getPresentation().setEnabledAndVisible(enabled);
+    }
 }

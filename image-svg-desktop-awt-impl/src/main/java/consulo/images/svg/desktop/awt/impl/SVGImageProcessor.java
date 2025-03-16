@@ -13,6 +13,7 @@ import org.intellij.images.ImageDocument;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -27,56 +28,59 @@ import java.net.URL;
  */
 @ExtensionImpl
 public class SVGImageProcessor implements ImageProcessor {
-  private static final Logger LOG = Logger.getInstance(SVGImageProcessor.class);
+    private static final Logger LOG = Logger.getInstance(SVGImageProcessor.class);
 
-  @Override
-  public boolean accept(@Nonnull VirtualFile file) {
-    return file.getFileType() == SVGFileType.INSTANCE;
-  }                                                                                              
-
-  @Override
-  @Nullable
-  public Pair<String, ImageDocument.ScaledImageProvider> read(@Nonnull VirtualFile file) throws IOException {
-    final Ref<URL> url = Ref.create();
-    try {
-      url.set(new File(file.getPath()).toURI().toURL());
-    } catch (MalformedURLException ex) {
-      LOG.warn(ex.getMessage());
-      return null;
+    @Override
+    public boolean accept(@Nonnull VirtualFile file) {
+        return file.getFileType() == SVGFileType.INSTANCE;
     }
 
-    byte[] content = file.contentsToByteArray();
-    try {
-      // ensure svg can be displayed
-      SVGLoader.load(url.get(), new ByteArrayInputStream(content), 1.0f);
-    } catch (Throwable t) {
-      LOG.warn(url.get() + " " + t.getMessage(), t);
-      return null;
-    }
-
-    ImageDocument.CachedScaledImageProvider provider = new ImageDocument.CachedScaledImageProvider() {
-      JBUI.ScaleContext.Cache<BufferedImage> cache = new JBUI.ScaleContext.Cache<>((ctx) ->
-      {
+    @Override
+    @Nullable
+    public Pair<String, ImageDocument.ScaledImageProvider> read(@Nonnull VirtualFile file) throws IOException {
+        final Ref<URL> url = Ref.create();
         try {
-          return SVGLoader.loadHiDPI(url.get(), new ByteArrayInputStream(content), ctx);
-        } catch (Throwable t) {
-          LOG.warn(url.get() + " " + t.getMessage());
-          return null;
+            url.set(new File(file.getPath()).toURI().toURL());
         }
-      });
+        catch (MalformedURLException ex) {
+            LOG.warn(ex.getMessage());
+            return null;
+        }
 
-      @Override
-      public void clearCache() {
-        cache.clear();
-      }
+        byte[] content = file.contentsToByteArray();
+        try {
+            // ensure svg can be displayed
+            SVGLoader.load(url.get(), new ByteArrayInputStream(content), 1.0f);
+        }
+        catch (Throwable t) {
+            LOG.warn(url.get() + " " + t.getMessage(), t);
+            return null;
+        }
 
-      @Override
-      public BufferedImage apply(Double zoom, Component ancestor) {
-        JBUI.ScaleContext ctx = JBUI.ScaleContext.create(ancestor);
-        ctx.update(JBUI.ScaleType.OBJ_SCALE.of(zoom));
-        return cache.getOrProvide(ctx);
-      }
-    };
-    return Pair.create(IfsUtil.SVG_FORMAT, provider);
-  }
+        ImageDocument.CachedScaledImageProvider provider = new ImageDocument.CachedScaledImageProvider() {
+            JBUI.ScaleContext.Cache<BufferedImage> cache = new JBUI.ScaleContext.Cache<>((ctx) ->
+            {
+                try {
+                    return SVGLoader.loadHiDPI(url.get(), new ByteArrayInputStream(content), ctx);
+                }
+                catch (Throwable t) {
+                    LOG.warn(url.get() + " " + t.getMessage());
+                    return null;
+                }
+            });
+
+            @Override
+            public void clearCache() {
+                cache.clear();
+            }
+
+            @Override
+            public BufferedImage apply(Double zoom, Component ancestor) {
+                JBUI.ScaleContext ctx = JBUI.ScaleContext.create(ancestor);
+                ctx.update(JBUI.ScaleType.OBJ_SCALE.of(zoom));
+                return cache.getOrProvide(ctx);
+            }
+        };
+        return Pair.create(IfsUtil.SVG_FORMAT, provider);
+    }
 }
