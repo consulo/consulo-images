@@ -70,7 +70,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
         gridOptionsPanel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 24);
         imagesLayout.add(gridOptionsPanel);
 
-        IntBox gridLineZoomLimit = IntBox.create();
+        IntBox gridLineZoomLimit = IntBox.create(2);
         gridLineZoomLimit.setRange(2, 8);
         gridOptionsPanel.add(LabeledBuilder.sided(ImagesLocalize.showGridZoomLimit(), gridLineZoomLimit));
         propertyBuilder.add(
@@ -79,7 +79,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
             it -> gridOptions.setOption(GridOptions.ATTR_LINE_ZOOM_FACTOR, it)
         );
 
-        IntBox gridLineSpan = IntBox.create();
+        IntBox gridLineSpan = IntBox.create(1);
         gridLineSpan.setRange(1, 100);
         gridOptionsPanel.add(LabeledBuilder.sided(ImagesLocalize.showGridEvery(), gridLineSpan));
         propertyBuilder.add(gridLineSpan, gridOptions::getLineSpan, it -> gridOptions.setOption(GridOptions.ATTR_LINE_SPAN, it));
@@ -96,7 +96,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
         chessboardPanel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 24);
         imagesLayout.add(chessboardPanel);
 
-        IntBox chessboardSize = IntBox.create();
+        IntBox chessboardSize = IntBox.create(1);
         chessboardSize.setRange(1, 100);
         chessboardPanel.add(LabeledBuilder.sided(ImagesLocalize.chessboardCellSize(), chessboardSize));
         propertyBuilder.add(
@@ -119,7 +119,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
         smartWheelPanel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 24);
         imagesLayout.add(smartWheelPanel);
 
-        IntBox smartZoomingWidth = IntBox.create();
+        IntBox smartZoomingWidth = IntBox.create(1);
         smartZoomingWidth.setRange(1, 9999);
         smartWheelPanel.add(LabeledBuilder.sided(ImagesLocalize.settingsPrefferedSmartZoomWidth(), smartZoomingWidth));
         propertyBuilder.add(
@@ -128,7 +128,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
             it -> zoomOptions.setOption(ZoomOptions.ATTR_PREFFERED_WIDTH, it)
         );
 
-        IntBox smartZoomingHeight = IntBox.create();
+        IntBox smartZoomingHeight = IntBox.create(1);
         smartZoomingHeight.setRange(1, 9999);
         smartWheelPanel.add(LabeledBuilder.sided(ImagesLocalize.settingsPrefferedSmartZoomHeight(), smartZoomingHeight));
         propertyBuilder.add(
