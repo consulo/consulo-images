@@ -37,39 +37,39 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 final class ImageFileEditorProvider implements FileEditorProvider, DumbAware {
-  private final ImageFileTypeManager typeManager;
+    private final ImageFileTypeManager typeManager;
 
-  @Inject
-  ImageFileEditorProvider(ImageFileTypeManager typeManager) {
-    this.typeManager = typeManager;
-  }
+    @Inject
+    ImageFileEditorProvider(ImageFileTypeManager typeManager) {
+        this.typeManager = typeManager;
+    }
 
-  @Override
-  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return typeManager.getBinaryImageFileType() == file.getFileType();
-  }
+    @Override
+    public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
+        return typeManager.getBinaryImageFileType() == file.getFileType();
+    }
 
-  @RequiredUIAccess
-  @Override
-  @Nonnull
-  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return new ImageFileEditorImpl(project, file);
-  }
+    @RequiredUIAccess
+    @Override
+    @Nonnull
+    public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+        return new ImageFileEditorImpl(project, file);
+    }
 
-  @Override
-  public void disposeEditor(@Nonnull FileEditor editor) {
-    Disposer.dispose(editor);
-  }
+    @Override
+    public void disposeEditor(@Nonnull FileEditor editor) {
+        Disposer.dispose(editor);
+    }
 
-  @Override
-  @Nonnull
-  public String getEditorTypeId() {
-    return "images";
-  }
+    @Override
+    @Nonnull
+    public String getEditorTypeId() {
+        return "images";
+    }
 
-  @Override
-  @Nonnull
-  public FileEditorPolicy getPolicy() {
-    return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
-  }
+    @Override
+    @Nonnull
+    public FileEditorPolicy getPolicy() {
+        return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
+    }
 }

@@ -31,20 +31,19 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ImageLookupInfoProvider extends FileLookupInfoProvider {
+    public Pair<String, String> getLookupInfo(@Nonnull VirtualFile file, Project project) {
+        final String[] s = new String[]{null};
+        ImageInfoIndex.processValues(file, (file1, value) -> {
+            s[0] = String.format("%sx%s", value.width(), value.height());
+            return true;
+        }, project);
 
-  public Pair<String, String> getLookupInfo(@Nonnull VirtualFile file, Project project) {
-    final String[] s = new String[] {null};
-    ImageInfoIndex.processValues(file, (file1, value) -> {
-      s[0] = String.format("%sx%s", value.width(), value.height());
-      return true;
-    }, project);
+        return s[0] == null ? null : new Pair<String, String>(file.getName(), s[0]);
+    }
 
-    return s[0] == null ? null : new Pair<String, String>(file.getName(), s[0]);
-  }
-
-  @Nonnull
-  @Override
-  public FileType[] getFileTypes() {
-    return ImageFileTypeManager.getInstance().getFileTypes().toArray(FileType.EMPTY_ARRAY);
-  }
+    @Nonnull
+    @Override
+    public FileType[] getFileTypes() {
+        return ImageFileTypeManager.getInstance().getFileTypes().toArray(FileType.EMPTY_ARRAY);
+    }
 }

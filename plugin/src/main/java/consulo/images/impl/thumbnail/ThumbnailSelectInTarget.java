@@ -27,41 +27,41 @@ import org.intellij.images.thumbnail.ThumbnailView;
 
 @ExtensionImpl
 final class ThumbnailSelectInTarget implements SelectInTarget {
-  @Inject
-  public ThumbnailSelectInTarget() {
-  }
-
-  public boolean canSelect(SelectInContext context) {
-    VirtualFile virtualFile = context.getVirtualFile();
-    return ImageFileTypeManager.getInstance().isImage(virtualFile) && virtualFile.getParent() != null;
-  }
-
-  public void selectIn(SelectInContext context, final boolean requestFocus) {
-    VirtualFile virtualFile = context.getVirtualFile();
-    VirtualFile parent = virtualFile.getParent();
-    if (parent != null) {
-      final Project project = context.getProject();
-      ThumbnailView thumbnailView = ThumbnailManager.getManager(project).getThumbnailView();
-      thumbnailView.setRoot(parent);
-      thumbnailView.setVisible(true);
-      thumbnailView.setSelected(virtualFile, true);
-      thumbnailView.scrollToSelection();
+    @Inject
+    public ThumbnailSelectInTarget() {
     }
-  }
 
-  public String toString() {
-    return getToolWindowId();
-  }
+    public boolean canSelect(SelectInContext context) {
+        VirtualFile virtualFile = context.getVirtualFile();
+        return ImageFileTypeManager.getInstance().isImage(virtualFile) && virtualFile.getParent() != null;
+    }
 
-  public String getToolWindowId() {
-    return ThumbnailView.TOOLWINDOW_ID;
-  }
+    public void selectIn(SelectInContext context, final boolean requestFocus) {
+        VirtualFile virtualFile = context.getVirtualFile();
+        VirtualFile parent = virtualFile.getParent();
+        if (parent != null) {
+            final Project project = context.getProject();
+            ThumbnailView thumbnailView = ThumbnailManager.getManager(project).getThumbnailView();
+            thumbnailView.setRoot(parent);
+            thumbnailView.setVisible(true);
+            thumbnailView.setSelected(virtualFile, true);
+            thumbnailView.scrollToSelection();
+        }
+    }
 
-  public String getMinorViewId() {
-    return null;
-  }
+    public String toString() {
+        return getToolWindowId();
+    }
 
-  public float getWeight() {
-    return 10;
-  }
+    public String getToolWindowId() {
+        return ThumbnailView.TOOLWINDOW_ID;
+    }
+
+    public String getMinorViewId() {
+        return null;
+    }
+
+    public float getWeight() {
+        return 10;
+    }
 }

@@ -36,30 +36,32 @@ import org.jdom.Element;
 @ServiceImpl
 @State(name = "Images.OptionsManager", storages = {@Storage(value = "images.support.xml", roamingType = RoamingType.DISABLED)})
 public class OptionsManagerImpl extends OptionsManager implements PersistentStateComponent<Element> {
-  private final OptionsImpl options = new OptionsImpl();
+    private final OptionsImpl options = new OptionsImpl();
 
-  @Override
-  public Options getOptions() {
-    return options;
-  }
-
-  @Override
-  public Element getState() {
-    Element element = new Element("state");
-    try {
-      options.writeExternal(element);
-    } catch (WriteExternalException e) {
-      throw new RuntimeException(e);
+    @Override
+    public Options getOptions() {
+        return options;
     }
-    return element;
-  }
 
-  @Override
-  public void loadState(final Element state) {
-    try {
-      options.readExternal(state);
-    } catch (InvalidDataException e) {
-      throw new RuntimeException(e);
+    @Override
+    public Element getState() {
+        Element element = new Element("state");
+        try {
+            options.writeExternal(element);
+        }
+        catch (WriteExternalException e) {
+            throw new RuntimeException(e);
+        }
+        return element;
     }
-  }
+
+    @Override
+    public void loadState(final Element state) {
+        try {
+            options.readExternal(state);
+        }
+        catch (InvalidDataException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

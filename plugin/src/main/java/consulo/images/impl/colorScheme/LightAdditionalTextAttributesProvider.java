@@ -11,9 +11,9 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class LightAdditionalTextAttributesProvider implements AdditionalTextAttributesProvider {
-  @Nonnull
-  @Override
-  public String getColorSchemeName() {
-    return EditorColorsScheme.DEFAULT_SCHEME_NAME;
-  }
+    @Nonnull
+    @Override
+    public String getColorSchemeName() {
+        return EditorColorsScheme.DEFAULT_SCHEME_NAME;
+    }
 }

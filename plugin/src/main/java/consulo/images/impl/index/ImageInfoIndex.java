@@ -32,6 +32,7 @@ import org.intellij.images.util.ImageInfoReader;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -42,84 +43,86 @@ import java.util.Collection;
  */
 @ExtensionImpl
 public class ImageInfoIndex extends SingleEntryFileBasedIndexExtension<ImageInfo> {
-  private static final int ourMaxImageSize;
+    private static final int ourMaxImageSize;
 
-  static {
-    int maxImageSize = 10;
-    try {
-      maxImageSize = Integer.parseInt(System.getProperty("idea.max.image.filesize", Integer.toString(maxImageSize)), 10);
-    } catch (NumberFormatException ex) {
-    }
-    ourMaxImageSize = maxImageSize * 1024 * 1024;
-  }
-
-  private static int VERSION = 7;
-
-  public static final ID<Integer, ImageInfo> INDEX_ID = ID.create("ImageFileInfoIndex");
-
-  private final DataExternalizer<ImageInfo> myValueExternalizer = new DataExternalizer<ImageInfo>() {
-    @Override
-    public void save(final DataOutput out, final ImageInfo info) throws IOException {
-      DataInputOutputUtil.writeINT(out, info.width());
-      DataInputOutputUtil.writeINT(out, info.height());
-      DataInputOutputUtil.writeINT(out, info.bpp());
+    static {
+        int maxImageSize = 10;
+        try {
+            maxImageSize = Integer.parseInt(System.getProperty("idea.max.image.filesize", Integer.toString(maxImageSize)), 10);
+        }
+        catch (NumberFormatException ex) {
+        }
+        ourMaxImageSize = maxImageSize * 1024 * 1024;
     }
 
-    @Override
-    public ImageInfo read(final DataInput in) throws IOException {
-      return new ImageInfo(DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in));
-    }
-  };
+    private static int VERSION = 7;
 
-  private final SingleEntryIndexer<ImageInfo> myDataIndexer = new SingleEntryIndexer<ImageInfo>(false) {
-    @Override
-    protected ImageInfo computeValue(@Nonnull FileContent inputData) {
-      FileType fileType = inputData.getFileType();
-      if (fileType instanceof ImageFileType imageFileType) {
-        return imageFileType.getImageInfo(inputData.getFile().getPath(), inputData.getContent());
-      }
-      return null;
-    }
-  };
+    public static final ID<Integer, ImageInfo> INDEX_ID = ID.create("ImageFileInfoIndex");
 
-  @Override
-  @Nonnull
-  public ID<Integer, ImageInfo> getName() {
-    return INDEX_ID;
-  }
+    private final DataExternalizer<ImageInfo> myValueExternalizer = new DataExternalizer<ImageInfo>() {
+        @Override
+        public void save(final DataOutput out, final ImageInfo info) throws IOException {
+            DataInputOutputUtil.writeINT(out, info.width());
+            DataInputOutputUtil.writeINT(out, info.height());
+            DataInputOutputUtil.writeINT(out, info.bpp());
+        }
 
-  @Override
-  @Nonnull
-  public SingleEntryIndexer<ImageInfo> getIndexer() {
-    return myDataIndexer;
-  }
-
-  public static void processValues(VirtualFile virtualFile, FileBasedIndex.ValueProcessor<ImageInfo> processor, Project project) {
-    FileBasedIndex.getInstance().processValues(INDEX_ID, Math.abs(FileBasedIndex.getFileId(virtualFile)), virtualFile, processor, GlobalSearchScope
-        .fileScope(project, virtualFile));
-  }
-
-  @Nonnull
-  @Override
-  public DataExternalizer<ImageInfo> getValueExternalizer() {
-    return myValueExternalizer;
-  }
-
-  @Nonnull
-  @Override
-  public FileBasedIndex.InputFilter getInputFilter() {
-    Collection<FileType> fileTypes = ImageFileTypeManager.getInstance().getFileTypes();
-    return new DefaultFileTypeSpecificInputFilter(ContainerUtil.toArray(fileTypes, FileType.ARRAY_FACTORY)) {
-      @Override
-      public boolean acceptInput(@Nullable Project project, @Nonnull VirtualFile file) {
-        return file.isInLocalFileSystem() && file.getLength() < ourMaxImageSize;
-      }
+        @Override
+        public ImageInfo read(final DataInput in) throws IOException {
+            return new ImageInfo(DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in));
+        }
     };
-  }
 
-  @Override
-  public int getVersion() {
-    Collection<FileType> fileTypes = ImageFileTypeManager.getInstance().getFileTypes();
-    return VERSION + fileTypes.size();
-  }
+    private final SingleEntryIndexer<ImageInfo> myDataIndexer = new SingleEntryIndexer<ImageInfo>(false) {
+        @Override
+        protected ImageInfo computeValue(@Nonnull FileContent inputData) {
+            FileType fileType = inputData.getFileType();
+            if (fileType instanceof ImageFileType imageFileType) {
+                return imageFileType.getImageInfo(inputData.getFile().getPath(), inputData.getContent());
+            }
+            return null;
+        }
+    };
+
+    @Override
+    @Nonnull
+    public ID<Integer, ImageInfo> getName() {
+        return INDEX_ID;
+    }
+
+    @Override
+    @Nonnull
+    public SingleEntryIndexer<ImageInfo> getIndexer() {
+        return myDataIndexer;
+    }
+
+    public static void processValues(VirtualFile virtualFile, FileBasedIndex.ValueProcessor<ImageInfo> processor, Project project) {
+        FileBasedIndex.getInstance()
+            .processValues(INDEX_ID, Math.abs(FileBasedIndex.getFileId(virtualFile)), virtualFile, processor, GlobalSearchScope
+                .fileScope(project, virtualFile));
+    }
+
+    @Nonnull
+    @Override
+    public DataExternalizer<ImageInfo> getValueExternalizer() {
+        return myValueExternalizer;
+    }
+
+    @Nonnull
+    @Override
+    public FileBasedIndex.InputFilter getInputFilter() {
+        Collection<FileType> fileTypes = ImageFileTypeManager.getInstance().getFileTypes();
+        return new DefaultFileTypeSpecificInputFilter(ContainerUtil.toArray(fileTypes, FileType.ARRAY_FACTORY)) {
+            @Override
+            public boolean acceptInput(@Nullable Project project, @Nonnull VirtualFile file) {
+                return file.isInLocalFileSystem() && file.getLength() < ourMaxImageSize;
+            }
+        };
+    }
+
+    @Override
+    public int getVersion() {
+        Collection<FileType> fileTypes = ImageFileTypeManager.getInstance().getFileTypes();
+        return VERSION + fileTypes.size();
+    }
 }

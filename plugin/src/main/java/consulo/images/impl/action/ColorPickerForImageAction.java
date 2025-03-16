@@ -22,8 +22,8 @@ import consulo.ui.ex.action.AnActionEvent;
  * @author Konstantin Bulenkov
  */
 public class ColorPickerForImageAction extends ShowColorPickerAction {
-  @Override
-  public void update(AnActionEvent e) {
-    EditExternallyAction.doUpdate(e);
-  }
+    @Override
+    public void update(AnActionEvent e) {
+        EditExternallyAction.doUpdate(e);
+    }
 }

@@ -28,6 +28,7 @@ import consulo.virtualFileSystem.VirtualFileWithId;
 import org.intellij.images.util.ImageInfo;
 
 import jakarta.annotation.Nullable;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -36,44 +37,51 @@ import java.net.URISyntaxException;
  */
 @ExtensionImpl
 public class ImageDocumentationProvider implements UnrestrictedDocumentationProvider {
-  private static final int MAX_IMAGE_SIZE = 300;
+    private static final int MAX_IMAGE_SIZE = 300;
 
-  @Override
-  public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
-    final String[] result = new String[] {null};
+    @Override
+    public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
+        final String[] result = new String[]{null};
 
-    if (element instanceof PsiFileSystemItem && !((PsiFileSystemItem)element).isDirectory()) {
-      final VirtualFile file = ((PsiFileSystemItem)element).getVirtualFile();
-      if (file instanceof VirtualFileWithId && !DumbService.isDumb(element.getProject())) {
-        ImageInfoIndex.processValues(file, new FileBasedIndex.ValueProcessor<ImageInfo>() {
-          public boolean process(VirtualFile file, ImageInfo value) {
-            int imageWidth = value.width();
-            int imageHeight = value.height();
+        if (element instanceof PsiFileSystemItem && !((PsiFileSystemItem)element).isDirectory()) {
+            final VirtualFile file = ((PsiFileSystemItem)element).getVirtualFile();
+            if (file instanceof VirtualFileWithId && !DumbService.isDumb(element.getProject())) {
+                ImageInfoIndex.processValues(file, new FileBasedIndex.ValueProcessor<ImageInfo>() {
+                    public boolean process(VirtualFile file, ImageInfo value) {
+                        int imageWidth = value.width();
+                        int imageHeight = value.height();
 
-            int maxSize = Math.max(value.width(), value.height());
-            if (maxSize > MAX_IMAGE_SIZE) {
-              double scaleFactor = (double)MAX_IMAGE_SIZE / (double)maxSize;
-              imageWidth *= scaleFactor;
-              imageHeight *= scaleFactor;
+                        int maxSize = Math.max(value.width(), value.height());
+                        if (maxSize > MAX_IMAGE_SIZE) {
+                            double scaleFactor = (double)MAX_IMAGE_SIZE / (double)maxSize;
+                            imageWidth *= scaleFactor;
+                            imageHeight *= scaleFactor;
+                        }
+                        try {
+                            String path = file.getPath();
+                            if (SystemInfo.isWindows) {
+                                path = "/" + path;
+                            }
+                            final String url = new URI("file", null, path, null).toString();
+                            result[0] = String.format(
+                                "<html><body><img src=\"%s\" width=\"%s\" height=\"%s\"><p>%sx%s, %sbpp</p><body></html>",
+                                url,
+                                imageWidth,
+                                imageHeight,
+                                value.width(),
+                                value.height(),
+                                value.bpp()
+                            );
+                        }
+                        catch (URISyntaxException e) {
+                            // nothing
+                        }
+                        return true;
+                    }
+                }, element.getProject());
             }
-            try {
-              String path = file.getPath();
-              if (SystemInfo.isWindows) {
-                path = "/" + path;
-              }
-              final String url = new URI("file", null, path, null).toString();
-              result[0] = String.format("<html><body><img src=\"%s\" width=\"%s\" height=\"%s\"><p>%sx%s, %sbpp</p><body></html>", url, imageWidth,
-                                   imageHeight, value.width(), value.height(), value.bpp());
-            }
-            catch (URISyntaxException e) {
-              // nothing
-            }
-            return true;
-          }
-        }, element.getProject());
-      }
+        }
+
+        return result[0];
     }
-
-    return result[0];
-  }
 }

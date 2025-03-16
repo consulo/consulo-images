@@ -31,28 +31,28 @@ import consulo.ui.ex.action.AnActionEvent;
  */
 @ActionImpl(id = "Images.ToggleTransparencyChessboard")
 public final class ToggleTransparencyChessboardAction extends ToggleAction {
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return ImagesIconGroup.toggletransparencychessboard();
-  }
-
-  public boolean isSelected(AnActionEvent e) {
-    ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
-    return decorator != null && decorator.isEnabledForActionPlace(e.getPlace()) && decorator.isTransparencyChessboardVisible();
-  }
-
-  public void setSelected(AnActionEvent e, boolean state) {
-    ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
-    if (decorator != null && decorator.isEnabledForActionPlace(e.getPlace())) {
-      decorator.setTransparencyChessboardVisible(state);
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return ImagesIconGroup.toggletransparencychessboard();
     }
-  }
 
-  public void update(final AnActionEvent e) {
-    super.update(e);
-    ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
-    e.getPresentation().setEnabled(decorator != null && decorator.isEnabledForActionPlace(e.getPlace()));
-    e.getPresentation().setText(isSelected(e) ? "Hide Chessboard" : "Show Chessboard");
-  }
+    public boolean isSelected(AnActionEvent e) {
+        ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
+        return decorator != null && decorator.isEnabledForActionPlace(e.getPlace()) && decorator.isTransparencyChessboardVisible();
+    }
+
+    public void setSelected(AnActionEvent e, boolean state) {
+        ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
+        if (decorator != null && decorator.isEnabledForActionPlace(e.getPlace())) {
+            decorator.setTransparencyChessboardVisible(state);
+        }
+    }
+
+    public void update(final AnActionEvent e) {
+        super.update(e);
+        ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
+        e.getPresentation().setEnabled(decorator != null && decorator.isEnabledForActionPlace(e.getPlace()));
+        e.getPresentation().setText(isSelected(e) ? "Hide Chessboard" : "Show Chessboard");
+    }
 }
