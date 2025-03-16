@@ -26,11 +26,11 @@ import jakarta.annotation.Nullable;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public final class ImageEditorActionUtil {
-  private ImageEditorActionUtil() {
-  }
+    private ImageEditorActionUtil() {
+    }
 
-  @Nullable
-  public static ImageComponentDecorator getImageComponentDecorator(AnActionEvent e) {
-    return e.getData(ImageComponentDecorator.DATA_KEY);
-  }
+    @Nullable
+    public static ImageComponentDecorator getImageComponentDecorator(AnActionEvent e) {
+        return e.getData(ImageComponentDecorator.DATA_KEY);
+    }
 }

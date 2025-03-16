@@ -40,26 +40,26 @@ import jakarta.annotation.Nonnull;
 // TODO <keyboard-shortcut first-keystroke="control DIVIDE" keymap="$default"/>
 // TODO <keyboard-shortcut first-keystroke="control SLASH"keymap="$default"/>
 public final class ActualSizeAction extends AnAction {
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.graphActualzoom();
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-    if (decorator != null) {
-      ImageZoomModel zoomModel = decorator.getZoomModel();
-      zoomModel.setZoomFactor(1.0d);
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.graphActualzoom();
     }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-    e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().getZoomFactor() != 1.0d);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+        if (decorator != null) {
+            ImageZoomModel zoomModel = decorator.getZoomModel();
+            zoomModel.setZoomFactor(1.0d);
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+        e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().getZoomFactor() != 1.0d);
+    }
 }

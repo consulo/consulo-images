@@ -36,31 +36,31 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "Images.Editor.ToggleGrid")
 // TODO <keyboard-shortcut first-keystroke="control QUOTE" keymap="$default"/>
 public final class ToggleGridAction extends ToggleAction {
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.graphGrid();
-  }
-
-  @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
-    ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-    return decorator != null && decorator.isGridVisible();
-  }
-
-  @Override
-  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-    ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-    if (decorator != null) {
-      decorator.setGridVisible(state);
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.graphGrid();
     }
-  }
 
-  @Override
-  public void update(@Nonnull final AnActionEvent e) {
-    super.update(e);
-    ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-    e.getPresentation().setEnabled(decorator != null);
-    e.getPresentation().setText(isSelected(e) ? "Hide Grid" : "Show Grid");
-  }
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+        return decorator != null && decorator.isGridVisible();
+    }
+
+    @Override
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+        if (decorator != null) {
+            decorator.setGridVisible(state);
+        }
+    }
+
+    @Override
+    public void update(@Nonnull final AnActionEvent e) {
+        super.update(e);
+        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+        e.getPresentation().setEnabled(decorator != null);
+        e.getPresentation().setText(isSelected(e) ? "Hide Grid" : "Show Grid");
+    }
 }

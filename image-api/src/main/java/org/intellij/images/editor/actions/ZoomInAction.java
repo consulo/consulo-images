@@ -39,24 +39,24 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "Images.Editor.ZoomIn", shortcutFrom = @ActionRef(id = IdeActions.ACTION_EXPAND_ALL))
 public final class ZoomInAction extends AnAction {
-  public ZoomInAction() {
-    super(ImagesLocalize.actionImagesEditorZoominText(), LocalizeValue.of(), PlatformIconGroup.graphZoomin());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-    if (decorator != null) {
-      ImageZoomModel zoomModel = decorator.getZoomModel();
-      zoomModel.zoomIn();
+    public ZoomInAction() {
+        super(ImagesLocalize.actionImagesEditorZoominText(), LocalizeValue.of(), PlatformIconGroup.graphZoomin());
     }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-    e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomIn());
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+        if (decorator != null) {
+            ImageZoomModel zoomModel = decorator.getZoomModel();
+            zoomModel.zoomIn();
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+        e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomIn());
+    }
 }

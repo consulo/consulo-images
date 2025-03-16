@@ -22,18 +22,18 @@ import org.jetbrains.annotations.PropertyKey;
  * @author max
  */
 public class ImagesBundle extends AbstractBundle {
-  private static final String BUNDLE = "org.intellij.images.ImagesBundle";
-  private static final ImagesBundle ourInstance = new ImagesBundle();
+    private static final String BUNDLE = "org.intellij.images.ImagesBundle";
+    private static final ImagesBundle ourInstance = new ImagesBundle();
 
-  private ImagesBundle() {
-    super(BUNDLE);
-  }
+    private ImagesBundle() {
+        super(BUNDLE);
+    }
 
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
-    return ourInstance.getMessage(key);
-  }
+    public static String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
+        return ourInstance.getMessage(key);
+    }
 
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
-    return ourInstance.getMessage(key, params);
-  }
+    public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
+        return ourInstance.getMessage(key, params);
+    }
 }

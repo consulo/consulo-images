@@ -12,10 +12,10 @@ import jakarta.annotation.Nullable;
  * @since 25-Aug-22
  */
 public interface ImageFileType extends FileType {
-  @Nullable
-  ImageInfo getImageInfo(@Nonnull String filePath, @Nonnull byte[] content);
+    @Nullable
+    ImageInfo getImageInfo(@Nonnull String filePath, @Nonnull byte[] content);
 
-  default double getImageMaxZoomFactor(@Nonnull VirtualFile file, @Nonnull Object uiComponent) {
-    return Double.MAX_VALUE;
-  }
+    default double getImageMaxZoomFactor(@Nonnull VirtualFile file, @Nonnull Object uiComponent) {
+        return Double.MAX_VALUE;
+    }
 }

@@ -26,14 +26,14 @@ import consulo.application.Application;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class OptionsManager {
-  /**
-   * Return current options.
-   *
-   * @return Options
-   */
-  public abstract Options getOptions();
+    /**
+     * Return current options.
+     *
+     * @return Options
+     */
+    public abstract Options getOptions();
 
-  public static OptionsManager getInstance() {
-    return Application.get().getInstance(OptionsManager.class);
-  }
+    public static OptionsManager getInstance() {
+        return Application.get().getInstance(OptionsManager.class);
+    }
 }

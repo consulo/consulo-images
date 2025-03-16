@@ -30,47 +30,47 @@ import jakarta.annotation.Nonnull;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public interface ThumbnailView extends Disposable, ImageComponentDecorator {
-  Key<ThumbnailView> DATA_KEY = Key.create(ThumbnailView.class.getName());
+    Key<ThumbnailView> DATA_KEY = Key.create(ThumbnailView.class.getName());
 
-  String TOOLWINDOW_ID = ImagesBundle.message("thumbnails.toolwindow.name");
+    String TOOLWINDOW_ID = ImagesBundle.message("thumbnails.toolwindow.name");
 
-  @Nonnull
-  Project getProject();
+    @Nonnull
+    Project getProject();
 
-  /**
-   * Add virtual files to view
-   *
-   * @param root Root
-   */
-  void setRoot(@Nonnull VirtualFile root);
+    /**
+     * Add virtual files to view
+     *
+     * @param root Root
+     */
+    void setRoot(@Nonnull VirtualFile root);
 
-  /**
-   * Return current root
-   *
-   * @return Current root
-   */
-  VirtualFile getRoot();
+    /**
+     * Return current root
+     *
+     * @return Current root
+     */
+    VirtualFile getRoot();
 
-  boolean isRecursive();
+    boolean isRecursive();
 
-  void setRecursive(boolean recursive);
+    void setRecursive(boolean recursive);
 
-  void setSelected(@Nonnull VirtualFile file, boolean selected);
+    void setSelected(@Nonnull VirtualFile file, boolean selected);
 
-  boolean isSelected(@Nonnull VirtualFile file);
+    boolean isSelected(@Nonnull VirtualFile file);
 
-  @Nonnull
-  VirtualFile[] getSelection();
+    @Nonnull
+    VirtualFile[] getSelection();
 
-  /**
-   * Scroll to selection. If ToolWindow is not active, then
-   * it will perform activatation before scroll.
-   */
-  void scrollToSelection();
+    /**
+     * Scroll to selection. If ToolWindow is not active, then
+     * it will perform activatation before scroll.
+     */
+    void scrollToSelection();
 
-  void setVisible(boolean visible);
+    void setVisible(boolean visible);
 
-  boolean isVisible();
+    boolean isVisible();
 
-  void activate();
+    void activate();
 }

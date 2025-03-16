@@ -12,8 +12,7 @@ import jakarta.annotation.Nonnull;
  * @since 05/12/2022
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public interface EmbeddedImageViewFactory
-{
-	@Nonnull
-	Component createViewer(@Nonnull Image image);
+public interface EmbeddedImageViewFactory {
+    @Nonnull
+    Component createViewer(@Nonnull Image image);
 }

@@ -13,6 +13,6 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ImageEditorFactory {
-  @Nonnull
-  ImageEditor create(@Nonnull VirtualFile imageFile);
+    @Nonnull
+    ImageEditor create(@Nonnull VirtualFile imageFile);
 }

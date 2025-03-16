@@ -19,6 +19,7 @@ import consulo.util.io.UnsyncByteArrayInputStream;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -28,207 +29,207 @@ import java.io.RandomAccessFile;
  * @author spleaner
  */
 public class ImageInfoReader {
-  private ImageInfoReader() {
-  }
+    private ImageInfoReader() {
+    }
 
-  @Nullable
-  public static ImageInfo getInfo(@Nonnull final String file) {
-    return read(file);
-  }
+    @Nullable
+    public static ImageInfo getInfo(@Nonnull final String file) {
+        return read(file);
+    }
 
-  @Nullable
-  public static ImageInfo getInfo(@Nonnull final byte[] data) {
-    return read(data);
-  }
+    @Nullable
+    public static ImageInfo getInfo(@Nonnull final byte[] data) {
+        return read(data);
+    }
 
-  @Nullable
-  private static ImageInfo read(@Nonnull final String file) {
-    final RandomAccessFile raf;
-    try {
-      raf = new RandomAccessFile(file, "r");
-      try {
-        return readFileData(raf);
-      }
-      finally {
+    @Nullable
+    private static ImageInfo read(@Nonnull final String file) {
+        final RandomAccessFile raf;
         try {
-          raf.close();
+            raf = new RandomAccessFile(file, "r");
+            try {
+                return readFileData(raf);
+            }
+            finally {
+                try {
+                    raf.close();
+                }
+                catch (IOException e) {
+                    // nothing
+                }
+            }
         }
         catch (IOException e) {
-          // nothing
+            return null;
         }
-      }
-    }
-    catch (IOException e) {
-      return null;
-    }
-  }
-
-  @Nullable
-  private static ImageInfo read(@Nonnull final byte[] data) {
-    final DataInputStream is = new DataInputStream(new UnsyncByteArrayInputStream(data));
-    try {
-      return readFileData(is);
-    }
-    catch (IOException e) {
-      return null;
-    }
-    finally {
-      try {
-        is.close();
-      }
-      catch (IOException e) {
-        // nothing
-      }
-    }
-  }
-
-
-  @Nullable
-  private static ImageInfo readFileData(@Nonnull final DataInput di) throws IOException {
-    final int b1 = di.readUnsignedByte();
-    final int b2 = di.readUnsignedByte();
-
-    if (b1 == 0x47 && b2 == 0x49) {
-      return readGif(di);
     }
 
-    if (b1 == 0x89 && b2 == 0x50) {
-      return readPng(di);
+    @Nullable
+    private static ImageInfo read(@Nonnull final byte[] data) {
+        final DataInputStream is = new DataInputStream(new UnsyncByteArrayInputStream(data));
+        try {
+            return readFileData(is);
+        }
+        catch (IOException e) {
+            return null;
+        }
+        finally {
+            try {
+                is.close();
+            }
+            catch (IOException e) {
+                // nothing
+            }
+        }
     }
 
-    if (b1 == 0xff && b2 == 0xd8) {
-      return readJpeg(di);
-    }
 
-    //if (b1 == 0x42 && b2 == 0x4d) {
-    //  return readBmp(raf);
-    //}
+    @Nullable
+    private static ImageInfo readFileData(@Nonnull final DataInput di) throws IOException {
+        final int b1 = di.readUnsignedByte();
+        final int b2 = di.readUnsignedByte();
 
-    return null;
-  }
+        if (b1 == 0x47 && b2 == 0x49) {
+            return readGif(di);
+        }
 
-  @Nullable
-  private static ImageInfo readGif(DataInput di) throws IOException {
-    final byte[] GIF_MAGIC_87A = {0x46, 0x38, 0x37, 0x61};
-    final byte[] GIF_MAGIC_89A = {0x46, 0x38, 0x39, 0x61};
-    byte[] a = new byte[11]; // 4 from the GIF signature + 7 from the global header
+        if (b1 == 0x89 && b2 == 0x50) {
+            return readPng(di);
+        }
 
-    di.readFully(a);
-    if ((!eq(a, 0, GIF_MAGIC_89A, 0, 4)) && (!eq(a, 0, GIF_MAGIC_87A, 0, 4))) {
-      return null;
-    }
+        if (b1 == 0xff && b2 == 0xd8) {
+            return readJpeg(di);
+        }
 
-    final int width = getShortLittleEndian(a, 4);
-    final int height = getShortLittleEndian(a, 6);
+        //if (b1 == 0x42 && b2 == 0x4d) {
+        //  return readBmp(raf);
+        //}
 
-    int flags = a[8] & 0xff;
-    final int bpp = ((flags >> 4) & 0x07) + 1;
-
-    return new ImageInfo(width, height, bpp);
-  }
-
-  private static ImageInfo readBmp(RandomAccessFile raf) throws IOException {
-    byte[] a = new byte[44];
-    if (raf.read(a) != a.length) {
-      return null;
-    }
-
-    final int width = getIntLittleEndian(a, 16);
-    final int height = getIntLittleEndian(a, 20);
-
-    if (width < 1 || height < 1) {
-      return null;
-    }
-
-    final int bpp = getShortLittleEndian(a, 26);
-    if (bpp != 1 && bpp != 4 && bpp != 8 && bpp != 16 && bpp != 24 & bpp != 32) {
-      return null;
-    }
-
-    return new ImageInfo(width, height, bpp);
-  }
-
-  @Nullable
-  private static ImageInfo readJpeg(DataInput di) throws IOException {
-    byte[] a = new byte[13];
-    while (true) {
-      di.readFully(a, 0, 4);
-
-      int marker = getShortBigEndian(a, 0);
-      final int size = getShortBigEndian(a, 2);
-
-      if ((marker & 0xff00) != 0xff00) {
         return null;
-      }
+    }
 
-      if (marker == 0xffe0) {
-        if (size < 14) {
-          di.skipBytes(size - 2);
-          continue;
+    @Nullable
+    private static ImageInfo readGif(DataInput di) throws IOException {
+        final byte[] GIF_MAGIC_87A = {0x46, 0x38, 0x37, 0x61};
+        final byte[] GIF_MAGIC_89A = {0x46, 0x38, 0x39, 0x61};
+        byte[] a = new byte[11]; // 4 from the GIF signature + 7 from the global header
+
+        di.readFully(a);
+        if ((!eq(a, 0, GIF_MAGIC_89A, 0, 4)) && (!eq(a, 0, GIF_MAGIC_87A, 0, 4))) {
+            return null;
         }
 
-        di.readFully(a, 0, 12);
-        di.skipBytes(size - 14);
-      }
-      else if (marker >= 0xffc0 && marker <= 0xffcf && marker != 0xffc4 && marker != 0xffc8) {
-        di.readFully(a, 0, 6);
+        final int width = getShortLittleEndian(a, 4);
+        final int height = getShortLittleEndian(a, 6);
 
-        final int bpp = (a[0] & 0xff) * (a[5] & 0xff);
-        final int width = getShortBigEndian(a, 3);
-        final int height = getShortBigEndian(a, 1);
+        int flags = a[8] & 0xff;
+        final int bpp = ((flags >> 4) & 0x07) + 1;
 
         return new ImageInfo(width, height, bpp);
-      }
-      else {
-        di.skipBytes(size - 2);
-      }
-    }
-  }
-
-  @Nullable
-  private static ImageInfo readPng(DataInput di) throws IOException {
-    final byte[] PNG_MAGIC = {0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
-    byte[] a = new byte[27];
-
-    di.readFully(a);
-    if (!eq(a, 0, PNG_MAGIC, 0, 6)) {
-      return null;
     }
 
-    final int width = getIntBigEndian(a, 14);
-    final int height = getIntBigEndian(a, 18);
-    int bpp = a[22] & 0xff;
-    int colorType = a[23] & 0xff;
-    if (colorType == 2 || colorType == 6) {
-      bpp *= 3;
+    private static ImageInfo readBmp(RandomAccessFile raf) throws IOException {
+        byte[] a = new byte[44];
+        if (raf.read(a) != a.length) {
+            return null;
+        }
+
+        final int width = getIntLittleEndian(a, 16);
+        final int height = getIntLittleEndian(a, 20);
+
+        if (width < 1 || height < 1) {
+            return null;
+        }
+
+        final int bpp = getShortLittleEndian(a, 26);
+        if (bpp != 1 && bpp != 4 && bpp != 8 && bpp != 16 && bpp != 24 & bpp != 32) {
+            return null;
+        }
+
+        return new ImageInfo(width, height, bpp);
     }
 
-    return new ImageInfo(width, height, bpp);
-  }
+    @Nullable
+    private static ImageInfo readJpeg(DataInput di) throws IOException {
+        byte[] a = new byte[13];
+        while (true) {
+            di.readFully(a, 0, 4);
 
-  private static int getShortBigEndian(byte[] a, int offset) {
-    return (a[offset] & 0xff) << 8 | (a[offset + 1] & 0xff);
-  }
+            int marker = getShortBigEndian(a, 0);
+            final int size = getShortBigEndian(a, 2);
 
-  private static boolean eq(byte[] a1, int offset1, byte[] a2, int offset2, int num) {
-    while (num-- > 0) {
-      if (a1[offset1++] != a2[offset2++]) {
-        return false;
-      }
+            if ((marker & 0xff00) != 0xff00) {
+                return null;
+            }
+
+            if (marker == 0xffe0) {
+                if (size < 14) {
+                    di.skipBytes(size - 2);
+                    continue;
+                }
+
+                di.readFully(a, 0, 12);
+                di.skipBytes(size - 14);
+            }
+            else if (marker >= 0xffc0 && marker <= 0xffcf && marker != 0xffc4 && marker != 0xffc8) {
+                di.readFully(a, 0, 6);
+
+                final int bpp = (a[0] & 0xff) * (a[5] & 0xff);
+                final int width = getShortBigEndian(a, 3);
+                final int height = getShortBigEndian(a, 1);
+
+                return new ImageInfo(width, height, bpp);
+            }
+            else {
+                di.skipBytes(size - 2);
+            }
+        }
     }
 
-    return true;
-  }
+    @Nullable
+    private static ImageInfo readPng(DataInput di) throws IOException {
+        final byte[] PNG_MAGIC = {0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
+        byte[] a = new byte[27];
 
-  private static int getIntBigEndian(byte[] a, int offset) {
-    return (a[offset] & 0xff) << 24 | (a[offset + 1] & 0xff) << 16 | (a[offset + 2] & 0xff) << 8 | a[offset + 3] & 0xff;
-  }
+        di.readFully(a);
+        if (!eq(a, 0, PNG_MAGIC, 0, 6)) {
+            return null;
+        }
 
-  private static int getIntLittleEndian(byte[] a, int offset) {
-    return (a[offset + 3] & 0xff) << 24 | (a[offset + 2] & 0xff) << 16 | (a[offset + 1] & 0xff) << 8 | a[offset] & 0xff;
-  }
+        final int width = getIntBigEndian(a, 14);
+        final int height = getIntBigEndian(a, 18);
+        int bpp = a[22] & 0xff;
+        int colorType = a[23] & 0xff;
+        if (colorType == 2 || colorType == 6) {
+            bpp *= 3;
+        }
 
-  private static int getShortLittleEndian(byte[] a, int offset) {
-    return (a[offset] & 0xff) | (a[offset + 1] & 0xff) << 8;
-  }
+        return new ImageInfo(width, height, bpp);
+    }
+
+    private static int getShortBigEndian(byte[] a, int offset) {
+        return (a[offset] & 0xff) << 8 | (a[offset + 1] & 0xff);
+    }
+
+    private static boolean eq(byte[] a1, int offset1, byte[] a2, int offset2, int num) {
+        while (num-- > 0) {
+            if (a1[offset1++] != a2[offset2++]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static int getIntBigEndian(byte[] a, int offset) {
+        return (a[offset] & 0xff) << 24 | (a[offset + 1] & 0xff) << 16 | (a[offset + 2] & 0xff) << 8 | a[offset + 3] & 0xff;
+    }
+
+    private static int getIntLittleEndian(byte[] a, int offset) {
+        return (a[offset + 3] & 0xff) << 24 | (a[offset + 2] & 0xff) << 16 | (a[offset + 1] & 0xff) << 8 | a[offset] & 0xff;
+    }
+
+    private static int getShortLittleEndian(byte[] a, int offset) {
+        return (a[offset] & 0xff) | (a[offset + 1] & 0xff) << 8;
+    }
 }

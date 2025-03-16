@@ -19,6 +19,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
 
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 
 /**
@@ -27,26 +28,26 @@ import java.awt.*;
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public interface GridOptions extends Cloneable {
-  String ATTR_PREFIX = "Editor.Grid.";
-  String ATTR_SHOW_DEFAULT = ATTR_PREFIX + "showDefault";
-  String ATTR_LINE_ZOOM_FACTOR = ATTR_PREFIX + "lineZoomFactor";
-  String ATTR_LINE_SPAN = ATTR_PREFIX + "lineSpan";
+    String ATTR_PREFIX = "Editor.Grid.";
+    String ATTR_SHOW_DEFAULT = ATTR_PREFIX + "showDefault";
+    String ATTR_LINE_ZOOM_FACTOR = ATTR_PREFIX + "lineZoomFactor";
+    String ATTR_LINE_SPAN = ATTR_PREFIX + "lineSpan";
 
-  int DEFAULT_LINE_ZOOM_FACTOR = 3;
-  int DEFAULT_LINE_SPAN = 1;
-  @Deprecated
-  Color DEFAULT_LINE_COLOR = JBColor.DARK_GRAY;
+    int DEFAULT_LINE_ZOOM_FACTOR = 3;
+    int DEFAULT_LINE_SPAN = 1;
+    @Deprecated
+    Color DEFAULT_LINE_COLOR = JBColor.DARK_GRAY;
 
-  boolean isShowDefault();
+    boolean isShowDefault();
 
-  int getLineZoomFactor();
+    int getLineZoomFactor();
 
-  int getLineSpan();
+    int getLineSpan();
 
-  @Nonnull
-  ColorValue getLineColor();
+    @Nonnull
+    ColorValue getLineColor();
 
-  void inject(GridOptions options);
+    void inject(GridOptions options);
 
-  boolean setOption(String name, Object value);
+    boolean setOption(String name, Object value);
 }
