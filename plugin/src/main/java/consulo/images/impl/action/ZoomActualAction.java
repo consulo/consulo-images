@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.intellij.images.editor.actions;
+package consulo.images.impl.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.ActionRef;
+import consulo.images.localize.ImagesLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nullable;
 import org.intellij.images.editor.ImageEditor;
@@ -32,17 +33,22 @@ import org.intellij.images.ui.ImageComponentDecorator;
 import jakarta.annotation.Nonnull;
 
 /**
- * Zoom out.
+ * Resize image to actual size.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
- * @see ImageEditor#getZoomModel
+ * @see ImageEditor#getZoomModel()
+ * @see ImageZoomModel#setZoomFactor
  */
-@ActionImpl(id = "Images.Editor.ZoomOut", shortcutFrom = @ActionRef(id = IdeActions.ACTION_COLLAPSE_ALL))
-public final class ZoomOutAction extends AnAction {
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.graphZoomout();
+@ActionImpl(id = "Images.Editor.Zoom.Actual")
+// TODO <keyboard-shortcut first-keystroke="control DIVIDE" keymap="$default"/>
+// TODO <keyboard-shortcut first-keystroke="control SLASH"keymap="$default"/>
+public final class ZoomActualAction extends DumbAwareAction {
+    public ZoomActualAction() {
+        super(
+            ImagesLocalize.actionImagesEditorZoomActualText(),
+            LocalizeValue.empty(),
+            PlatformIconGroup.graphActualzoom()
+        );
     }
 
     @Override
@@ -50,8 +56,7 @@ public final class ZoomOutAction extends AnAction {
     public void actionPerformed(@Nonnull AnActionEvent e) {
         ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
         if (decorator != null) {
-            ImageZoomModel zoomModel = decorator.getZoomModel();
-            zoomModel.zoomOut();
+            decorator.getZoomModel().setZoomFactor(1.0d);
         }
     }
 
@@ -59,6 +64,6 @@ public final class ZoomOutAction extends AnAction {
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomOut());
+        e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().getZoomFactor() != 1.0d);
     }
 }

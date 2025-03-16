@@ -15,8 +15,10 @@
  */
 package consulo.images.desktop.awt.impl.editor;
 
+import consulo.images.ImageColorKeys;
 import consulo.images.localize.ImagesLocalize;
 import consulo.ui.ex.awt.JBUI.ScaleContext;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Lists;
 import jakarta.annotation.Nullable;
 import org.intellij.images.ImageDocument;
@@ -56,10 +58,6 @@ public class ImageComponent extends JComponent {
      * @see #readObject
      */
     private static final String uiClassID = "ImageComponentUI";
-
-    static {
-        //UIManager.getDefaults().put(uiClassID, ImageComponentUI.class.getName());
-    }
 
     private final ImageDocument document = new ImageDocumentImpl(this);
     private final Grid grid = new Grid();
@@ -230,7 +228,6 @@ public class ImageComponent extends JComponent {
     @Override
     public void updateUI() {
         setUI(ImageComponentUI.createUI(this));
-        //setUI(UIManager.getUI(this));
     }
 
     private static class ImageDocumentImpl implements ImageDocument {
@@ -369,7 +366,7 @@ public class ImageComponent extends JComponent {
     private static final class Grid {
         private int lineZoomFactor = GridOptions.DEFAULT_LINE_ZOOM_FACTOR;
         private int lineSpan = GridOptions.DEFAULT_LINE_SPAN;
-        private Color lineColor = GridOptions.DEFAULT_LINE_COLOR;
+        private Color lineColor;
         private boolean visible = false;
 
         public int getLineZoomFactor() {

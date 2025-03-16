@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.intellij.images.editor.actions;
+package consulo.images.impl.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
@@ -21,26 +21,25 @@ import consulo.images.localize.ImagesLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
+import jakarta.annotation.Nonnull;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
 import org.intellij.images.ui.ImageComponentDecorator;
 
-import jakarta.annotation.Nonnull;
-
 /**
- * Zoom in.
+ * Zoom out.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  * @see ImageEditor#getZoomModel
  */
-@ActionImpl(id = "Images.Editor.ZoomIn", shortcutFrom = @ActionRef(id = IdeActions.ACTION_EXPAND_ALL))
-public final class ZoomInAction extends AnAction {
-    public ZoomInAction() {
-        super(ImagesLocalize.actionImagesEditorZoominText(), LocalizeValue.of(), PlatformIconGroup.graphZoomin());
+@ActionImpl(id = "Images.Editor.Zoom.Out", shortcutFrom = @ActionRef(id = IdeActions.ACTION_COLLAPSE_ALL))
+public final class ZoomOutAction extends DumbAwareAction {
+    public ZoomOutAction() {
+        super(ImagesLocalize.actionImagesEditorZoomOutText(), LocalizeValue.empty(), PlatformIconGroup.graphZoomout());
     }
 
     @Override
@@ -49,7 +48,7 @@ public final class ZoomInAction extends AnAction {
         ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
         if (decorator != null) {
             ImageZoomModel zoomModel = decorator.getZoomModel();
-            zoomModel.zoomIn();
+            zoomModel.zoomOut();
         }
     }
 
@@ -57,6 +56,6 @@ public final class ZoomInAction extends AnAction {
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomIn());
+        e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomOut());
     }
 }

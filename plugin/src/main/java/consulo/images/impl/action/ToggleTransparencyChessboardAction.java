@@ -20,36 +20,38 @@ import consulo.images.icon.ImagesIconGroup;
 import consulo.images.localize.ImagesLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
 import org.intellij.images.ui.ImageComponentDecorator;
 
 /**
  * Show/hide background action.
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
- * @see org.intellij.images.ui.ImageComponentDecorator#setTransparencyChessboardVisible
+ * @see ImageComponentDecorator#setTransparencyChessboardVisible
  */
 @ActionImpl(id = "Images.ToggleTransparencyChessboard")
 public final class ToggleTransparencyChessboardAction extends ToggleAction {
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return ImagesIconGroup.toggletransparencychessboard();
+    public ToggleTransparencyChessboardAction() {
+        super(
+            ImagesLocalize.actionImagesEditorToggleTransparencyChessboardShowText(),
+            ImagesLocalize.actionImagesEditorToggleTransparencyChessboardDescription(),
+            ImagesIconGroup.toggletransparencychessboard()
+        );
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
-        ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
-        return decorator != null && decorator.isEnabledForActionPlace(e.getPlace()) && decorator.isTransparencyChessboardVisible();
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        ImageComponentDecorator decorator = getDecoratorIfEnabled(e);
+        return decorator != null && decorator.isTransparencyChessboardVisible();
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
-        ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
-        if (decorator != null && decorator.isEnabledForActionPlace(e.getPlace())) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        ImageComponentDecorator decorator = getDecoratorIfEnabled(e);
+        if (decorator != null) {
             decorator.setTransparencyChessboardVisible(state);
         }
     }
@@ -58,10 +60,18 @@ public final class ToggleTransparencyChessboardAction extends ToggleAction {
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        ImageComponentDecorator decorator = e.getData(ImageComponentDecorator.DATA_KEY);
-        e.getPresentation().setEnabled(decorator != null && decorator.isEnabledForActionPlace(e.getPlace()));
-        e.getPresentation().setTextValue(
-            isSelected(e) ? ImagesLocalize.actionEditorHideChessboardText() : ImagesLocalize.actionEditorShowChessboardText()
+        ImageComponentDecorator decorator = getDecoratorIfEnabled(e);
+        Presentation presentation = e.getPresentation();
+        presentation.setEnabled(decorator != null);
+        presentation.setTextValue(
+            isSelected(e)
+                ? ImagesLocalize.actionImagesEditorToggleTransparencyChessboardHideText()
+                : ImagesLocalize.actionImagesEditorToggleTransparencyChessboardShowText()
         );
+    }
+
+    private ImageComponentDecorator getDecoratorIfEnabled(AnActionEvent e) {
+        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
+        return decorator != null && decorator.isEnabledForActionPlace(e.getPlace()) ? decorator : null;
     }
 }

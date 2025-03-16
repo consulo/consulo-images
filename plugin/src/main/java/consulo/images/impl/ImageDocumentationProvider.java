@@ -38,14 +38,14 @@ public class ImageDocumentationProvider implements UnrestrictedDocumentationProv
 
     @Override
     public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
-        String[] result = new String[]{null};
+        String[] result = new String[] {null};
 
         if (element instanceof PsiFileSystemItem fileSystemItem && !fileSystemItem.isDirectory()) {
-            VirtualFile file = fileSystemItem.getVirtualFile();
-            if (file instanceof VirtualFileWithId && !DumbService.isDumb(element.getProject())) {
+            VirtualFile virtualFile = fileSystemItem.getVirtualFile();
+            if (virtualFile instanceof VirtualFileWithId && !DumbService.isDumb(element.getProject())) {
                 ImageInfoIndex.processValues(
-                    file,
-                    (file1, value) -> {
+                    virtualFile,
+                    (file, value) -> {
                         int imageWidth = value.width();
                         int imageHeight = value.height();
 
@@ -56,7 +56,7 @@ public class ImageDocumentationProvider implements UnrestrictedDocumentationProv
                             imageHeight *= scaleFactor;
                         }
                         try {
-                            String path = file1.getPath();
+                            String path = file.getPath();
                             if (Platform.current().os().isWindows()) {
                                 path = "/" + path;
                             }

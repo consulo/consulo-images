@@ -55,12 +55,12 @@ public class ImagesColorSettingsPage implements ColorSettingsPage {
             ),
             new ColorDescriptor(
                 ImagesLocalize.whiteCellColorDescriptor(),
-                ImageColorKeys.WHITE_CELL_COLOR_KEY,
+                ImageColorKeys.CHESSBOARD_WHITE_CELL_COLOR_KEY,
                 ColorDescriptor.Kind.BACKGROUND
             ),
             new ColorDescriptor(
                 ImagesLocalize.blackCellColorDescriptor(),
-                ImageColorKeys.BLACK_CELL_COLOR_KEY,
+                ImageColorKeys.CHESSBOARD_BLACK_CELL_COLOR_KEY,
                 ColorDescriptor.Kind.BACKGROUND
             )
         };

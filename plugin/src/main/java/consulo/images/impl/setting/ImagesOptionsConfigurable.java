@@ -53,9 +53,10 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
     @Override
     protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
         Options options = myOptionsManager.get().getOptions();
-        GridOptions gridOptions = options.getEditorOptions().getGridOptions();
-        TransparencyChessboardOptions chessboardOptions = options.getEditorOptions().getTransparencyChessboardOptions();
-        ZoomOptions zoomOptions = options.getEditorOptions().getZoomOptions();
+        EditorOptions editorOptions = options.getEditorOptions();
+        GridOptions gridOptions = editorOptions.getGridOptions();
+        TransparencyChessboardOptions chessboardOptions = editorOptions.getTransparencyChessboardOptions();
+        ZoomOptions zoomOptions = editorOptions.getZoomOptions();
 
         VerticalLayout root = VerticalLayout.create(0);
 
@@ -70,8 +71,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
         gridOptionsPanel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 24);
         imagesLayout.add(gridOptionsPanel);
 
-        IntBox gridLineZoomLimit = IntBox.create(2);
-        gridLineZoomLimit.setRange(2, 8);
+        IntBox gridLineZoomLimit = IntBox.create(2).withRange(2, 8);
         gridOptionsPanel.add(LabeledBuilder.sided(ImagesLocalize.showGridZoomLimit(), gridLineZoomLimit));
         propertyBuilder.add(
             gridLineZoomLimit,
@@ -79,8 +79,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
             it -> gridOptions.setOption(GridOptions.ATTR_LINE_ZOOM_FACTOR, it)
         );
 
-        IntBox gridLineSpan = IntBox.create(1);
-        gridLineSpan.setRange(1, 100);
+        IntBox gridLineSpan = IntBox.create(1).withRange(1, 100);
         gridOptionsPanel.add(LabeledBuilder.sided(ImagesLocalize.showGridEvery(), gridLineSpan));
         propertyBuilder.add(gridLineSpan, gridOptions::getLineSpan, it -> gridOptions.setOption(GridOptions.ATTR_LINE_SPAN, it));
 
@@ -96,8 +95,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
         chessboardPanel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 24);
         imagesLayout.add(chessboardPanel);
 
-        IntBox chessboardSize = IntBox.create(1);
-        chessboardSize.setRange(1, 100);
+        IntBox chessboardSize = IntBox.create(1).withRange(1, 100);
         chessboardPanel.add(LabeledBuilder.sided(ImagesLocalize.chessboardCellSize(), chessboardSize));
         propertyBuilder.add(
             chessboardSize,
@@ -119,8 +117,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
         smartWheelPanel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 24);
         imagesLayout.add(smartWheelPanel);
 
-        IntBox smartZoomingWidth = IntBox.create(1);
-        smartZoomingWidth.setRange(1, 9999);
+        IntBox smartZoomingWidth = IntBox.create(1).withRange(1, 9999);
         smartWheelPanel.add(LabeledBuilder.sided(ImagesLocalize.settingsPrefferedSmartZoomWidth(), smartZoomingWidth));
         propertyBuilder.add(
             smartZoomingWidth,
@@ -128,8 +125,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
             it -> zoomOptions.setOption(ZoomOptions.ATTR_PREFFERED_WIDTH, it)
         );
 
-        IntBox smartZoomingHeight = IntBox.create(1);
-        smartZoomingHeight.setRange(1, 9999);
+        IntBox smartZoomingHeight = IntBox.create(1).withRange(1, 9999);
         smartWheelPanel.add(LabeledBuilder.sided(ImagesLocalize.settingsPrefferedSmartZoomHeight(), smartZoomingHeight));
         propertyBuilder.add(
             smartZoomingHeight,
