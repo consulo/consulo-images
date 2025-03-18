@@ -21,15 +21,14 @@ import consulo.images.localize.ImagesLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
+import jakarta.annotation.Nonnull;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
 import org.intellij.images.ui.ImageComponentDecorator;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Zoom in.
@@ -38,7 +37,7 @@ import jakarta.annotation.Nonnull;
  * @see ImageEditor#getZoomModel
  */
 @ActionImpl(id = "Images.Editor.Zoom.In", shortcutFrom = @ActionRef(id = IdeActions.ACTION_EXPAND_ALL))
-public final class ZoomInAction extends AnAction {
+public final class ZoomInAction extends DumbAwareAction {
     public ZoomInAction() {
         super(ImagesLocalize.actionImagesEditorZoomInText(), LocalizeValue.empty(), PlatformIconGroup.graphZoomin());
     }

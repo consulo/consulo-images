@@ -1,88 +1,86 @@
-error.empty.external.editor.path:
-  text: Please configure external editor executable path
-error.title.empty.external.editor.path:
-  text: External Editor not Configured
-error.title.launching.external.editor:
-  text: Problem Launching External Executable
-select.external.executable.title:
-  text: Select editor
-select.external.executable.message:
-  text: Select external graphics editor
-error.broken.image.file.format:
-  text: <html><b>Image not loaded</b><br>Try to open it externally to fix format problem</html>
-images.filetype.description:
-  text: Image files
-settings.page.name:
-  text: Image Viewer
-thumbnails.component.error.text:
-  text: Error
-icons.count:
-  text: '{0,choice, 0#no images|1#1 image|2#{0,number} images|100# > 100 images}'
-icon.dimensions:
-  text: '{0,number}x{1,number}x{2,number}'
-settings.preffered.smart.zoom.width:
-  text: 'Preferred minimum wi&dth for smart zooming (pixels):'
-settings.preffered.smart.zoom.height:
-  text: 'Preferred minimum &height for smart zooming (pixels):'
-show.grid.lines:
-  text: Show &Grid lines by default
-show.transparency.chessboard:
-  text: Show &transparency chessboard by default
-enable.mousewheel.zooming:
-  text: Zoom image with &mouse wheel ({0}+Mouse Wheel)
-smart.zoom:
-  text: Enable smart &zooming for small images
-chessboard.cell.size:
-  text: 'Chessboard cell &size (pixels):'
-show.grid.every:
-  text: 'Show main Grid line after &every (pixels):'
-show.grid.zoom.limit:
-  text: 'Show Grid lines &only when zoom factor is at least:'
-white.cell.color:
-  text: 'Color of ''&white'' cell:'
-white.cell.color.descriptor:
-  text: "'White' cell"
-black.cell.color:
-  text: 'Color of ''&black'' cell:'
-black.cell.color.descriptor:
-  text: "'Black' cell"
-grid.line.color.descriptor:
-  text: 'Grid line &color:'
-external.editor.executable.path:
-  text: 'Executable &path:'
-external.editor.border.title:
-  text: External Editor
-main.page.border.title:
-  text: Editor
-plugin.Images.description:
-  text: Provides image viewing and thumbnail browsing
-unknown.format:
-  text: Unknown Format
-image.info:
-  text: '{0}x{1} {2} ({3}-bit color) {4}'
-svg.file.type.description:
-  text: Scalable Vector Graphics
-action.Images.Editor.Zoom.In.text:
-  text: Zoom In
-action.Images.Editor.Zoom.Out.text:
-  text: Zoom Out
-action.Images.Editor.Zoom.Actual.text:
-  text: Zoom to Actual Size
-action.Images.Editor.Toggle.Grid.show.text:
-  text: Show Grid
-action.Images.Editor.Toggle.Grid.hide.text:
-  text: Hide Grid
-action.Images.Editor.Toggle.Transparency.Chessboard.show.text:
-  text: Show Chessboard
-action.Images.Editor.Toggle.Transparency.Chessboard.hide.text:
-  text: Hide Chessboard
-action.Images.Editor.Toggle.Transparency.Chessboard.description:
-  text: A chessboard on transparent image parts
-action.Images.Open.Settings.text:
-  text: Image Viewer Settings
-action.Images.Open.Settings.description:
-  text: Open Image Viewer settings page
 action.Images.Convert.Svg.To.Png.text:
-  text: Convert to PNG
+    text: Convert to PNG
+action.Images.Editor.Toggle.Grid.hide.text:
+    text: Hide Grid
+action.Images.Editor.Toggle.Grid.show.text:
+    text: Show Grid
+action.Images.Editor.Toggle.Transparency.Chessboard.description:
+    text: A chessboard on transparent image parts
+action.Images.Editor.Toggle.Transparency.Chessboard.hide.text:
+    text: Hide Chessboard
+action.Images.Editor.Toggle.Transparency.Chessboard.show.text:
+    text: Show Chessboard
+action.Images.Editor.Zoom.Actual.text:
+    text: Zoom to Actual Size
+action.Images.Editor.Zoom.In.text:
+    text: Zoom In
+action.Images.Editor.Zoom.Out.text:
+    text: Zoom Out
+action.Images.Open.Settings.description:
+    text: Open Image Viewer settings page
+action.Images.Open.Settings.text:
+    text: Image Viewer Settings
+black.cell.color:
+    text: 'Color of ''&black'' cell:'
+black.cell.color.descriptor:
+    text: '''Black'' cell'
+chessboard.cell.size:
+    text: 'Chessboard cell &size (pixels):'
+enable.mousewheel.zooming:
+    text: Zoom image with &mouse wheel ({0}+Mouse Wheel)
+error.broken.image.file.format:
+    text: <html><b>Image not loaded</b><br>Try to open it externally to fix format problem</html>
+error.empty.external.editor.path:
+    text: Please configure external editor executable path
+error.title.empty.external.editor.path:
+    text: External Editor not Configured
+error.title.launching.external.editor:
+    text: Problem Launching External Executable
+external.editor.border.title:
+    text: External Editor
+external.editor.executable.path:
+    text: 'Executable &path:'
 grid.line.color.descriptor:
-  text: Grid line
+    text: Grid line
+icon.dimensions:
+    text: '{0,number}x{1,number}x{2,number}'
+icons.count:
+    text: '{0,choice, 0#no images|1#1 image|2#{0,number} images|100# > 100 images}'
+image.info:
+    text: '{0}x{1} {2} ({3}-bit color) {4}'
+images.filetype.description:
+    text: Image files
+main.page.border.title:
+    text: Editor
+plugin.Images.description:
+    text: Provides image viewing and thumbnail browsing
+select.external.executable.message:
+    text: Select external graphics editor
+select.external.executable.title:
+    text: Select editor
+settings.page.name:
+    text: Image Viewer
+settings.preffered.smart.zoom.height:
+    text: 'Preferred minimum &height for smart zooming (pixels):'
+settings.preffered.smart.zoom.width:
+    text: 'Preferred minimum wi&dth for smart zooming (pixels):'
+show.grid.every:
+    text: 'Show main Grid line after &every (pixels):'
+show.grid.lines:
+    text: Show &Grid lines by default
+show.grid.zoom.limit:
+    text: 'Show Grid lines &only when zoom factor is at least:'
+show.transparency.chessboard:
+    text: Show &transparency chessboard by default
+smart.zoom:
+    text: Enable smart &zooming for small images
+svg.file.type.description:
+    text: Scalable Vector Graphics
+thumbnails.component.error.text:
+    text: Error
+unknown.format:
+    text: Unknown Format
+white.cell.color:
+    text: 'Color of ''&white'' cell:'
+white.cell.color.descriptor:
+    text: '''White'' cell'
