@@ -16,14 +16,15 @@
 package consulo.images.desktop.awt.impl.editor;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.images.ui.EmbeddedImageViewFactory;
 import consulo.ui.Component;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.intellij.images.options.*;
-
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +38,13 @@ import java.awt.image.BufferedImage;
 @Singleton
 @ServiceImpl
 public final class ImageEditorManagerImpl implements EmbeddedImageViewFactory {
+    private final Application myApplication;
+
+    @Inject
+    public ImageEditorManagerImpl(Application application) {
+        myApplication = application;
+    }
+
     @Nonnull
     @Override
     public Component createViewer(@Nonnull Image uiImage) {
@@ -52,12 +60,12 @@ public final class ImageEditorManagerImpl implements EmbeddedImageViewFactory {
         icon.paintIcon(null, g, 0, 0);
         g.dispose();
 
-        return TargetAWT.wrap(createImageEditorUI(image));
+        return TargetAWT.wrap(createImageEditorUI(myApplication, image));
     }
 
     @Nonnull
-    public static ImageEditorUI createImageEditorUI(BufferedImage image) {
-        ImageEditorUI ui = new ImageEditorUI(null);
+    public static ImageEditorUI createImageEditorUI(Application application, BufferedImage image) {
+        ImageEditorUI ui = new ImageEditorUI(application, null);
         Options options = OptionsManager.getInstance().getOptions();
         EditorOptions editorOptions = options.getEditorOptions();
         GridOptions gridOptions = editorOptions.getGridOptions();

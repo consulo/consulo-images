@@ -22,10 +22,10 @@ import consulo.images.desktop.awt.impl.IfsUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
+import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.intellij.images.ImageDocument;
@@ -33,8 +33,6 @@ import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
-
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -53,23 +51,21 @@ public final class ImageEditorImpl implements ImageEditor {
         this.project = project;
         this.file = file;
 
-        editorUI = new ImageEditorUI(this);
+        editorUI = new ImageEditorUI(project.getApplication(), this);
+        
         Disposer.register(this, editorUI);
 
-        VirtualFileManager.getInstance().addVirtualFileListener(
-            new VirtualFileListener() {
-                @Override
-                public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
-                    ImageEditorImpl.this.propertyChanged(event);
-                }
+        project.getApplication().getMessageBus().connect(this).subscribe(VirtualFileListener.class, new VirtualFileListener() {
+            @Override
+            public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+                ImageEditorImpl.this.propertyChanged(event);
+            }
 
-                @Override
-                public void contentsChanged(@Nonnull VirtualFileEvent event) {
-                    ImageEditorImpl.this.contentsChanged(event);
-                }
-            },
-            this
-        );
+            @Override
+            public void contentsChanged(@Nonnull VirtualFileEvent event) {
+                ImageEditorImpl.this.contentsChanged(event);
+            }
+        });
 
         setValue(file);
     }
