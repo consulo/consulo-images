@@ -123,5 +123,11 @@
             <artifactId>com.intellij.images-svg.desktop.awt.impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>com.intellij.images-svg.desktop.awt.internal.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

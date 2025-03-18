@@ -17,7 +17,7 @@ module com.intellij.images.desktop.awt.impl {
 
     requires org.apache.commons.imaging;
 
-    exports consulo.images.desktop.awt.impl to com.intellij.images_svg.desktop.awt.impl;
+    exports consulo.images.desktop.awt.impl to com.intellij.images_svg.desktop.awt.impl, com.intellij.images_svg.desktop.awt.internal.impl;
     exports consulo.images.desktop.awt.impl.editor to com.intellij.images_svg.desktop.awt.impl;
     exports consulo.images.desktop.awt.impl.thumbnail to com.intellij.images_svg.desktop.awt.impl;
 }

@@ -8,5 +8,8 @@ module com.intellij.images_image.svg.api {
     requires transitive com.intellij.xml;
 
     exports consulo.images.svg;
-    exports consulo.images.svg.internal to com.intellij.images_svg.desktop.awt.impl, com.intellij.images_image.svg.impl;
+    exports consulo.images.svg.internal to
+        com.intellij.images_svg.desktop.awt.impl,
+        com.intellij.images_svg.desktop.awt.internal.impl,
+        com.intellij.images_image.svg.impl;
 }

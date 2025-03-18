@@ -69,7 +69,7 @@ public final class IfsUtil {
 
                 ExtensionPoint<ImageProcessor> point = Application.get().getExtensionPoint(ImageProcessor.class);
 
-                point.forEachExtensionSafe(processor -> {
+                point.findFirstSafe(processor -> {
                     if (processor.accept(file)) {
                         try {
                             Pair<String, ScaledImageProvider> info = processor.read(file);
@@ -81,7 +81,10 @@ public final class IfsUtil {
                         catch (IOException e) {
                             LOG.warn(e);
                         }
+                        return true;
                     }
+
+                    return false;
                 });
             }
             finally {

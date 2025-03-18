@@ -1,11 +1,15 @@
-package consulo.images.svg.desktop.awt.impl;
+package consulo.images.svg.desktop.awt.impl.internal;
 
+import com.github.weisj.jsvg.SVGDocument;
+import com.github.weisj.jsvg.geometry.size.FloatSize;
+import com.github.weisj.jsvg.parser.SVGLoader;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.images.desktop.awt.impl.IfsUtil;
 import consulo.images.desktop.awt.impl.ImageProcessor;
 import consulo.images.svg.SVGFileType;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
@@ -23,11 +27,11 @@ import java.net.URL;
 
 /**
  * @author VISTALL
- * @since 2022-08-25
+ * @since 2025-03-18
  */
-@ExtensionImpl(id = "svg", order = "before jsvg")
-public class SVGImageProcessor implements ImageProcessor {
-    private static final Logger LOG = Logger.getInstance(SVGImageProcessor.class);
+@ExtensionImpl(id = "jsvg")
+public class JSVGImageProcessor implements ImageProcessor {
+    private static final Logger LOG = Logger.getInstance(JSVGImageProcessor.class);
 
     @Override
     public boolean accept(@Nonnull VirtualFile file) {
@@ -47,20 +51,12 @@ public class SVGImageProcessor implements ImageProcessor {
         }
 
         byte[] content = file.contentsToByteArray();
-        try {
-            // ensure svg can be displayed
-            SVGLoader.load(url.get(), new ByteArrayInputStream(content), 1.0f);
-        }
-        catch (Throwable t) {
-            LOG.warn(url.get() + " " + t.getMessage(), t);
-            return null;
-        }
 
         ImageDocument.CachedScaledImageProvider provider = new ImageDocument.CachedScaledImageProvider() {
             JBUI.ScaleContext.Cache<BufferedImage> cache = new JBUI.ScaleContext.Cache<>((ctx) ->
             {
                 try {
-                    return SVGLoader.loadHiDPI(url.get(), new ByteArrayInputStream(content), ctx);
+                    return toImage(content);
                 }
                 catch (Throwable t) {
                     LOG.warn(url.get() + " " + t.getMessage());
@@ -81,5 +77,25 @@ public class SVGImageProcessor implements ImageProcessor {
             }
         };
         return Pair.create(IfsUtil.SVG_FORMAT, provider);
+    }
+
+    public static BufferedImage toImage(byte[] content) {
+        SVGLoader loader = new SVGLoader();
+
+        SVGDocument document = loader.load(new ByteArrayInputStream(content));
+
+        FloatSize shape = document.size();
+
+        BufferedImage image = new BufferedImage((int) shape.width, (int) shape.height, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics graphics = image.getGraphics();
+
+        GraphicsUtil.setupAAPainting(graphics);
+
+        document.render(null, (Graphics2D) graphics);
+
+        graphics.dispose();
+
+        return image;
     }
 }
