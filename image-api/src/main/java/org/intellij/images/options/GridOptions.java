@@ -34,9 +34,7 @@ public interface GridOptions extends Cloneable {
     String ATTR_LINE_SPAN = ATTR_PREFIX + "lineSpan";
 
     int DEFAULT_LINE_ZOOM_FACTOR = 3;
-    int DEFAULT_LINE_SPAN = 1;
-    @Deprecated
-    Color DEFAULT_LINE_COLOR = JBColor.DARK_GRAY;
+    int DEFAULT_LINE_SPAN = 4;
 
     boolean isShowDefault();
 

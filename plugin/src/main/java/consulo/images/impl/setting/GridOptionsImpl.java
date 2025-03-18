@@ -20,10 +20,9 @@ import consulo.images.ImageColorKeys;
 import consulo.ui.color.ColorValue;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.JDOMExternalizer;
+import jakarta.annotation.Nonnull;
 import org.intellij.images.options.GridOptions;
 import org.jdom.Element;
-
-import jakarta.annotation.Nonnull;
 
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
@@ -62,7 +61,7 @@ final class GridOptionsImpl implements GridOptions, JDOMExternalizable {
     @Override
     public ColorValue getLineColor() {
         ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.GRID_LINE_COLOR_KEY);
-        return Objects.requireNonNull(color, "Grid Color required");
+        return Objects.requireNonNull(color, "Grid line сolor required");
     }
 
     void setShowDefault(boolean showDefault) {

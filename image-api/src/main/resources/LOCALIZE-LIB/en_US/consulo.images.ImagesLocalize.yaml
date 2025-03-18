@@ -35,7 +35,7 @@ smart.zoom:
 chessboard.cell.size:
   text: 'Chessboard cell &size (pixels):'
 show.grid.every:
-  text: 'Show Grid line after &every (pixels):'
+  text: 'Show main Grid line after &every (pixels):'
 show.grid.zoom.limit:
   text: 'Show Grid lines &only when zoom factor is at least:'
 white.cell.color:
@@ -46,7 +46,7 @@ black.cell.color:
   text: 'Color of ''&black'' cell:'
 black.cell.color.descriptor:
   text: "'Black' cell"
-grid.line.color:
+grid.line.color.descriptor:
   text: 'Grid line &color:'
 external.editor.executable.path:
   text: 'Executable &path:'
@@ -62,27 +62,27 @@ image.info:
   text: '{0}x{1} {2} ({3}-bit color) {4}'
 svg.file.type.description:
   text: Scalable Vector Graphics
-action.Images.ToggleTransparencyChessboard.text:
-  text: Show Chessboard
-action.Images.ToggleTransparencyChessboard.description:
-  text: Show a chessboard on transparent image parts
-action.Images.Editor.ToggleGrid.text:
-  text: Show Grid
-action.Images.Editor.ZoomIn.text:
+action.Images.Editor.Zoom.In.text:
   text: Zoom In
-action.Images.Editor.ZoomOut.text:
+action.Images.Editor.Zoom.Out.text:
   text: Zoom Out
-action.Images.Editor.ActualSize.text:
+action.Images.Editor.Zoom.Actual.text:
   text: Zoom to Actual Size
-action.editor.show.grid.text:
+action.Images.Editor.Toggle.Grid.show.text:
   text: Show Grid
-action.editor.hide.grid.text:
+action.Images.Editor.Toggle.Grid.hide.text:
   text: Hide Grid
-action.editor.show.chessboard.text:
+action.Images.Editor.Toggle.Transparency.Chessboard.show.text:
   text: Show Chessboard
-action.editor.hide.chessboard.text:
+action.Images.Editor.Toggle.Transparency.Chessboard.hide.text:
   text: Hide Chessboard
-action.convert.svg.to.png.text:
+action.Images.Editor.Toggle.Transparency.Chessboard.description:
+  text: A chessboard on transparent image parts
+action.Images.Open.Settings.text:
+  text: Image Viewer Settings
+action.Images.Open.Settings.description:
+  text: Open Image Viewer settings page
+action.Images.Convert.Svg.To.Png.text:
   text: Convert to PNG
 grid.line.color.descriptor:
   text: Grid line

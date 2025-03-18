@@ -34,13 +34,13 @@ import java.io.File;
 /**
  * @author Konstantin Bulenkov
  */
-@ActionImpl(id = "Images.ConvertSvgToPng", parents = {
+@ActionImpl(id = "Images.Convert.Svg.To.Png", parents = {
     @ActionParentRef(value = @ActionRef(id = "ProjectViewPopupMenu"), anchor = ActionRefAnchor.AFTER, relatedToAction = @ActionRef(id = "EditSource"))
 })
 public class ConvertSvgToPngAction extends DumbAwareAction {
     @Inject
     public ConvertSvgToPngAction() {
-        super(ImagesLocalize.actionConvertSvgToPngText());
+        super(ImagesLocalize.actionImagesConvertSvgToPngText());
     }
 
     @RequiredUIAccess

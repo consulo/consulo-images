@@ -55,15 +55,17 @@ final class TransparencyChessboardOptionsImpl implements TransparencyChessboardO
     @Nonnull
     @Override
     public ColorValue getWhiteColor() {
-        ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.WHITE_CELL_COLOR_KEY);
-        return Objects.requireNonNull(color, "White color required");
+        ColorValue color = EditorColorsManager.getInstance().getGlobalScheme()
+            .getColor(ImageColorKeys.CHESSBOARD_WHITE_CELL_COLOR_KEY);
+        return Objects.requireNonNull(color, "Chessboard white cell color required");
     }
 
     @Nonnull
     @Override
     public ColorValue getBlackColor() {
-        ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(ImageColorKeys.BLACK_CELL_COLOR_KEY);
-        return Objects.requireNonNull(color, "BlackCell color required");
+        ColorValue color = EditorColorsManager.getInstance().getGlobalScheme()
+            .getColor(ImageColorKeys.CHESSBOARD_BLACK_CELL_COLOR_KEY);
+        return Objects.requireNonNull(color, "Chessboard black cell color required");
     }
 
     void setShowDefault(boolean showDefault) {

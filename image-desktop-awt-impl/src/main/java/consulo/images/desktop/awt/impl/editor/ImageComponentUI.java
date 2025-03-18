@@ -29,6 +29,8 @@ import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static consulo.ui.ex.awt.paint.LinePainter2D.StrokeType.CENTERED_CAPS_SQUARE;
+
 /**
  * UI for {@link ImageComponent}.
  *
@@ -129,6 +131,7 @@ public class ImageComponentUI extends ComponentUI {
         g2d.setRenderingHints(oldHints);
     }
 
+    @SuppressWarnings("UseJBColor")
     private static void paintGrid(Graphics g, ImageComponent ic) {
         Dimension size = ic.getCanvasSize();
         BufferedImage image = ic.getDocument().getValue();
@@ -137,18 +140,29 @@ public class ImageComponentUI extends ComponentUI {
         double zoomX = (double)size.width / imageWidth;
         double zoomY = (double)size.height / imageHeight;
         double zoomFactor = (zoomX + zoomY) / 2.0d;
-        if (zoomFactor >= ic.getGridLineZoomFactor()) {
-            Graphics2D g2d = (Graphics2D)g;
-            g2d.setColor(ic.getGridLineColor());
-            int ls = ic.getGridLineSpan();
-            for (int dx = ls; dx < imageWidth; dx += ls) {
-                int x1 = (int)((double)dx * zoomX);
-                LinePainter2D.paint(g2d, x1, 0, x1, size.height);
-            }
-            for (int dy = ls; dy < imageHeight; dy += ls) {
-                int y1 = (int)((double)dy * zoomY);
-                LinePainter2D.paint(g2d, 0, y1, size.width, y1);
-            }
+
+        if (zoomFactor < ic.getGridLineZoomFactor()) {
+            return;
+        }
+
+        Graphics2D g2d = (Graphics2D)g;
+        int gridLineRGB = ic.getGridLineColor().getRGB() & 0xFFFFFF;
+        Color auxColor = new Color(gridLineRGB | 0x26000000, true);
+        Color mainColor = new Color(gridLineRGB | 0x4D000000, true);
+        int ls = ic.getGridLineSpan();
+        for (int dx = 1; dx < imageWidth; dx++) {
+            boolean mainLine = (dx % ls) == 0;
+            g.setColor(mainLine ? mainColor : auxColor);
+
+            double x = (double)dx * zoomX;
+            LinePainter2D.paint(g2d, x, 0, x, size.height, CENTERED_CAPS_SQUARE, 0.5);
+        }
+        for (int dy = 1; dy < imageHeight; dy++) {
+            boolean mainLine = (dy % ls) == 0;
+            g.setColor(mainLine ? mainColor : auxColor);
+
+            double y = (double)dy * zoomY;
+            LinePainter2D.paint(g2d, 0, y, size.width, y, CENTERED_CAPS_SQUARE, 0.5);
         }
     }
 

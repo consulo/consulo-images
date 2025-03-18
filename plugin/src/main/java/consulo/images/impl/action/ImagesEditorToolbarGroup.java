@@ -5,10 +5,6 @@ import consulo.annotation.component.ActionRef;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import org.intellij.images.editor.actionSystem.ImageEditorActions;
-import org.intellij.images.editor.actions.ActualSizeAction;
-import org.intellij.images.editor.actions.ToggleGridAction;
-import org.intellij.images.editor.actions.ZoomInAction;
-import org.intellij.images.editor.actions.ZoomOutAction;
 
 /**
  * @author VISTALL
@@ -20,7 +16,9 @@ import org.intellij.images.editor.actions.ZoomOutAction;
     @ActionRef(type = AnSeparator.class),
     @ActionRef(type = ZoomInAction.class),
     @ActionRef(type = ZoomOutAction.class),
-    @ActionRef(type = ActualSizeAction.class)
+    @ActionRef(type = ZoomActualAction.class),
+    @ActionRef(type = AnSeparator.class),
+    @ActionRef(type = OpenSettingsAction.class)
 })
 public class ImagesEditorToolbarGroup extends DefaultActionGroup {
 }

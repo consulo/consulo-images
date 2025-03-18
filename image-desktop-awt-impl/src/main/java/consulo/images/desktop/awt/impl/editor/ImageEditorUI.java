@@ -128,7 +128,6 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
         imageComponent.setGridLineZoomFactor(gridOptions.getLineZoomFactor());
         imageComponent.setGridLineSpan(gridOptions.getLineSpan());
         imageComponent.setGridLineColor(TargetAWT.to(gridOptions.getLineColor()));
-
         // Create layout
         ImageContainerPane view = new ImageContainerPane(imageComponent);
         view.addMouseListener(new EditorMouseAdapter());
@@ -433,13 +432,13 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
         private double getMaximumZoomFactor() {
             double factor = IMAGE_MAX_ZOOM_FACTOR.get();
-            return Math.min(factor, MACRO_ZOOM_LIMIT);
+            return Math.min(factor, ZOOM_UPPER_LIMIT);
         }
 
         private double getMinimumZoomFactor() {
             Rectangle bounds = imageComponent.getDocument().getBounds();
             double factor = bounds != null ? 1.0d / bounds.getWidth() : 0.0d;
-            return Math.max(factor, MICRO_ZOOM_LIMIT);
+            return Math.max(factor, ZOOM_LOWER_LIMIT);
         }
 
         @Override
@@ -470,30 +469,12 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
         }
 
         private double getNextZoomOut() {
-            double factor = getZoomFactor();
-            if (factor > 1.0d) {
-                // Macro
-                factor /= MACRO_ZOOM_RATIO;
-                factor = Math.max(factor, 1.0d);
-            }
-            else {
-                // Micro
-                factor /= MICRO_ZOOM_RATIO;
-            }
+            double factor = getZoomFactor() / ZOOM_RATIO;
             return Math.max(factor, getMinimumZoomFactor());
         }
 
         private double getNextZoomIn() {
-            double factor = getZoomFactor();
-            if (factor >= 1.0d) {
-                // Macro
-                factor *= MACRO_ZOOM_RATIO;
-            }
-            else {
-                // Micro
-                factor *= MICRO_ZOOM_RATIO;
-                factor = Math.min(factor, 1.0d);
-            }
+            double factor = getZoomFactor() * ZOOM_RATIO;
             return Math.min(factor, getMaximumZoomFactor());
         }
 
@@ -586,8 +567,9 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
     private class FocusRequester extends MouseAdapter {
         @Override
         public void mousePressed(@Nonnull MouseEvent e) {
-            IdeFocusManager.getGlobalInstance()
-                .doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(ImageEditorUI.this, true));
+            IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
+                () -> IdeFocusManager.getGlobalInstance().requestFocus(ImageEditorUI.this, true)
+            );
         }
     }
 
