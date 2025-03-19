@@ -52,20 +52,23 @@ public final class ImageEditorImpl implements ImageEditor {
         this.file = file;
 
         editorUI = new ImageEditorUI(project.getApplication(), this);
-        
+
         Disposer.register(this, editorUI);
 
-        project.getApplication().getMessageBus().connect(this).subscribe(VirtualFileListener.class, new VirtualFileListener() {
-            @Override
-            public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
-                ImageEditorImpl.this.propertyChanged(event);
-            }
+        project.getApplication().getMessageBus().connect(this).subscribe(
+            VirtualFileListener.class,
+            new VirtualFileListener() {
+                @Override
+                public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+                    ImageEditorImpl.this.propertyChanged(event);
+                }
 
-            @Override
-            public void contentsChanged(@Nonnull VirtualFileEvent event) {
-                ImageEditorImpl.this.contentsChanged(event);
+                @Override
+                public void contentsChanged(@Nonnull VirtualFileEvent event) {
+                    ImageEditorImpl.this.contentsChanged(event);
+                }
             }
-        });
+        );
 
         setValue(file);
     }
@@ -116,13 +119,13 @@ public final class ImageEditorImpl implements ImageEditor {
 
     @Override
     public void setTransparencyChessboardVisible(boolean visible) {
-        editorUI.getImageComponent().setTransparencyChessboardVisible(visible);
+        editorUI.getImageComponent().getTransparencyChessboard().setVisible(visible);
         editorUI.repaint();
     }
 
     @Override
     public boolean isTransparencyChessboardVisible() {
-        return editorUI.getImageComponent().isTransparencyChessboardVisible();
+        return editorUI.getImageComponent().getTransparencyChessboard().isVisible();
     }
 
     @Override
@@ -133,13 +136,13 @@ public final class ImageEditorImpl implements ImageEditor {
 
     @Override
     public void setGridVisible(boolean visible) {
-        editorUI.getImageComponent().setGridVisible(visible);
+        editorUI.getImageComponent().getGrid().setVisible(visible);
         editorUI.repaint();
     }
 
     @Override
     public boolean isGridVisible() {
-        return editorUI.getImageComponent().isGridVisible();
+        return editorUI.getImageComponent().getGrid().isVisible();
     }
 
     @Override

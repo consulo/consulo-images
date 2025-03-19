@@ -53,65 +53,72 @@ public class ImageComponentUI extends ComponentUI {
     @Override
     public void paint(Graphics g, JComponent c) {
         ImageComponent ic = (ImageComponent)c;
-        if (ic != null) {
-            ImageDocument document = ic.getDocument();
-            BufferedImage image = document.getValue(ic.getZoomFactor());
-            if (image != null) {
-                if (ic.isFileSizeVisible()) {
-                    paintBorder(g, ic);
-                }
-
-                Dimension size = ic.getCanvasSize();
-                Graphics igc = g.create(ImageComponent.IMAGE_INSETS, ImageComponent.IMAGE_INSETS, size.width, size.height);
-
-                // Transparency chessboard
-                if (ic.isTransparencyChessboardVisible() && image.getTransparency() != Transparency.OPAQUE) {
-                    paintChessboard(igc, ic);
-                }
-
-                paintImage(igc, ic);
-
-                // Grid
-                if (ic.isGridVisible()) {
-                    paintGrid(igc, ic);
-                }
-
-                igc.dispose();
-            }
+        if (ic == null) {
+            return;
         }
+
+        ImageDocument document = ic.getDocument();
+        BufferedImage image = document.getValue(ic.getZoomFactor());
+        if (image == null) {
+            return;
+        }
+
+        paintBorder(g, ic);
+
+        Dimension size = ic.getCanvasSize();
+        Graphics2D igc = (Graphics2D)g.create(ImageComponent.IMAGE_INSETS, ImageComponent.IMAGE_INSETS, size.width, size.height);
+
+        // Transparency chessboard
+        if (image.getTransparency() != Transparency.OPAQUE) {
+            paintChessboard(igc, ic);
+        }
+
+        paintImage(igc, ic);
+
+        paintGrid(igc, ic);
+
+        igc.dispose();
     }
 
     private static void paintBorder(Graphics g, ImageComponent ic) {
+        if (!ic.isFileSizeVisible()) {
+            return;
+        }
+
         Dimension size = ic.getSize();
-        g.setColor(ic.getTransparencyChessboardBlackColor());
+        g.setColor(ic.getTransparencyChessboard().getBlackColor());
         g.drawRect(0, 0, size.width - 1, size.height - 1);
     }
 
-    private void paintChessboard(Graphics g, ImageComponent ic) {
+    private void paintChessboard(Graphics2D g2d, ImageComponent ic) {
+        ImageComponent.Chessboard chessboard = ic.getTransparencyChessboard();
+        if (!chessboard.isVisible()) {
+            return;
+        }
+
         Dimension size = ic.getCanvasSize();
         // Create pattern
-        int cellSize = ic.getTransparencyChessboardCellSize();
+        int cellSize = chessboard.getCellSize();
         int patternSize = 2 * cellSize;
 
         if (pattern == null) {
-            pattern = UIUtil.createImage(g, patternSize, patternSize, BufferedImage.TYPE_INT_ARGB);
+            pattern = UIUtil.createImage(g2d, patternSize, patternSize, BufferedImage.TYPE_INT_ARGB);
             Graphics imageGraphics = pattern.getGraphics();
-            imageGraphics.setColor(ic.getTransparencyChessboardWhiteColor());
+            imageGraphics.setColor(chessboard.getWhiteColor());
             imageGraphics.fillRect(0, 0, patternSize, patternSize);
-            imageGraphics.setColor(ic.getTransparencyChessboardBlackColor());
+            imageGraphics.setColor(chessboard.getBlackColor());
             imageGraphics.fillRect(0, cellSize, cellSize, cellSize);
             imageGraphics.fillRect(cellSize, 0, cellSize, cellSize);
         }
 
-        ((Graphics2D)g).setPaint(new TexturePaint(pattern, new Rectangle(0, 0, patternSize, patternSize)));
-        g.fillRect(0, 0, size.width, size.height);
+        g2d.setPaint(new TexturePaint(pattern, new Rectangle(0, 0, patternSize, patternSize)));
+        g2d.fillRect(0, 0, size.width, size.height);
     }
 
-    private static void paintImage(Graphics g, ImageComponent ic) {
+    private static void paintImage(Graphics2D g2d, ImageComponent ic) {
         ImageDocument document = ic.getDocument();
         Dimension size = ic.getCanvasSize();
 
-        Graphics2D g2d = (Graphics2D)g;
         RenderingHints oldHints = g2d.getRenderingHints();
 
         BufferedImage image = document.getValue(ic.getZoomFactor());
@@ -125,7 +132,7 @@ public class ImageComponentUI extends ComponentUI {
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
             }
-            UIUtil.drawImage(g, image, new Rectangle(0, 0, size.width, size.height), ic);
+            UIUtil.drawImage(g2d, image, new Rectangle(0, 0, size.width, size.height), ic);
         }
 
         g2d.setRenderingHints(oldHints);
@@ -133,6 +140,11 @@ public class ImageComponentUI extends ComponentUI {
 
     @SuppressWarnings("UseJBColor")
     private static void paintGrid(Graphics g, ImageComponent ic) {
+        ImageComponent.Grid grid = ic.getGrid();
+        if (!grid.isVisible()) {
+            return;
+        }
+
         Dimension size = ic.getCanvasSize();
         BufferedImage image = ic.getDocument().getValue();
         int imageWidth = image.getWidth();
@@ -141,15 +153,15 @@ public class ImageComponentUI extends ComponentUI {
         double zoomY = (double)size.height / imageHeight;
         double zoomFactor = (zoomX + zoomY) / 2.0d;
 
-        if (zoomFactor < ic.getGridLineZoomFactor()) {
+        if (zoomFactor < grid.getLineZoomFactor()) {
             return;
         }
 
         Graphics2D g2d = (Graphics2D)g;
-        int gridLineRGB = ic.getGridLineColor().getRGB() & 0xFFFFFF;
+        int gridLineRGB = grid.getLineColor().getRGB() & 0xFFFFFF;
         Color auxColor = new Color(gridLineRGB | 0x26000000, true);
         Color mainColor = new Color(gridLineRGB | 0x4D000000, true);
-        int ls = ic.getGridLineSpan();
+        int ls = grid.getLineSpan();
         for (int dx = 1; dx < imageWidth; dx++) {
             boolean mainLine = (dx % ls) == 0;
             g.setColor(mainLine ? mainColor : auxColor);

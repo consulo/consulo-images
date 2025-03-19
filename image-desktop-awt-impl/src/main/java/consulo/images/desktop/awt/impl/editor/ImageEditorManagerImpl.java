@@ -68,10 +68,9 @@ public final class ImageEditorManagerImpl implements EmbeddedImageViewFactory {
         ImageEditorUI ui = new ImageEditorUI(application, null);
         Options options = OptionsManager.getInstance().getOptions();
         EditorOptions editorOptions = options.getEditorOptions();
-        GridOptions gridOptions = editorOptions.getGridOptions();
-        TransparencyChessboardOptions transparencyChessboardOptions = editorOptions.getTransparencyChessboardOptions();
-        ui.getImageComponent().setGridVisible(gridOptions.isShowDefault());
-        ui.getImageComponent().setTransparencyChessboardVisible(transparencyChessboardOptions.isShowDefault());
+        ImageComponent ic = ui.getImageComponent();
+        ic.getGrid().setVisible(editorOptions.getGridOptions().isShowDefault());
+        ic.getTransparencyChessboard().setVisible(editorOptions.getTransparencyChessboardOptions().isShowDefault());
         ui.setImageProvider((scale, ancestor) -> image, null);
         return ui;
     }
