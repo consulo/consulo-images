@@ -232,13 +232,13 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
     @Override
     public void setTransparencyChessboardVisible(boolean visible) {
-        imageComponent.setTransparencyChessboardVisible(visible);
+        imageComponent.getTransparencyChessboard().setVisible(visible);
         repaint();
     }
 
     @Override
     public boolean isTransparencyChessboardVisible() {
-        return imageComponent.isTransparencyChessboardVisible();
+        return imageComponent.getTransparencyChessboard().isVisible();
     }
 
     @Override
@@ -249,13 +249,13 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
     @Override
     public void setGridVisible(boolean visible) {
-        imageComponent.setGridVisible(visible);
+        imageComponent.getGrid().setVisible(visible);
         repaint();
     }
 
     @Override
     public boolean isGridVisible() {
-        return imageComponent.isGridVisible();
+        return imageComponent.getGrid().isVisible();
     }
 
     @Override
@@ -688,11 +688,14 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
         TransparencyChessboardOptions chessboardOptions = editorOptions.getTransparencyChessboardOptions();
         GridOptions gridOptions = editorOptions.getGridOptions();
 
-        imageComponent.setTransparencyChessboardCellSize(chessboardOptions.getCellSize());
-        imageComponent.setTransparencyChessboardWhiteColor(TargetAWT.to(chessboardOptions.getWhiteColor()));
-        imageComponent.setTransparencyChessboardBlankColor(TargetAWT.to(chessboardOptions.getBlackColor()));
-        imageComponent.setGridLineZoomFactor(gridOptions.getLineZoomFactor());
-        imageComponent.setGridLineSpan(gridOptions.getLineSpan());
-        imageComponent.setGridLineColor(TargetAWT.to(gridOptions.getLineColor()));
+        ImageComponent.Chessboard chessboard = imageComponent.getTransparencyChessboard();
+        chessboard.setCellSize(chessboardOptions.getCellSize());
+        chessboard.setWhiteColor(TargetAWT.to(chessboardOptions.getWhiteColor()));
+        chessboard.setBlackColor(TargetAWT.to(chessboardOptions.getBlackColor()));
+
+        ImageComponent.Grid grid = imageComponent.getGrid();
+        grid.setLineZoomFactor(gridOptions.getLineZoomFactor());
+        grid.setLineSpan(gridOptions.getLineSpan());
+        grid.setLineColor(TargetAWT.to(gridOptions.getLineColor()));
     }
 }

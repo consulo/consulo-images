@@ -113,61 +113,63 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable {
     }
 
     private void createUI() {
-        if (cellRenderer == null || list == null) {
-            cellRenderer = new ThumbnailListCellRenderer();
-            ImageComponent imageComponent = cellRenderer.getImageComponent();
-
-            VirtualFileManager.getInstance().addVirtualFileListener(vfsListener);
-
-            Options options = OptionsManager.getInstance().getOptions();
-            EditorOptions editorOptions = options.getEditorOptions();
-            // Set options
-            TransparencyChessboardOptions chessboardOptions = editorOptions.getTransparencyChessboardOptions();
-            imageComponent.setTransparencyChessboardVisible(chessboardOptions.isShowDefault());
-            imageComponent.setTransparencyChessboardCellSize(chessboardOptions.getCellSize());
-            imageComponent.setTransparencyChessboardWhiteColor(TargetAWT.to(chessboardOptions.getWhiteColor()));
-            imageComponent.setTransparencyChessboardBlankColor(TargetAWT.to(chessboardOptions.getBlackColor()));
-
-            options.addPropertyChangeListener(optionsListener);
-
-            list = new JBList<>();
-            list.setModel(new DefaultListModel<>());
-            list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-            list.setVisibleRowCount(-1);
-            list.setCellRenderer(cellRenderer);
-            list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
-            ThumbnailsMouseAdapter mouseListener = new ThumbnailsMouseAdapter();
-            list.addMouseListener(mouseListener);
-            list.addMouseMotionListener(mouseListener);
-
-            ThumbnailComponentUI componentUI = (ThumbnailComponentUI)UIManager.getUI(cellRenderer);
-            Dimension preferredSize = componentUI.getPreferredSize(cellRenderer);
-
-            list.setFixedCellWidth(preferredSize.width);
-            list.setFixedCellHeight(preferredSize.height);
-
-            JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(
-                list,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-            );
-            scrollPane.setBorder(IdeBorderFactory.createBorder(SideBorder.TOP));
-
-            ActionManager actionManager = ActionManager.getInstance();
-            ActionGroup actionGroup = (ActionGroup)actionManager.getAction(ThumbnailViewActions.GROUP_TOOLBAR);
-            ActionToolbar actionToolbar = actionManager.createActionToolbar(ThumbnailViewActions.ACTION_PLACE, actionGroup, true);
-            actionToolbar.setTargetComponent(this);
-
-            JComponent toolbar = actionToolbar.getComponent();
-
-            FocusRequester focusRequester = new FocusRequester();
-            toolbar.addMouseListener(focusRequester);
-            scrollPane.addMouseListener(focusRequester);
-
-            add(toolbar, BorderLayout.NORTH);
-            add(scrollPane, BorderLayout.CENTER);
+        if (cellRenderer != null && list != null) {
+            return;
         }
+        cellRenderer = new ThumbnailListCellRenderer();
+        ImageComponent imageComponent = cellRenderer.getImageComponent();
+
+        VirtualFileManager.getInstance().addVirtualFileListener(vfsListener);
+
+        Options options = OptionsManager.getInstance().getOptions();
+        EditorOptions editorOptions = options.getEditorOptions();
+        // Set options
+        TransparencyChessboardOptions chessboardOptions = editorOptions.getTransparencyChessboardOptions();
+        ImageComponent.Chessboard chessboard = imageComponent.getTransparencyChessboard();
+        chessboard.setVisible(chessboardOptions.isShowDefault());
+        chessboard.setCellSize(chessboardOptions.getCellSize());
+        chessboard.setWhiteColor(TargetAWT.to(chessboardOptions.getWhiteColor()));
+        chessboard.setBlackColor(TargetAWT.to(chessboardOptions.getBlackColor()));
+
+        options.addPropertyChangeListener(optionsListener);
+
+        list = new JBList<>();
+        list.setModel(new DefaultListModel<>());
+        list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+        list.setVisibleRowCount(-1);
+        list.setCellRenderer(cellRenderer);
+        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        ThumbnailsMouseAdapter mouseListener = new ThumbnailsMouseAdapter();
+        list.addMouseListener(mouseListener);
+        list.addMouseMotionListener(mouseListener);
+
+        ThumbnailComponentUI componentUI = (ThumbnailComponentUI)UIManager.getUI(cellRenderer);
+        Dimension preferredSize = componentUI.getPreferredSize(cellRenderer);
+
+        list.setFixedCellWidth(preferredSize.width);
+        list.setFixedCellHeight(preferredSize.height);
+
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(
+            list,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        scrollPane.setBorder(IdeBorderFactory.createBorder(SideBorder.TOP));
+
+        ActionManager actionManager = ActionManager.getInstance();
+        ActionGroup actionGroup = (ActionGroup)actionManager.getAction(ThumbnailViewActions.GROUP_TOOLBAR);
+        ActionToolbar actionToolbar = actionManager.createActionToolbar(ThumbnailViewActions.ACTION_PLACE, actionGroup, true);
+        actionToolbar.setTargetComponent(this);
+
+        JComponent toolbar = actionToolbar.getComponent();
+
+        FocusRequester focusRequester = new FocusRequester();
+        toolbar.addMouseListener(focusRequester);
+        scrollPane.addMouseListener(focusRequester);
+
+        add(toolbar, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     public void refresh() {
@@ -197,12 +199,12 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable {
 
     public boolean isTransparencyChessboardVisible() {
         createUI();
-        return cellRenderer.getImageComponent().isTransparencyChessboardVisible();
+        return cellRenderer.getImageComponent().getTransparencyChessboard().isVisible();
     }
 
     public void setTransparencyChessboardVisible(boolean visible) {
         createUI();
-        cellRenderer.getImageComponent().setTransparencyChessboardVisible(visible);
+        cellRenderer.getImageComponent().getTransparencyChessboard().setVisible(visible);
         list.repaint();
     }
 
@@ -591,12 +593,15 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable {
             GridOptions gridOptions = editorOptions.getGridOptions();
 
             ImageComponent imageComponent = cellRenderer.getImageComponent();
-            imageComponent.setTransparencyChessboardCellSize(chessboardOptions.getCellSize());
-            imageComponent.setTransparencyChessboardWhiteColor(TargetAWT.to(chessboardOptions.getWhiteColor()));
-            imageComponent.setTransparencyChessboardBlankColor(TargetAWT.to(chessboardOptions.getBlackColor()));
-            imageComponent.setGridLineZoomFactor(gridOptions.getLineZoomFactor());
-            imageComponent.setGridLineSpan(gridOptions.getLineSpan());
-            imageComponent.setGridLineColor(TargetAWT.to(gridOptions.getLineColor()));
+            ImageComponent.Chessboard chessboard = imageComponent.getTransparencyChessboard();
+            chessboard.setCellSize(chessboardOptions.getCellSize());
+            chessboard.setWhiteColor(TargetAWT.to(chessboardOptions.getWhiteColor()));
+            chessboard.setBlackColor(TargetAWT.to(chessboardOptions.getBlackColor()));
+
+            ImageComponent.Grid grid = imageComponent.getGrid();
+            grid.setLineZoomFactor(gridOptions.getLineZoomFactor());
+            grid.setLineSpan(gridOptions.getLineSpan());
+            grid.setLineColor(TargetAWT.to(gridOptions.getLineColor()));
         }
     }
 

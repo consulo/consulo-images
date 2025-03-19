@@ -15,10 +15,8 @@
  */
 package consulo.images.desktop.awt.impl.editor;
 
-import consulo.images.ImageColorKeys;
 import consulo.images.localize.ImagesLocalize;
 import consulo.ui.ex.awt.JBUI.ScaleContext;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Lists;
 import jakarta.annotation.Nullable;
 import org.intellij.images.ImageDocument;
@@ -31,6 +29,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Objects;
 
 import static consulo.ui.ex.awt.JBUI.ScaleType.OBJ_SCALE;
 
@@ -82,52 +81,12 @@ public class ImageComponent extends JComponent {
         this.zoomFactor = zoomFactor;
     }
 
-    public void setTransparencyChessboardCellSize(int cellSize) {
-        int oldValue = chessboard.getCellSize();
-        if (oldValue != cellSize) {
-            chessboard.setCellSize(cellSize);
-            firePropertyChange(TRANSPARENCY_CHESSBOARD_CELL_SIZE_PROP, oldValue, cellSize);
-        }
+    public Chessboard getTransparencyChessboard() {
+        return chessboard;
     }
 
-    public void setTransparencyChessboardWhiteColor(Color color) {
-        Color oldValue = chessboard.getWhiteColor();
-        if (oldValue != null && !oldValue.equals(color) || oldValue == null && color != null) {
-            chessboard.setWhiteColor(color);
-            firePropertyChange(TRANSPARENCY_CHESSBOARD_WHITE_COLOR_PROP, oldValue, color);
-        }
-    }
-
-    public void setTransparencyChessboardBlankColor(Color color) {
-        Color oldValue = chessboard.getBlackColor();
-        if (oldValue != null && !oldValue.equals(color) || oldValue == null && color != null) {
-            chessboard.setBlackColor(color);
-            firePropertyChange(TRANSPARENCY_CHESSBOARD_BLACK_COLOR_PROP, oldValue, color);
-        }
-    }
-
-    public void setTransparencyChessboardVisible(boolean visible) {
-        boolean oldValue = chessboard.isVisible();
-        if (oldValue != visible) {
-            chessboard.setVisible(visible);
-            firePropertyChange(TRANSPARENCY_CHESSBOARD_VISIBLE_PROP, oldValue, visible);
-        }
-    }
-
-    public int getTransparencyChessboardCellSize() {
-        return chessboard.getCellSize();
-    }
-
-    public Color getTransparencyChessboardWhiteColor() {
-        return chessboard.getWhiteColor();
-    }
-
-    public Color getTransparencyChessboardBlackColor() {
-        return chessboard.getBlackColor();
-    }
-
-    public boolean isTransparencyChessboardVisible() {
-        return chessboard.isVisible();
+    public Grid getGrid() {
+        return grid;
     }
 
     public boolean isFileSizeVisible() {
@@ -148,54 +107,6 @@ public class ImageComponent extends JComponent {
         boolean oldValue = myFileNameVisible;
         myFileNameVisible = fileNameVisible;
         firePropertyChange(FILE_NAME_VISIBLE_PROP, oldValue, fileNameVisible);
-    }
-
-    public void setGridLineZoomFactor(int lineZoomFactor) {
-        int oldValue = grid.getLineZoomFactor();
-        if (oldValue != lineZoomFactor) {
-            grid.setLineZoomFactor(lineZoomFactor);
-            firePropertyChange(GRID_LINE_ZOOM_FACTOR_PROP, oldValue, lineZoomFactor);
-        }
-    }
-
-    public void setGridLineSpan(int lineSpan) {
-        int oldValue = grid.getLineSpan();
-        if (oldValue != lineSpan) {
-            grid.setLineSpan(lineSpan);
-            firePropertyChange(GRID_LINE_SPAN_PROP, oldValue, lineSpan);
-        }
-    }
-
-    public void setGridLineColor(Color color) {
-        Color oldValue = grid.getLineColor();
-        if (oldValue != null && !oldValue.equals(color) || oldValue == null && color != null) {
-            grid.setLineColor(color);
-            firePropertyChange(GRID_LINE_COLOR_PROP, oldValue, color);
-        }
-    }
-
-    public void setGridVisible(boolean visible) {
-        boolean oldValue = grid.isVisible();
-        if (oldValue != visible) {
-            grid.setVisible(visible);
-            firePropertyChange(GRID_VISIBLE_PROP, oldValue, visible);
-        }
-    }
-
-    public int getGridLineZoomFactor() {
-        return grid.getLineZoomFactor();
-    }
-
-    public int getGridLineSpan() {
-        return grid.getLineSpan();
-    }
-
-    public Color getGridLineColor() {
-        return grid.getLineColor();
-    }
-
-    public boolean isGridVisible() {
-        return grid.isVisible();
     }
 
     @Nullable
@@ -300,7 +211,6 @@ public class ImageComponent extends JComponent {
             return format;
         }
 
-
         @Override
         public void setFormat(String format) {
             this.format = format;
@@ -324,7 +234,7 @@ public class ImageComponent extends JComponent {
         }
     }
 
-    private static final class Chessboard {
+    public final class Chessboard {
         private int cellSize = TransparencyChessboardOptions.DEFAULT_CELL_SIZE;
         private Color whiteColor = TransparencyChessboardOptions.DEFAULT_WHITE_COLOR;
         private Color blackColor = TransparencyChessboardOptions.DEFAULT_BLACK_COLOR;
@@ -335,7 +245,12 @@ public class ImageComponent extends JComponent {
         }
 
         public void setCellSize(int cellSize) {
+            int oldValue = this.cellSize;
+            if (oldValue == cellSize) {
+                return;
+            }
             this.cellSize = cellSize;
+            firePropertyChange(TRANSPARENCY_CHESSBOARD_CELL_SIZE_PROP, oldValue, cellSize);
         }
 
         public Color getWhiteColor() {
@@ -343,7 +258,12 @@ public class ImageComponent extends JComponent {
         }
 
         public void setWhiteColor(Color whiteColor) {
+            Color oldValue = this.whiteColor;
+            if (Objects.equals(oldValue, whiteColor)) {
+                return;
+            }
             this.whiteColor = whiteColor;
+            firePropertyChange(TRANSPARENCY_CHESSBOARD_WHITE_COLOR_PROP, oldValue, whiteColor);
         }
 
         public Color getBlackColor() {
@@ -351,7 +271,12 @@ public class ImageComponent extends JComponent {
         }
 
         public void setBlackColor(Color blackColor) {
+            Color oldValue = this.blackColor;
+            if (Objects.equals(oldValue, blackColor)) {
+                return;
+            }
             this.blackColor = blackColor;
+            firePropertyChange(TRANSPARENCY_CHESSBOARD_BLACK_COLOR_PROP, oldValue, blackColor);
         }
 
         public boolean isVisible() {
@@ -359,11 +284,19 @@ public class ImageComponent extends JComponent {
         }
 
         public void setVisible(boolean visible) {
+            boolean oldValue = this.visible;
+            if (oldValue == visible) {
+                return;
+            }
             this.visible = visible;
+            firePropertyChange(TRANSPARENCY_CHESSBOARD_VISIBLE_PROP, oldValue, visible);
+        }
+
+        private Chessboard() {
         }
     }
 
-    private static final class Grid {
+    public final class Grid {
         private int lineZoomFactor = GridOptions.DEFAULT_LINE_ZOOM_FACTOR;
         private int lineSpan = GridOptions.DEFAULT_LINE_SPAN;
         private Color lineColor;
@@ -374,7 +307,12 @@ public class ImageComponent extends JComponent {
         }
 
         public void setLineZoomFactor(int lineZoomFactor) {
+            int oldValue = this.lineZoomFactor;
+            if (oldValue == lineZoomFactor) {
+                return;
+            }
             this.lineZoomFactor = lineZoomFactor;
+            firePropertyChange(GRID_LINE_ZOOM_FACTOR_PROP, oldValue, lineZoomFactor);
         }
 
         public int getLineSpan() {
@@ -382,7 +320,12 @@ public class ImageComponent extends JComponent {
         }
 
         public void setLineSpan(int lineSpan) {
+            int oldValue = this.lineSpan;
+            if (oldValue == lineSpan) {
+                return;
+            }
             this.lineSpan = lineSpan;
+            firePropertyChange(GRID_LINE_SPAN_PROP, oldValue, lineSpan);
         }
 
         public Color getLineColor() {
@@ -390,7 +333,12 @@ public class ImageComponent extends JComponent {
         }
 
         public void setLineColor(Color lineColor) {
+            Color oldValue = grid.getLineColor();
+            if (Objects.equals(oldValue, lineColor)) {
+                return;
+            }
             this.lineColor = lineColor;
+            firePropertyChange(GRID_LINE_COLOR_PROP, oldValue, lineColor);
         }
 
         public boolean isVisible() {
@@ -398,7 +346,15 @@ public class ImageComponent extends JComponent {
         }
 
         public void setVisible(boolean visible) {
+            boolean oldValue = this.visible;
+            if (oldValue == visible) {
+                return;
+            }
             this.visible = visible;
+            firePropertyChange(GRID_VISIBLE_PROP, oldValue, visible);
+        }
+
+        public Grid() {
         }
     }
 }
