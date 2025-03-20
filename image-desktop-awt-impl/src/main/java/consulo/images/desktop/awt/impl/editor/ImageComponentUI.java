@@ -27,6 +27,8 @@ import org.intellij.images.ImageDocument;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import static consulo.ui.ex.awt.paint.LinePainter2D.StrokeType.CENTERED_CAPS_SQUARE;
@@ -37,17 +39,7 @@ import static consulo.ui.ex.awt.paint.LinePainter2D.StrokeType.CENTERED_CAPS_SQU
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public class ImageComponentUI extends ComponentUI {
-    private BufferedImage pattern;
-
     private ImageComponentUI(JComponent c) {
-        c.addPropertyChangeListener(evt -> {
-            String name = evt.getPropertyName();
-            if (ImageComponent.TRANSPARENCY_CHESSBOARD_BLACK_COLOR_PROP.equals(name)
-                || ImageComponent.TRANSPARENCY_CHESSBOARD_WHITE_COLOR_PROP.equals(name)
-                || ImageComponent.TRANSPARENCY_CHESSBOARD_CELL_SIZE_PROP.equals(name)) {
-                pattern = null;
-            }
-        });
     }
 
     @Override
@@ -97,44 +89,52 @@ public class ImageComponentUI extends ComponentUI {
         }
 
         Dimension size = ic.getCanvasSize();
-        // Create pattern
-        int cellSize = chessboard.getCellSize();
-        int patternSize = 2 * cellSize;
+        int canvasW = size.width, canvasH = size.height;
 
-        if (pattern == null) {
-            pattern = UIUtil.createImage(g2d, patternSize, patternSize, BufferedImage.TYPE_INT_ARGB);
-            Graphics imageGraphics = pattern.getGraphics();
-            imageGraphics.setColor(chessboard.getWhiteColor());
-            imageGraphics.fillRect(0, 0, patternSize, patternSize);
-            imageGraphics.setColor(chessboard.getBlackColor());
-            imageGraphics.fillRect(0, cellSize, cellSize, cellSize);
-            imageGraphics.fillRect(cellSize, 0, cellSize, cellSize);
+        AffineTransform transform = g2d.getTransform();
+        double scaleX = transform.getScaleX(), scaleY = transform.getScaleY();
+        double cellW = Math.round(chessboard.getCellSize() * scaleX) / scaleX;
+        double cellH = Math.round(chessboard.getCellSize() * scaleY) / scaleY;
+
+        RenderingHints oldHints = g2d.getRenderingHints();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+
+        g2d.setColor(chessboard.getWhiteColor());
+        g2d.fillRect(0, 0, canvasW, canvasH);
+
+        g2d.setColor(chessboard.getBlackColor());
+        Rectangle2D.Double cellRect = new Rectangle2D.Double();
+        for (double x = 0; x < canvasW; x += cellW + cellW) {
+            for (double y = 0; y < canvasH; y += cellH + cellH) {
+                cellRect.setRect(x, y, cellW, cellH);
+                g2d.fill(cellRect);
+                cellRect.setRect(x + cellW, y + cellH, cellW, cellH);
+                g2d.fill(cellRect);
+            }
         }
 
-        g2d.setPaint(new TexturePaint(pattern, new Rectangle(0, 0, patternSize, patternSize)));
-        g2d.fillRect(0, 0, size.width, size.height);
+        g2d.setRenderingHints(oldHints);
     }
 
     private static void paintImage(Graphics2D g2d, ImageComponent ic) {
         ImageDocument document = ic.getDocument();
-        Dimension size = ic.getCanvasSize();
-
-        RenderingHints oldHints = g2d.getRenderingHints();
-
         BufferedImage image = document.getValue(ic.getZoomFactor());
-        if (image != null) {
-            if (size.width > image.getWidth() && size.height > image.getHeight()) {
-                // disable any kind of source image manipulation when resizing
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-            }
-            else {
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            }
-            UIUtil.drawImage(g2d, image, new Rectangle(0, 0, size.width, size.height), ic);
+        if (image == null) {
+            return;
         }
 
+        Dimension size = ic.getCanvasSize();
+        RenderingHints oldHints = g2d.getRenderingHints();
+        if (size.width > image.getWidth() && size.height > image.getHeight()) {
+            // disable any kind of source image manipulation when resizing
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+        }
+        else {
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        }
+        UIUtil.drawImage(g2d, image, new Rectangle(0, 0, size.width, size.height), ic);
         g2d.setRenderingHints(oldHints);
     }
 
