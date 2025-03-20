@@ -265,14 +265,13 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
     public void setImageProvider(ScaledImageProvider imageProvider, String format) {
         ImageDocument document = imageComponent.getDocument();
-        BufferedImage previousImage = document.getValue();
         document.setValue(imageProvider);
         if (imageProvider == null) {
             return;
         }
         document.setFormat(format);
 
-        if (previousImage == null || !zoomModel.isZoomLevelChanged()) {
+        if (!zoomModel.isZoomLevelChanged()) {
             Options options = OptionsManager.getInstance().getOptions();
             ZoomOptions zoomOptions = options.getEditorOptions().getZoomOptions();
 
