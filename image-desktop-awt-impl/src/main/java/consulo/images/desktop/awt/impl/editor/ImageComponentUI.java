@@ -39,9 +39,6 @@ import static consulo.ui.ex.awt.paint.LinePainter2D.StrokeType.CENTERED_CAPS_SQU
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
 public class ImageComponentUI extends ComponentUI {
-    private ImageComponentUI(JComponent c) {
-    }
-
     @Override
     public void paint(Graphics g, JComponent c) {
         ImageComponent ic = (ImageComponent)c;
@@ -180,6 +177,9 @@ public class ImageComponentUI extends ComponentUI {
 
     @SuppressWarnings({"UnusedDeclaration"})
     public static ComponentUI createUI(JComponent c) {
-        return new ImageComponentUI(c);
+        return new ImageComponentUI();
+    }
+
+    private ImageComponentUI() {
     }
 }
