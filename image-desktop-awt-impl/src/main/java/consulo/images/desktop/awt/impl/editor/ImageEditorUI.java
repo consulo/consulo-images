@@ -84,6 +84,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
     private static final String IMAGE_PANEL = "image";
     private static final String ERROR_PANEL = "error";
     private static final String ZOOM_FACTOR_PROP = "ImageEditor.zoomFactor";
+    private static final String MOUSE_COORDS_EMPTY = " ";
 
     @Nullable
     private final ImageEditor editor;
@@ -91,10 +92,12 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
     private final CopyPasteSupport copyPasteSupport;
 
     private final ImageZoomModel zoomModel = new ImageZoomModelImpl();
+    private final MouseCursorPositionAdapter mouseCursorPositionAdapter = new MouseCursorPositionAdapter();
     private final ImageWheelAdapter wheelAdapter = new ImageWheelAdapter();
     private final ChangeListener changeListener = new DocumentChangeListener();
     private final ImageComponent imageComponent = new ImageComponent();
     private final JPanel contentPanel;
+    private final JLabel mouseCoordsLabel;
     private final JLabel infoLabel;
 
     private final PropertyChangeListener optionsChangeListener = new OptionsChangeListener();
@@ -134,6 +137,8 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
         // Zoom by wheel listener
         myScrollPane.addMouseWheelListener(wheelAdapter);
+        imageComponent.addMouseMotionListener(mouseCursorPositionAdapter);
+        imageComponent.addMouseListener(mouseCursorPositionAdapter);
 
         // Construct UI
         setLayout(new BorderLayout());
@@ -165,8 +170,16 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
         infoLabel.setBorder(JBUI.Borders.emptyRight(2));
         topPanel.add(infoLabel, BorderLayout.EAST);
 
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        mouseCoordsLabel = new JLabel(MOUSE_COORDS_EMPTY, SwingConstants.RIGHT);
+        mouseCoordsLabel.setBorder(JBUI.Borders.emptyRight(2));
+        mouseCoordsLabel.setOpaque(false);
+        mouseCoordsLabel.putClientProperty("FlatLaf.styleClass", "monospaced");
+        bottomPanel.add(mouseCoordsLabel, BorderLayout.EAST);
+
         add(topPanel, BorderLayout.NORTH);
         add(contentPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         myScrollPane.addComponentListener(new ComponentAdapter() {
             @Override
@@ -175,9 +188,8 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
             }
         });
 
-        application.getMessageBus().connect(this).subscribe(EditorColorsListener.class, editorColorsScheme -> {
-            updateComponentOptions(options);
-        });
+        application.getMessageBus().connect(this)
+            .subscribe(EditorColorsListener.class, editorColorsScheme -> updateComponentOptions(options));
 
         updateInfo();
     }
@@ -224,7 +236,9 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
         Options options = OptionsManager.getInstance().getOptions();
         options.removePropertyChangeListener(optionsChangeListener);
 
-        imageComponent.removeMouseWheelListener(wheelAdapter);
+        myScrollPane.removeMouseWheelListener(wheelAdapter);
+        imageComponent.removeMouseMotionListener(mouseCursorPositionAdapter);
+        imageComponent.removeMouseListener(mouseCursorPositionAdapter);
         imageComponent.getDocument().removeChangeListener(changeListener);
 
         removeAll();
@@ -384,6 +398,37 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
         }
     }
 
+    private final class MouseCursorPositionAdapter extends MouseAdapter {
+        @Override
+        public void mouseExited(@Nonnull MouseEvent e) {
+            update(-1, -1);
+        }
+
+        @Override
+        public void mouseMoved(@Nonnull MouseEvent e) {
+            update(e.getX(), e.getY());
+        }
+
+        private void update(int mouseX, int mouseY) {
+            BufferedImage image = imageComponent.getDocument().getValue();
+            Dimension size = imageComponent.getCanvasSize();
+            Rectangle ir = new Rectangle(ImageComponent.IMAGE_INSETS, ImageComponent.IMAGE_INSETS, size.width, size.height);
+            if (ir.contains(mouseX, mouseY)) {
+                int imageWidth = image.getWidth();
+                int imageHeight = image.getHeight();
+                double x = (mouseX - ir.getX()) / size.width * imageWidth;
+                double y = (mouseY - ir.getY()) / size.height * imageHeight;
+                x = Math.round(x * 1000) / 1000d;
+                y = Math.round(y * 1000) / 1000d;
+
+                mouseCoordsLabel.setText(ImagesLocalize.mouseCoordinates(x, y).get());
+            }
+            else {
+                mouseCoordsLabel.setText(MOUSE_COORDS_EMPTY);
+            }
+        }
+    }
+
     private class ImageZoomModelImpl implements ImageZoomModel {
         private boolean myZoomLevelChanged;
         private final Supplier<Double> IMAGE_MAX_ZOOM_FACTOR = LazyValue.notNull(new LazyValue<Double>() {
@@ -525,8 +570,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
             return null;
         }
 
-        if (canvasSize.width < width ||
-            canvasSize.height < height) {
+        if (canvasSize.width < width || canvasSize.height < height) {
             return Math.min(
                 (double)canvasSize.height / height,
                 (double)canvasSize.width / width
