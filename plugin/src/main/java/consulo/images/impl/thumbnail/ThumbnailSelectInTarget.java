@@ -16,10 +16,13 @@
 package consulo.images.impl.thumbnail;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.images.localize.ImagesLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.thumbnail.ThumbnailManager;
@@ -51,9 +54,10 @@ final class ThumbnailSelectInTarget implements SelectInTarget {
         }
     }
 
+    @Nonnull
     @Override
-    public String toString() {
-        return getToolWindowId();
+    public LocalizeValue getActionText() {
+        return ImagesLocalize.thumbnailsSelectInTargetActionText();
     }
 
     @Override

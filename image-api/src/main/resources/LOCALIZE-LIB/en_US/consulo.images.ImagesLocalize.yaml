@@ -86,3 +86,5 @@ white.cell.color:
     text: 'Color of ''&white'' cell:'
 white.cell.color.descriptor:
     text: '''White'' cell'
+thumbnails.select.in.target.action.text:
+    text: Thumbnails
