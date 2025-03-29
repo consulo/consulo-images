@@ -12,6 +12,9 @@ import consulo.language.psi.PsiFile;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.util.ColorValueUtil;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.xml.psi.xml.XmlAttribute;
 import consulo.xml.psi.xml.XmlTokenType;
 import jakarta.annotation.Nonnull;
@@ -194,20 +197,16 @@ public class SVGColorProvider implements ElementColorProvider {
             return colorValue;
         }
 
-        private static final Map<String, ColorValue> colorsMap = new HashMap<>();
+        private static final LazyValue<Map<String, ColorValue>> colorsMap = LazyValue.notNull(() -> {
+            Map<String, ColorValue> map = Maps.newHashMap(HashingStrategy.caseInsensitive());
+            for (NamedColor c : values()) {
+                map.put(c.name(), c.getColorValue());
+            }
+            return map;
+        });
 
         public static ColorValue getColorValue(String name) {
-            return colorsMap.get(name.toLowerCase(Locale.ROOT));
-        }
-
-        private static void initColorsMap() {
-            for (NamedColor c : values()) {
-                colorsMap.put(c.getName(), c.getColorValue());
-            }
-        }
-
-        static {
-            initColorsMap();
+            return colorsMap.get().get(name);
         }
     }
 
