@@ -14,16 +14,18 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.xml.psi.xml.XmlAttribute;
 import consulo.xml.psi.xml.XmlTokenType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author UNV
@@ -227,18 +229,62 @@ public class SVGColorProvider implements ElementColorProvider {
         return null;
     }
 
-    private ColorValue parseColor(String textColor) {
-        ColorValue colorValue = NamedColor.getColorValue(textColor);
-        if (colorValue != null) {
-            return colorValue;
+    private static ColorValue parseColor(String textColor) {
+        if (textColor.startsWith("#")) {
+            return parseHexColor(textColor);
         }
 
+        if (StringUtil.startsWithIgnoreCase(textColor, "rgb")) {
+            return parseRGBColor(textColor);
+        }
+
+        return NamedColor.getColorValue(textColor);
+    }
+
+    private static ColorValue parseHexColor(String textColor) {
         try {
             return ColorValueUtil.fromHex(textColor);
         }
         catch (Exception e) {
             return null;
         }
+    }
+
+    private static final Pattern RGB_PATTERN = Pattern.compile(
+        "rgb\\(\\s*(\\d+)(%?)\\s*,\\s*(\\d+)(%?)\\s*,\\s*(\\d+)(%?)\\s*\\)",
+        Pattern.CASE_INSENSITIVE
+    );
+
+    private static ColorValue parseRGBColor(String textColor) {
+        Matcher matcher = RGB_PATTERN.matcher(textColor);
+        if (!matcher.matches()) {
+            return null;
+        }
+
+        try {
+            return new RGBColor(
+                parseRGBComponent(matcher.group(1), matcher.group(2)),
+                parseRGBComponent(matcher.group(3), matcher.group(4)),
+                parseRGBComponent(matcher.group(5), matcher.group(6))
+            );
+        }
+        catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private static int parseRGBComponent(String value, String percent) {
+        int v = Integer.parseInt(value);
+        if (percent.isEmpty()) {
+            return clamp(v, 0, 255);
+        }
+        else {
+            return (int)(clamp(v, 0, 100) * (255 / 100.0) + 0.5);
+        }
+    }
+
+    private static int clamp(int value, int min, int max) {
+        return Math.min(max, Math.max(value, min));
     }
 
     @Override
