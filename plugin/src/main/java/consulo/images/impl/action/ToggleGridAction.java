@@ -43,25 +43,20 @@ public final class ToggleGridAction extends ToggleAction {
 
     @Override
     public boolean isSelected(@Nonnull AnActionEvent e) {
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        return decorator != null && decorator.isGridVisible();
+        return ImageEditorActionUtil.testImageDecorator(e, ImageComponentDecorator::isGridVisible);
     }
 
     @Override
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        if (decorator != null) {
-            decorator.setGridVisible(state);
-        }
+        ImageEditorActionUtil.acceptImageDecorator(e, decorator -> decorator.setGridVisible(state));
     }
 
     @Override
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
         Presentation presentation = e.getPresentation();
-        presentation.setEnabled(decorator != null);
+        presentation.setEnabled(ImageEditorActionUtil.testImageDecorator(e, decorator -> true));
         presentation.setTextValue(
             isSelected(e) ? ImagesLocalize.actionImagesEditorToggleGridHideText() : ImagesLocalize.actionImagesEditorToggleGridShowText()
         );

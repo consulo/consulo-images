@@ -28,7 +28,6 @@ import jakarta.annotation.Nonnull;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
-import org.intellij.images.ui.ImageComponentDecorator;
 
 /**
  * Zoom in.
@@ -45,17 +44,12 @@ public final class ZoomInAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        if (decorator != null) {
-            ImageZoomModel zoomModel = decorator.getZoomModel();
-            zoomModel.zoomIn();
-        }
+        ImageEditorActionUtil.acceptZoomModel(e, ImageZoomModel::zoomIn);
     }
 
     @Override
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomIn());
+        e.getPresentation().setEnabled(ImageEditorActionUtil.testZoomModel(e, ImageZoomModel::canZoomIn));
     }
 }

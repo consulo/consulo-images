@@ -26,7 +26,6 @@ import jakarta.annotation.Nonnull;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
-import org.intellij.images.ui.ImageComponentDecorator;
 
 /**
  * Resize image to actual size.
@@ -50,16 +49,12 @@ public final class ZoomActualAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        if (decorator != null) {
-            decorator.getZoomModel().setZoomFactor(1.0d);
-        }
+        ImageEditorActionUtil.acceptZoomModel(e, zoomModel -> zoomModel.setZoomFactor(1.0d));
     }
 
     @Override
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().getZoomFactor() != 1.0d);
+        e.getPresentation().setEnabled(ImageEditorActionUtil.testZoomModel(e, zoomModel -> zoomModel.getZoomFactor() != 1.0d));
     }
 }

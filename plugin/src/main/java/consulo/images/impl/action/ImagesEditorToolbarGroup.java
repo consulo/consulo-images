@@ -17,6 +17,7 @@ import org.intellij.images.editor.actionSystem.ImageEditorActions;
     @ActionRef(type = ZoomInAction.class),
     @ActionRef(type = ZoomOutAction.class),
     @ActionRef(type = ZoomActualAction.class),
+    @ActionRef(type = ZoomFitToWindowAction.class),
     @ActionRef(type = AnSeparator.class),
     @ActionRef(type = OpenSettingsAction.class)
 })
