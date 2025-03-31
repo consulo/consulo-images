@@ -38,7 +38,7 @@ public class BinaryImageFileType implements ImageFileType {
     @Nonnull
     @Override
     public Image getIcon() {
-        return ImagesIconGroup.imagesfiletype();
+        return ImagesIconGroup.filetypeImage();
     }
 
     @Override

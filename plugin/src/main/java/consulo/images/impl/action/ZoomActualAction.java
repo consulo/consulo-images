@@ -16,21 +16,17 @@
 package consulo.images.impl.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.images.icon.ImagesIconGroup;
 import consulo.images.localize.ImagesLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
+import jakarta.annotation.Nonnull;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
 import org.intellij.images.ui.ImageComponentDecorator;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Resize image to actual size.
@@ -47,7 +43,7 @@ public final class ZoomActualAction extends DumbAwareAction {
         super(
             ImagesLocalize.actionImagesEditorZoomActualText(),
             LocalizeValue.empty(),
-            PlatformIconGroup.graphActualzoom()
+            ImagesIconGroup.actionActualzoom()
         );
     }
 

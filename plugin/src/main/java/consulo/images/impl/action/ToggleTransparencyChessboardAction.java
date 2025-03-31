@@ -38,7 +38,7 @@ public final class ToggleTransparencyChessboardAction extends ToggleAction {
         super(
             ImagesLocalize.actionImagesEditorToggleTransparencyChessboardShowText(),
             ImagesLocalize.actionImagesEditorToggleTransparencyChessboardDescription(),
-            ImagesIconGroup.toggletransparencychessboard()
+            ImagesIconGroup.actionChessboard()
         );
     }
 

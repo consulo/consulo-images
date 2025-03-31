@@ -16,9 +16,9 @@
 package consulo.images.impl.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.images.icon.ImagesIconGroup;
 import consulo.images.localize.ImagesLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -38,7 +38,7 @@ import org.intellij.images.ui.ImageComponentDecorator;
 // TODO <keyboard-shortcut first-keystroke="control QUOTE" keymap="$default"/>
 public final class ToggleGridAction extends ToggleAction {
     public ToggleGridAction() {
-        super(ImagesLocalize.actionImagesEditorToggleGridShowText(), LocalizeValue.empty(), PlatformIconGroup.graphGrid());
+        super(ImagesLocalize.actionImagesEditorToggleGridShowText(), LocalizeValue.empty(), ImagesIconGroup.actionGrid());
     }
 
     @Override
