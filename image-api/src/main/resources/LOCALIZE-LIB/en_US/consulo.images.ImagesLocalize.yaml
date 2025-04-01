@@ -12,6 +12,8 @@ action.Images.Editor.Toggle.Transparency.Chessboard.show.text:
     text: Show Chessboard
 action.Images.Editor.Zoom.Actual.text:
     text: Zoom to Actual Size
+action.Images.Editor.Zoom.Fit.To.Window.text:
+    text: Fit to Window
 action.Images.Editor.Zoom.In.text:
     text: Zoom In
 action.Images.Editor.Zoom.Out.text:

@@ -61,7 +61,7 @@ public final class SVGFileType extends XmlLikeFileType implements UIBasedFileTyp
     @Nonnull
     @Override
     public Image getIcon() {
-        return ImagesIconGroup.imagesfiletype();
+        return ImagesIconGroup.filetypeImage();
     }
 
     @Override

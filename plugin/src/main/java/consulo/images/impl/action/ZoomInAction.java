@@ -17,9 +17,9 @@ package consulo.images.impl.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
+import consulo.images.icon.ImagesIconGroup;
 import consulo.images.localize.ImagesLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -28,7 +28,6 @@ import jakarta.annotation.Nonnull;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
-import org.intellij.images.ui.ImageComponentDecorator;
 
 /**
  * Zoom in.
@@ -39,23 +38,18 @@ import org.intellij.images.ui.ImageComponentDecorator;
 @ActionImpl(id = "Images.Editor.Zoom.In", shortcutFrom = @ActionRef(id = IdeActions.ACTION_EXPAND_ALL))
 public final class ZoomInAction extends DumbAwareAction {
     public ZoomInAction() {
-        super(ImagesLocalize.actionImagesEditorZoomInText(), LocalizeValue.empty(), PlatformIconGroup.graphZoomin());
+        super(ImagesLocalize.actionImagesEditorZoomInText(), LocalizeValue.empty(), ImagesIconGroup.actionZoomin());
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        if (decorator != null) {
-            ImageZoomModel zoomModel = decorator.getZoomModel();
-            zoomModel.zoomIn();
-        }
+        ImageEditorActionUtil.acceptZoomModel(e, ImageZoomModel::zoomIn);
     }
 
     @Override
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomIn());
+        e.getPresentation().setEnabled(ImageEditorActionUtil.testZoomModel(e, ImageZoomModel::canZoomIn));
     }
 }

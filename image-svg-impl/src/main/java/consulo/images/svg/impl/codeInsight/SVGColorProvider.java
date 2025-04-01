@@ -75,6 +75,7 @@ public class SVGColorProvider implements ElementColorProvider {
         DARKSEAGREEN(0x8FBC8F),
         DARKSLATEBLUE(0x483D8B),
         DARKSLATEGRAY(0x2F4F4F),
+        DARKSLATEGREY(0x2F4F4F),
         DARKTURQUOISE(0x00CED1),
         DARKVIOLET(0x9400D3),
         DEEPPINK(0xFF1493),

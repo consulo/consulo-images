@@ -17,9 +17,9 @@ package consulo.images.impl.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
+import consulo.images.icon.ImagesIconGroup;
 import consulo.images.localize.ImagesLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -28,7 +28,6 @@ import jakarta.annotation.Nonnull;
 import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
-import org.intellij.images.ui.ImageComponentDecorator;
 
 /**
  * Zoom out.
@@ -39,23 +38,18 @@ import org.intellij.images.ui.ImageComponentDecorator;
 @ActionImpl(id = "Images.Editor.Zoom.Out", shortcutFrom = @ActionRef(id = IdeActions.ACTION_COLLAPSE_ALL))
 public final class ZoomOutAction extends DumbAwareAction {
     public ZoomOutAction() {
-        super(ImagesLocalize.actionImagesEditorZoomOutText(), LocalizeValue.empty(), PlatformIconGroup.graphZoomout());
+        super(ImagesLocalize.actionImagesEditorZoomOutText(), LocalizeValue.empty(), ImagesIconGroup.actionZoomout());
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        if (decorator != null) {
-            ImageZoomModel zoomModel = decorator.getZoomModel();
-            zoomModel.zoomOut();
-        }
+        ImageEditorActionUtil.acceptZoomModel(e, ImageZoomModel::zoomOut);
     }
 
     @Override
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        e.getPresentation().setEnabled(decorator != null && decorator.getZoomModel().canZoomOut());
+        e.getPresentation().setEnabled(ImageEditorActionUtil.testZoomModel(e, ImageZoomModel::canZoomOut));
     }
 }

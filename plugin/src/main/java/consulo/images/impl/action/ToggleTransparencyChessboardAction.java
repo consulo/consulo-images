@@ -38,40 +38,30 @@ public final class ToggleTransparencyChessboardAction extends ToggleAction {
         super(
             ImagesLocalize.actionImagesEditorToggleTransparencyChessboardShowText(),
             ImagesLocalize.actionImagesEditorToggleTransparencyChessboardDescription(),
-            ImagesIconGroup.toggletransparencychessboard()
+            ImagesIconGroup.actionChessboard()
         );
     }
 
     @Override
     public boolean isSelected(@Nonnull AnActionEvent e) {
-        ImageComponentDecorator decorator = getDecoratorIfEnabled(e);
-        return decorator != null && decorator.isTransparencyChessboardVisible();
+        return ImageEditorActionUtil.testImageDecorator(e, ImageComponentDecorator::isTransparencyChessboardVisible);
     }
 
     @Override
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-        ImageComponentDecorator decorator = getDecoratorIfEnabled(e);
-        if (decorator != null) {
-            decorator.setTransparencyChessboardVisible(state);
-        }
+        ImageEditorActionUtil.acceptImageDecorator(e, decorator -> decorator.setTransparencyChessboardVisible(state));
     }
 
     @Override
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        ImageComponentDecorator decorator = getDecoratorIfEnabled(e);
         Presentation presentation = e.getPresentation();
-        presentation.setEnabled(decorator != null);
+        presentation.setEnabled(ImageEditorActionUtil.testImageDecorator(e, decorator -> true));
         presentation.setTextValue(
             isSelected(e)
                 ? ImagesLocalize.actionImagesEditorToggleTransparencyChessboardHideText()
                 : ImagesLocalize.actionImagesEditorToggleTransparencyChessboardShowText()
         );
-    }
-
-    private ImageComponentDecorator getDecoratorIfEnabled(AnActionEvent e) {
-        ImageComponentDecorator decorator = ImageEditorActionUtil.getImageComponentDecorator(e);
-        return decorator != null && decorator.isEnabledForActionPlace(e.getPlace()) ? decorator : null;
     }
 }

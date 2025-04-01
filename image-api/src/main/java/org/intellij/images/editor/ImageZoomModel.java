@@ -31,17 +31,19 @@ public interface ImageZoomModel {
 
     void setZoomFactor(double zoomFactor);
 
-    void fitZoomToWindow();
-
-    void zoomOut();
+    void zoomFitToWindow();
 
     void zoomIn();
 
+    void zoomOut();
+
     void setZoomLevelChanged(boolean value);
 
-    boolean canZoomOut();
+    boolean canZoomFitToWindow();
 
     boolean canZoomIn();
+
+    boolean canZoomOut();
 
     boolean isZoomLevelChanged();
 
@@ -56,7 +58,7 @@ public interface ImageZoomModel {
         }
 
         @Override
-        public void zoomOut() {
+        public void zoomFitToWindow() {
         }
 
         @Override
@@ -64,20 +66,25 @@ public interface ImageZoomModel {
         }
 
         @Override
+        public void zoomOut() {
+        }
+
+        @Override
         public void setZoomLevelChanged(boolean value) {
         }
 
         @Override
-        public void fitZoomToWindow() {
-        }
-
-        @Override
-        public boolean canZoomOut() {
+        public boolean canZoomFitToWindow() {
             return false;
         }
 
         @Override
         public boolean canZoomIn() {
+            return false;
+        }
+
+        @Override
+        public boolean canZoomOut() {
             return false;
         }
 
