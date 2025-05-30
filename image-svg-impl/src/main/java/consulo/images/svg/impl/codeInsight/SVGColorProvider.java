@@ -5,6 +5,8 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.WriteAction;
 import consulo.images.svg.SVGFileType;
+import consulo.images.svg.SVGLanguage;
+import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.ElementColorProvider;
 import consulo.language.psi.PsiElement;
@@ -213,6 +215,11 @@ public class SVGColorProvider implements ElementColorProvider {
         }
     }
 
+    // @override
+    public Language getLanguage() {
+      return SVGLanguage.INSTANCE;
+    }
+    
     @Nullable
     @Override
     @RequiredReadAction
