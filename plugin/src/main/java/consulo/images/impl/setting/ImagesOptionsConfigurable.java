@@ -121,7 +121,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
         smartWheelPanel.add(LabeledBuilder.sided(ImagesLocalize.settingsPrefferedSmartZoomWidth(), smartZoomingWidth));
         propertyBuilder.add(
             smartZoomingWidth,
-            () -> zoomOptions.getPrefferedSize().getWidth(),
+            () -> zoomOptions.getPrefferedSize().width(),
             it -> zoomOptions.setOption(ZoomOptions.ATTR_PREFFERED_WIDTH, it)
         );
 
@@ -129,7 +129,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
         smartWheelPanel.add(LabeledBuilder.sided(ImagesLocalize.settingsPrefferedSmartZoomHeight(), smartZoomingHeight));
         propertyBuilder.add(
             smartZoomingHeight,
-            () -> zoomOptions.getPrefferedSize().getHeight(),
+            () -> zoomOptions.getPrefferedSize().height(),
             it -> zoomOptions.setOption(ZoomOptions.ATTR_PREFFERED_HEIGHT, it)
         );
 

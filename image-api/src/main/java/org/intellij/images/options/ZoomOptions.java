@@ -15,7 +15,7 @@
  */
 package org.intellij.images.options;
 
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 
 import jakarta.annotation.Nonnull;
 
@@ -31,14 +31,14 @@ public interface ZoomOptions extends Cloneable {
     String ATTR_PREFFERED_WIDTH = ATTR_PREFIX + "prefferedWidth";
     String ATTR_PREFFERED_HEIGHT = ATTR_PREFIX + "prefferedHeight";
 
-    Size DEFAULT_PREFFERED_SIZE = new Size(128, 128);
+    Size2D DEFAULT_PREFFERED_SIZE = new Size2D(128, 128);
 
     boolean isWheelZooming();
 
     boolean isSmartZooming();
 
     @Nonnull
-    Size getPrefferedSize();
+    Size2D getPrefferedSize();
 
     void inject(ZoomOptions options);
 
