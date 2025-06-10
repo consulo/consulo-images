@@ -31,7 +31,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.ex.CopyPasteSupport;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.CutProvider;
@@ -569,10 +569,10 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
         }
         int width = bounds.width, height = bounds.height;
 
-        Size preferredMinimumSize = zoomOptions.getPrefferedSize();
-        if (width < preferredMinimumSize.getWidth() && height < preferredMinimumSize.getHeight()) {
-            double factor = (preferredMinimumSize.getWidth() / (double)width +
-                preferredMinimumSize.getHeight() / (double)height) / 2.0d;
+        Size2D preferredMinimumSize = zoomOptions.getPrefferedSize();
+        if (width < preferredMinimumSize.width() && height < preferredMinimumSize.height()) {
+            double factor = (preferredMinimumSize.width() / (double)width +
+                preferredMinimumSize.height() / (double)height) / 2.0d;
             return Math.ceil(factor);
         }
 

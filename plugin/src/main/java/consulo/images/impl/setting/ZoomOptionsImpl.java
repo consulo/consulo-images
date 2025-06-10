@@ -15,7 +15,7 @@
  */
 package consulo.images.impl.setting;
 
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.JDOMExternalizer;
 import jakarta.annotation.Nonnull;
@@ -32,8 +32,8 @@ import java.beans.PropertyChangeSupport;
 final class ZoomOptionsImpl implements ZoomOptions, JDOMExternalizable {
     private boolean wheelZooming;
     private boolean smartZooming = true;
-    private int prefferedWidth = DEFAULT_PREFFERED_SIZE.getWidth();
-    private int prefferedHeight = DEFAULT_PREFFERED_SIZE.getHeight();
+    private int prefferedWidth = DEFAULT_PREFFERED_SIZE.width();
+    private int prefferedHeight = DEFAULT_PREFFERED_SIZE.height();
     private final PropertyChangeSupport propertyChangeSupport;
 
     ZoomOptionsImpl(PropertyChangeSupport propertyChangeSupport) {
@@ -52,8 +52,8 @@ final class ZoomOptionsImpl implements ZoomOptions, JDOMExternalizable {
 
     @Nonnull
     @Override
-    public Size getPrefferedSize() {
-        return new Size(prefferedWidth, prefferedHeight);
+    public Size2D getPrefferedSize() {
+        return new Size2D(prefferedWidth, prefferedHeight);
     }
 
     void setWheelZooming(boolean wheelZooming) {
@@ -72,12 +72,12 @@ final class ZoomOptionsImpl implements ZoomOptions, JDOMExternalizable {
         }
     }
 
-    void setPrefferedSize(Size prefferedSize) {
+    void setPrefferedSize(Size2D prefferedSize) {
         if (prefferedSize == null) {
             prefferedSize = DEFAULT_PREFFERED_SIZE;
         }
-        setPrefferedWidth(prefferedSize.getWidth());
-        setPrefferedHeight(prefferedSize.getHeight());
+        setPrefferedWidth(prefferedSize.width());
+        setPrefferedHeight(prefferedSize.height());
     }
 
     void setPrefferedWidth(int prefferedWidth) {
@@ -127,8 +127,8 @@ final class ZoomOptionsImpl implements ZoomOptions, JDOMExternalizable {
     public void readExternal(Element element) {
         setWheelZooming(JDOMExternalizer.readBoolean(element, ATTR_WHEEL_ZOOMING));
         setSmartZooming(JDOMExternalizer.readBoolean(element, ATTR_SMART_ZOOMING));
-        setPrefferedWidth(JDOMExternalizer.readInteger(element, ATTR_PREFFERED_WIDTH, DEFAULT_PREFFERED_SIZE.getWidth()));
-        setPrefferedHeight(JDOMExternalizer.readInteger(element, ATTR_PREFFERED_HEIGHT, DEFAULT_PREFFERED_SIZE.getHeight()));
+        setPrefferedWidth(JDOMExternalizer.readInteger(element, ATTR_PREFFERED_WIDTH, DEFAULT_PREFFERED_SIZE.width()));
+        setPrefferedHeight(JDOMExternalizer.readInteger(element, ATTR_PREFFERED_HEIGHT, DEFAULT_PREFFERED_SIZE.height()));
     }
 
     @Override
@@ -150,9 +150,9 @@ final class ZoomOptionsImpl implements ZoomOptions, JDOMExternalizable {
 
         ZoomOptions otherOptions = (ZoomOptions)obj;
 
-        Size prefferedSize = otherOptions.getPrefferedSize();
-        return prefferedHeight == prefferedSize.getHeight()
-            && prefferedWidth == prefferedSize.getWidth()
+        Size2D prefferedSize = otherOptions.getPrefferedSize();
+        return prefferedHeight == prefferedSize.height()
+            && prefferedWidth == prefferedSize.width()
             && smartZooming == otherOptions.isSmartZooming()
             && wheelZooming == otherOptions.isWheelZooming();
     }
