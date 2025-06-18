@@ -16,16 +16,15 @@
 package consulo.images.impl.completion;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.psi.file.FileLookupInfoProvider;
 import consulo.images.impl.index.ImageInfoIndex;
+import consulo.language.editor.FileLookupInfoProvider;
 import consulo.project.Project;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.intellij.images.fileTypes.ImageFileTypeManager;
-
 import jakarta.annotation.Nonnull;
+import org.intellij.images.fileTypes.ImageFileTypeManager;
 
 /**
  * @author spleaner
