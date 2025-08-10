@@ -9,6 +9,7 @@ import consulo.images.localize.ImagesLocalize;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -68,7 +69,7 @@ public class ImagesColorSettingsPage implements ColorSettingsPage {
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return ImagesLocalize.settingsPageName().get();
+    public LocalizeValue getDisplayName() {
+        return ImagesLocalize.settingsPageName();
     }
 }

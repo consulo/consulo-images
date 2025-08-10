@@ -10,6 +10,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.images.localize.ImagesLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
@@ -171,7 +172,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return ImagesLocalize.settingsPageName().get();
+    public LocalizeValue getDisplayName() {
+        return ImagesLocalize.settingsPageName();
     }
 }
