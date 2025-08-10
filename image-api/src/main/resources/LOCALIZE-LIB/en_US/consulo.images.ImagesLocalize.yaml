@@ -82,11 +82,11 @@ svg.file.type.description:
     text: Scalable Vector Graphics
 thumbnails.component.error.text:
     text: Error
+thumbnails.select.in.target.action.text:
+    text: Thumbnails
 unknown.format:
     text: Unknown Format
 white.cell.color:
     text: 'Color of ''&white'' cell:'
 white.cell.color.descriptor:
     text: '''White'' cell'
-thumbnails.select.in.target.action.text:
-    text: Thumbnails
