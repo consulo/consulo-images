@@ -8,6 +8,7 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.images.localize.ImagesLocalize;
 import consulo.localize.LocalizeValue;
@@ -19,16 +20,14 @@ import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.intellij.images.options.*;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
