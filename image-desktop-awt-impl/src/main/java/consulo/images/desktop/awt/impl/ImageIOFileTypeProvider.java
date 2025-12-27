@@ -1,11 +1,13 @@
 package consulo.images.desktop.awt.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.images.BinaryImageFileType;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -17,11 +19,18 @@ import java.util.Set;
  */
 @ExtensionImpl
 public class ImageIOFileTypeProvider extends FileTypeFactory {
+    private final Application myApplication;
+
+    @Inject
+    public ImageIOFileTypeProvider(Application application) {
+        myApplication = application;
+    }
+
     @Override
     public void createFileTypes(@Nonnull FileTypeConsumer fileTypeConsumer) {
         Set<String> processed = new HashSet<>();
 
-        for (String format : ImageIOProxy.getReaderFormatNames()) {
+        for (String format : ImageIOProxy.getReaderFormatNames(myApplication)) {
             String ext = format.toLowerCase(Locale.ROOT);
             processed.add(ext);
         }

@@ -2,6 +2,7 @@ package consulo.images.desktop.awt.impl;
 
 import consulo.application.Application;
 import consulo.component.extension.SPIClassLoaderExtension;
+import consulo.container.plugin.PluginManager;
 import jakarta.annotation.Nullable;
 
 import javax.imageio.ImageIO;
@@ -17,10 +18,10 @@ import java.util.function.Function;
  * @since 27/12/2025
  */
 public class ImageIOProxy {
-    public static List<String> getReaderFormatNames() {
+    public static List<String> getReaderFormatNames(Application application) {
         // do not use List.of() since it's copy array
         List<String> formats = new ArrayList<>(Arrays.asList(ImageIO.getReaderFormatNames()));
-        forEachReader(imageReaderSpi -> {
+        forEachReader(application, imageReaderSpi -> {
             formats.addAll(Arrays.asList(imageReaderSpi.getFormatNames()));
             return null;
         });
@@ -32,13 +33,13 @@ public class ImageIOProxy {
     }
 
     @Nullable
-    public static ImageReader getImageReader(ImageInputStream input) {
+    public static ImageReader getImageReader(Application application, ImageInputStream input) {
         Iterator<ImageReader> iterator = ImageIO.getImageReaders(input);
         while (iterator.hasNext()) {
             return iterator.next();
         }
 
-        return forEachReader(imageReaderSpi -> {
+        return forEachReader(application, imageReaderSpi -> {
             try {
                 // Perform mark/reset as a defensive measure
                 // even though plug-ins are supposed to take
@@ -62,19 +63,25 @@ public class ImageIOProxy {
         });
     }
 
-    private static <T> T forEachReader(Function<ImageReaderSpi, T> f) {
-        ClassLoader joinedClassLoader = SPIClassLoaderExtension.createJoinedClassLoader(Application.get(), ImageIO.class);
+    private static <T> T forEachReader(Application application, Function<ImageReaderSpi, T> f) {
+        List<ClassLoader> classLoaders = application.getExtensionPoint(SPIClassLoaderExtension.class)
+            .collectMapped(extension -> {
+                if (extension.getTargetClass() == ImageIO.class) {
+                    return PluginManager.getPlugin(extension.getClass()).getPluginClassLoader();
+                }
+                return null;
+            });
 
-        ServiceLoader<ImageReaderSpi> loader = ServiceLoader.load(ImageReaderSpi.class, joinedClassLoader);
-
-        for (ImageReaderSpi readerSpi : loader) {
-            T v = f.apply(readerSpi);
-            if (v != null) {
-                return v;
+        for (ClassLoader classLoader : classLoaders) {
+            ServiceLoader<ImageReaderSpi> loader = ServiceLoader.load(ImageReaderSpi.class, classLoader);
+            for (ImageReaderSpi readerSpi : loader) {
+                T v = f.apply(readerSpi);
+                if (v != null) {
+                    return v;
+                }
             }
         }
 
-        
         return null;
     }
 }

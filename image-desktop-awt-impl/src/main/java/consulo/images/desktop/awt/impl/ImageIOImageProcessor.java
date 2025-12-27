@@ -1,10 +1,12 @@
 package consulo.images.desktop.awt.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import org.intellij.images.ImageDocument;
 
 import javax.imageio.ImageReadParam;
@@ -19,6 +21,13 @@ import java.io.IOException;
  */
 @ExtensionImpl(order = "last")
 public class ImageIOImageProcessor implements ImageProcessor {
+    private final Application myApplication;
+
+    @Inject
+    public ImageIOImageProcessor(Application application) {
+        myApplication = application;
+    }
+
     @Override
     public boolean accept(@Nonnull VirtualFile file) {
         return true;
@@ -28,7 +37,7 @@ public class ImageIOImageProcessor implements ImageProcessor {
     @Nullable
     public Pair<String, ImageDocument.ScaledImageProvider> read(@Nonnull VirtualFile file) throws IOException {
         try (ImageInputStream imageInputStream = ImageIOProxy.createImageInputStream(file.getInputStream())) {
-            ImageReader imageReader = ImageIOProxy.getImageReader(imageInputStream);
+            ImageReader imageReader = ImageIOProxy.getImageReader(myApplication, imageInputStream);
             if (imageReader != null) {
                 try {
                     String formatName = imageReader.getFormatName();
