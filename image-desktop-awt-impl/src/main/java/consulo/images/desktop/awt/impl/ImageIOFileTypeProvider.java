@@ -5,11 +5,10 @@ import consulo.images.BinaryImageFileType;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
-
 import jakarta.annotation.Nonnull;
 
-import javax.imageio.ImageIO;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -20,13 +19,10 @@ import java.util.Set;
 public class ImageIOFileTypeProvider extends FileTypeFactory {
     @Override
     public void createFileTypes(@Nonnull FileTypeConsumer fileTypeConsumer) {
-        ImageIO.scanForPlugins();
-
         Set<String> processed = new HashSet<>();
 
-        String[] readerFormatNames = ImageIO.getReaderFormatNames();
-        for (String format : readerFormatNames) {
-            String ext = format.toLowerCase();
+        for (String format : ImageIOProxy.getReaderFormatNames()) {
+            String ext = format.toLowerCase(Locale.ROOT);
             processed.add(ext);
         }
 

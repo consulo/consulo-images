@@ -3,12 +3,10 @@ package consulo.images.desktop.awt.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import org.intellij.images.ImageDocument;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.images.ImageDocument;
 
-import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
@@ -16,7 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 
 /**
  * @author VISTALL
@@ -34,10 +31,9 @@ public class ImageIOImageProcessor implements ImageProcessor {
     public Pair<String, ImageDocument.ScaledImageProvider> read(@Nonnull VirtualFile file) throws IOException {
         byte[] content = file.contentsToByteArray();
         InputStream inputStream = new ByteArrayInputStream(content, 0, content.length);
-        try (ImageInputStream imageInputStream = ImageIO.createImageInputStream(inputStream)) {
-            Iterator<ImageReader> imageReaders = ImageIO.getImageReaders(imageInputStream);
-            if (imageReaders.hasNext()) {
-                ImageReader imageReader = imageReaders.next();
+        try (ImageInputStream imageInputStream = ImageIOProxy.createImageInputStream(inputStream)) {
+            ImageReader imageReader = ImageIOProxy.getImageReader(imageInputStream);
+            if (imageReader != null) {
                 try {
                     String formatName = imageReader.getFormatName();
                     ImageReadParam param = imageReader.getDefaultReadParam();

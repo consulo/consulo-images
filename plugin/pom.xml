@@ -54,6 +54,9 @@
                     <dependencies>
                         <dependency>com.intellij.xml</dependency>
                         <dependency>consulo.library.batik</dependency>
+                        <dependency>consulo.images.format.webp</dependency>
+                        <dependency>consulo.images.format.photoshop</dependency>
+                        <dependency>consulo.library.twelvemonkeys.imageio</dependency>
                     </dependencies>
                     <packaging>
                         <skip>${dev.mode}</skip>
