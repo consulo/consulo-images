@@ -21,7 +21,7 @@
 package consulo.images.desktop.awt.impl.thumbnail;
 
 import consulo.disposer.Disposer;
-import consulo.images.desktop.awt.impl.IfsUtil;
+import consulo.images.desktop.awt.impl.ImageLoaderUtil;
 import consulo.images.icon.ImagesIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -159,7 +159,7 @@ final class ThumbnailViewImpl implements ThumbnailView {
 
     @RequiredUIAccess
     private void setTitle() {
-        toolWindow.setTitle(root != null ? IfsUtil.getReferencePath(project, root) : null);
+        toolWindow.setTitle(root != null ? ImageLoaderUtil.getReferencePath(project, root) : null);
     }
 
     @Override

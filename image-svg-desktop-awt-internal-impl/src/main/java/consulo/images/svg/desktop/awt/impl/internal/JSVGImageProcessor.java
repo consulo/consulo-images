@@ -4,7 +4,6 @@ import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.images.desktop.awt.impl.IfsUtil;
 import consulo.images.desktop.awt.impl.ImageProcessor;
 import consulo.images.svg.SVGFileType;
 import consulo.logging.Logger;
@@ -19,9 +18,9 @@ import org.intellij.images.ImageDocument;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -50,13 +49,11 @@ public class JSVGImageProcessor implements ImageProcessor {
             return null;
         }
 
-        byte[] content = file.contentsToByteArray();
-
         ImageDocument.CachedScaledImageProvider provider = new ImageDocument.CachedScaledImageProvider() {
             JBUI.ScaleContext.Cache<BufferedImage> cache = new JBUI.ScaleContext.Cache<>((ctx) ->
             {
-                try {
-                    return toImage(content);
+                try (InputStream stream = file.getInputStream()) {
+                    return toImage(stream);
                 }
                 catch (Throwable t) {
                     LOG.warn(url.get() + " " + t.getMessage());
@@ -76,13 +73,13 @@ public class JSVGImageProcessor implements ImageProcessor {
                 return cache.getOrProvide(ctx);
             }
         };
-        return Pair.create(IfsUtil.SVG_FORMAT, provider);
+        return Pair.create(SVGFileType.SVG_EXTENSION, provider);
     }
 
-    public static BufferedImage toImage(byte[] content) {
+    public static BufferedImage toImage(InputStream stream) {
         SVGLoader loader = new SVGLoader();
 
-        SVGDocument document = loader.load(new ByteArrayInputStream(content));
+        SVGDocument document = loader.load(stream);
 
         FloatSize shape = document.size();
 

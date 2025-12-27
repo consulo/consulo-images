@@ -24,7 +24,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditorManager;
-import consulo.images.desktop.awt.impl.IfsUtil;
+import consulo.images.desktop.awt.impl.ImageLoaderUtil;
 import consulo.images.desktop.awt.impl.editor.ImageComponent;
 import consulo.images.desktop.awt.impl.editor.ThumbnailComponent;
 import consulo.images.desktop.awt.impl.editor.ThumbnailComponentUI;
@@ -243,7 +243,7 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable {
         @Override
         public Component getListCellRendererComponent(JList list, VirtualFile file, int index, boolean isSelected, boolean cellHasFocus) {
             setFileName(file.getName());
-            setToolTipText(IfsUtil.getReferencePath(thumbnailView.getProject(), file));
+            setToolTipText(ImageLoaderUtil.getReferencePath(thumbnailView.getProject(), file));
             setDirectory(file.isDirectory());
             if (file.isDirectory()) {
                 int imagesCount = 0;
@@ -262,10 +262,10 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable {
                 // File rendering
                 setFileSize(file.getLength());
                 try {
-                    BufferedImage image = IfsUtil.getImage(file);
+                    BufferedImage image = ImageLoaderUtil.getImage(file);
                     ImageComponent imageComponent = getImageComponent();
                     imageComponent.getDocument().setValue(image);
-                    setFormat(IfsUtil.getFormat(file));
+                    setFormat(ImageLoaderUtil.getFormat(file));
                 }
                 catch (Exception e) {
                     // Ignore

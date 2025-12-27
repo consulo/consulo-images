@@ -26,8 +26,6 @@ public class ImageIOFileTypeProvider extends FileTypeFactory {
             processed.add(ext);
         }
 
-        processed.add(IfsUtil.ICO_FORMAT.toLowerCase());
-
         fileTypeConsumer.consume(BinaryImageFileType.INSTANCE, StringUtil.join(processed, FileTypeConsumer.EXTENSION_DELIMITER));
     }
 }

@@ -36,6 +36,8 @@ import jakarta.annotation.Nullable;
 public final class SVGFileType extends XmlLikeFileType implements UIBasedFileType, ImageFileType {
     public static final SVGFileType INSTANCE = new SVGFileType();
 
+    public static final String SVG_EXTENSION = "svg";
+
     private SVGFileType() {
         super(SVGLanguage.INSTANCE);
     }
@@ -55,7 +57,7 @@ public final class SVGFileType extends XmlLikeFileType implements UIBasedFileTyp
     @Nonnull
     @Override
     public String getDefaultExtension() {
-        return "svg";
+        return SVG_EXTENSION;
     }
 
     @Nonnull

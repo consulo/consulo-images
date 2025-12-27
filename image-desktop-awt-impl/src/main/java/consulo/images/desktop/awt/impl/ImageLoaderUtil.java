@@ -45,11 +45,8 @@ import java.io.IOException;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public final class IfsUtil {
-    private static final Logger LOG = Logger.getInstance(IfsUtil.class);
-
-    public static final String ICO_FORMAT = "ico";
-    public static final String SVG_FORMAT = "svg";
+public final class ImageLoaderUtil {
+    private static final Logger LOG = Logger.getInstance(ImageLoaderUtil.class);
 
     private static final Key<Long> TIMESTAMP_KEY = Key.create("Image.timeStamp");
     private static final Key<String> FORMAT_KEY = Key.create("Image.format");
@@ -113,10 +110,6 @@ public final class IfsUtil {
         refresh(file);
         SoftReference<ScaledImageProvider> imageProviderRef = file.getUserData(IMAGE_PROVIDER_REF_KEY);
         return SoftReference.dereference(imageProviderRef);
-    }
-
-    public static boolean isSVG(@Nullable VirtualFile file) {
-        return file != null && SVG_FORMAT.equalsIgnoreCase(file.getExtension());
     }
 
     @Nullable

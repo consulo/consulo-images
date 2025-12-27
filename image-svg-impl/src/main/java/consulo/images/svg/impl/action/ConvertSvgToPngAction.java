@@ -20,6 +20,7 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.images.localize.ImagesLocalize;
 import consulo.images.svg.SVGFileType;
 import consulo.images.svg.internal.SVGFileProcessor;
@@ -38,9 +39,12 @@ import java.io.File;
     @ActionParentRef(value = @ActionRef(id = "ProjectViewPopupMenu"), anchor = ActionRefAnchor.AFTER, relatedToAction = @ActionRef(id = "EditSource"))
 })
 public class ConvertSvgToPngAction extends DumbAwareAction {
+    private final Application myApplication;
+
     @Inject
-    public ConvertSvgToPngAction() {
+    public ConvertSvgToPngAction(Application application) {
         super(ImagesLocalize.actionImagesConvertSvgToPngText());
+        myApplication = application;
     }
 
     @RequiredUIAccess
@@ -50,10 +54,10 @@ public class ConvertSvgToPngAction extends DumbAwareAction {
 
         String path = svgFile.getPath();
 
-        for (SVGFileProcessor service : Application.get().getExtensionPoint(SVGFileProcessor.class)) {
-            service.convert(svgFile, new File(path + ".png"));
-            break;
-        }
+        myApplication.getExtensionPoint(SVGFileProcessor.class).forEachBreakable(processor -> {
+            processor.convert(svgFile, new File(path + ".png"));
+            return ExtensionPoint.Flow.BREAK;
+        });
     }
 
     @RequiredUIAccess
@@ -62,7 +66,7 @@ public class ConvertSvgToPngAction extends DumbAwareAction {
         VirtualFile svgFile = e.getData(VirtualFile.KEY);
         boolean enabled = svgFile != null
             && svgFile.getFileType() == SVGFileType.INSTANCE
-            && Application.get().getExtensionPoint(SVGFileProcessor.class).hasAnyExtensions();
+            && myApplication.getExtensionPoint(SVGFileProcessor.class).hasAnyExtensions();
         e.getPresentation().setEnabledAndVisible(enabled);
     }
 }

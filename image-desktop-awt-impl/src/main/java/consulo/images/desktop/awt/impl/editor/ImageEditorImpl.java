@@ -18,7 +18,7 @@ package consulo.images.desktop.awt.impl.editor;
 import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
-import consulo.images.desktop.awt.impl.IfsUtil;
+import consulo.images.desktop.awt.impl.ImageLoaderUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
@@ -76,7 +76,7 @@ public final class ImageEditorImpl implements ImageEditor {
     @Override
     public void setValue(VirtualFile file) {
         try {
-            editorUI.setImageProvider(IfsUtil.getImageProvider(file), IfsUtil.getFormat(file));
+            editorUI.setImageProvider(ImageLoaderUtil.getImageProvider(file), ImageLoaderUtil.getFormat(file));
         }
         catch (Exception e) {
             //     Error loading image file

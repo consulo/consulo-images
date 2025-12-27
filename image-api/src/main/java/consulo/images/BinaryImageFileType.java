@@ -46,4 +46,9 @@ public class BinaryImageFileType implements ImageFileType {
     public ImageInfo getImageInfo(@Nonnull String filePath, @Nonnull byte[] content) {
         return ImageInfoReader.getInfo(content);
     }
+
+    @Override
+    public boolean isBinary() {
+        return true;
+    }
 }

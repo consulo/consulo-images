@@ -16,6 +16,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 
 /**
  * @author VISTALL
@@ -27,8 +29,8 @@ public class JSVGFileProcessorImpl implements SVGFileProcessor {
 
     @Override
     public void convert(VirtualFile svgFile, File pngFile) {
-        try {
-            Image image = JSVGImageProcessor.toImage(svgFile.contentsToByteArray());
+        try (InputStream stream = Files.newInputStream(pngFile.toPath())) {
+            Image image = JSVGImageProcessor.toImage(stream);
             
             ImageIO.write((BufferedImage) image, "png", pngFile);
         }

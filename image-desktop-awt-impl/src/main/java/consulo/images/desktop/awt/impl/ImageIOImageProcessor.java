@@ -11,9 +11,7 @@ import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * @author VISTALL
@@ -29,9 +27,7 @@ public class ImageIOImageProcessor implements ImageProcessor {
     @Override
     @Nullable
     public Pair<String, ImageDocument.ScaledImageProvider> read(@Nonnull VirtualFile file) throws IOException {
-        byte[] content = file.contentsToByteArray();
-        InputStream inputStream = new ByteArrayInputStream(content, 0, content.length);
-        try (ImageInputStream imageInputStream = ImageIOProxy.createImageInputStream(inputStream)) {
+        try (ImageInputStream imageInputStream = ImageIOProxy.createImageInputStream(file.getInputStream())) {
             ImageReader imageReader = ImageIOProxy.getImageReader(imageInputStream);
             if (imageReader != null) {
                 try {

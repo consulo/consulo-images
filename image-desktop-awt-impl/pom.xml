@@ -48,11 +48,5 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-imaging</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 </project>
