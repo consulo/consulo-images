@@ -17,6 +17,7 @@ package consulo.images.desktop.awt.impl.thumbnail;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
@@ -47,7 +48,8 @@ final class ThumbnailManagerImpl extends ThumbnailManager implements Disposable 
     @RequiredUIAccess
     public final ThumbnailView getThumbnailView() {
         if (thumbnailView == null) {
-            thumbnailView = new ThumbnailViewImpl(project);
+            thumbnailView = new ThumbnailViewImpl(project, this);
+            Disposer.register(this, thumbnailView);
         }
         return thumbnailView;
     }
@@ -55,7 +57,6 @@ final class ThumbnailManagerImpl extends ThumbnailManager implements Disposable 
     @Override
     public void dispose() {
         if (thumbnailView != null) {
-            thumbnailView.dispose();
             thumbnailView = null;
         }
     }

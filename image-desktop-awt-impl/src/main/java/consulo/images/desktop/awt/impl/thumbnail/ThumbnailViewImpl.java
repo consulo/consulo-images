@@ -20,12 +20,14 @@
 
 package consulo.images.desktop.awt.impl.thumbnail;
 
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.images.desktop.awt.impl.ImageLoaderUtil;
 import consulo.images.icon.ImagesIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.virtualFileSystem.VirtualFile;
@@ -51,13 +53,18 @@ final class ThumbnailViewImpl implements ThumbnailView {
     private final ThumbnailViewUI myThubmnailViewUi;
 
     @RequiredUIAccess
-    public ThumbnailViewImpl(Project project) {
+    public ThumbnailViewImpl(Project project, @Nonnull Disposable parentDisposable) {
         this.project = project;
 
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
         myThubmnailViewUi = new ThumbnailViewUI(this);
-        toolWindow = windowManager.registerToolWindow(TOOLWINDOW_ID, myThubmnailViewUi, ToolWindowAnchor.BOTTOM);
+        toolWindow = windowManager.registerToolWindow(TOOLWINDOW_ID, true, ToolWindowAnchor.BOTTOM, parentDisposable);
+
+        ContentManager contentManager = toolWindow.getContentManager();
+        contentManager.addContent(contentManager.getFactory().createContent(myThubmnailViewUi, null, true));
+
         toolWindow.setIcon(ImagesIconGroup.toolwindowThumbnail());
+
         setVisible(false);
     }
 
