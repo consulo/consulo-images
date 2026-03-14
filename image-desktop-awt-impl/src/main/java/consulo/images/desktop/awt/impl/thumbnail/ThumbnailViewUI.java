@@ -50,16 +50,18 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileListener;
+import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.images.fileTypes.ImageFileTypeManager;
 import org.intellij.images.options.*;
 import org.intellij.images.thumbnail.ThumbnailView;
 import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
 import org.intellij.images.ui.ImageComponentDecorator;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -560,7 +562,7 @@ final class ThumbnailViewUI extends JPanel implements DataProvider, Disposable {
         public void fileDeleted(@Nonnull VirtualFileEvent event) {
             VirtualFile file = event.getFile();
             VirtualFile root = thumbnailView.getRoot();
-            if (root != null && consulo.ide.impl.idea.openapi.vfs.VfsUtil.isAncestor(file, root, false)) {
+            if (root != null && VirtualFileUtil.isAncestor(file, root, false)) {
                 refresh();
             }
             if (list != null) {
