@@ -1,7 +1,7 @@
 package consulo.images.svg;
 
 import consulo.language.Language;
-import consulo.xml.lang.xml.XMLLanguage;
+import consulo.xml.language.XMLLanguage;
 
 /**
  * @author VISTALL

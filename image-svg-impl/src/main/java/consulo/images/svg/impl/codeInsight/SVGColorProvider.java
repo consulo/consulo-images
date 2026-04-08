@@ -18,8 +18,8 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
-import consulo.xml.psi.xml.XmlAttribute;
-import consulo.xml.psi.xml.XmlTokenType;
+import consulo.xml.language.psi.XmlAttribute;
+import consulo.xml.language.psi.XmlTokenType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
