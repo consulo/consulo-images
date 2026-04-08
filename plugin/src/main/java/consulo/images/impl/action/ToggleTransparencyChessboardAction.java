@@ -48,6 +48,7 @@ public final class ToggleTransparencyChessboardAction extends ToggleAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         ImageEditorActionUtil.acceptImageDecorator(e, decorator -> decorator.setTransparencyChessboardVisible(state));
     }
@@ -58,7 +59,7 @@ public final class ToggleTransparencyChessboardAction extends ToggleAction {
         super.update(e);
         Presentation presentation = e.getPresentation();
         presentation.setEnabled(ImageEditorActionUtil.testImageDecorator(e, decorator -> true));
-        presentation.setTextValue(
+        presentation.setText(
             isSelected(e)
                 ? ImagesLocalize.actionImagesEditorToggleTransparencyChessboardHideText()
                 : ImagesLocalize.actionImagesEditorToggleTransparencyChessboardShowText()
