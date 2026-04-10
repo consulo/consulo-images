@@ -24,7 +24,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UIBasedFileType;
-import consulo.xml.ide.highlighter.XmlLikeFileType;
+import consulo.xml.language.XmlLikeFileType;
 import org.intellij.images.util.ImageInfo;
 
 import jakarta.annotation.Nonnull;

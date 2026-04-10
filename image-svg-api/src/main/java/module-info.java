@@ -5,7 +5,7 @@
 module com.intellij.images_image.svg.api {
     requires transitive com.intellij.images_image.api;
     requires transitive consulo.language.api;
-    requires transitive com.intellij.xml;
+    requires transitive com.intellij.xml.api;
 
     exports consulo.images.svg;
     exports consulo.images.svg.internal to
