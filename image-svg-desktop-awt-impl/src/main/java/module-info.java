@@ -9,6 +9,7 @@ module com.intellij.images_svg.desktop.awt.impl {
 
     requires com.intellij.images.desktop.awt.impl;
 
+    requires consulo.ui.ex.awt.api;
     requires com.github.weisj.jsvg;
 
     requires consulo.library.batik;

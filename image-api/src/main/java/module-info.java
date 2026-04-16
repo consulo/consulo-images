@@ -3,7 +3,8 @@
  * @since 2022-08-25
  */
 module com.intellij.images_image.api {
-    requires transitive consulo.ide.api;
+    requires transitive consulo.file.editor.api;
+    requires consulo.ui.ex.api;
 
     // TODO remove in future
     requires java.desktop;

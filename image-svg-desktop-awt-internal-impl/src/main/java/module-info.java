@@ -9,6 +9,7 @@ module com.intellij.images_svg.desktop.awt.internal.impl {
 
     requires com.intellij.images.desktop.awt.impl;
 
+    requires consulo.ui.ex.awt.api;
     requires com.github.weisj.jsvg;
 
     requires java.desktop;
