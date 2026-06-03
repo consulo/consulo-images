@@ -1,0 +1,23 @@
+{
+  "lockVersion" : 1,
+  "server" : "https://i.verbaria.org/",
+  "project" : "consulo-images",
+  "projectVersion" : "master",
+  "generatedAt" : "2026-06-03T07:39:50.847142213Z",
+  "documents" : {
+    "consulo.images.ImagesLocalize" : {
+      "source" : {
+        "revision" : 1,
+        "sig" : "884fbb68a7055c0e1e00ee27ae8a256b"
+      },
+      "translations" : {
+        "en-US" : {
+          "sig" : "f73979f25a633744e740c4b8af19d2ca",
+          "state" : "Approved",
+          "total" : 46,
+          "translators" : [ "Valery Semenchuk <vistall.valeriy@gmail.com>" ]
+        }
+      }
+    }
+  }
+}
