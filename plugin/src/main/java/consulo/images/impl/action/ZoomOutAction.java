@@ -22,6 +22,7 @@ import consulo.images.localize.ImagesLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
@@ -36,7 +37,7 @@ import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
  * @see ImageEditor#getZoomModel
  */
 @ActionImpl(id = "Images.Editor.Zoom.Out", shortcutFrom = @ActionRef(id = IdeActions.ACTION_COLLAPSE_ALL))
-public final class ZoomOutAction extends DumbAwareAction {
+public final class ZoomOutAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     public ZoomOutAction() {
         super(ImagesLocalize.actionImagesEditorZoomOutText(), LocalizeValue.empty(), ImagesIconGroup.actionZoomout());
     }

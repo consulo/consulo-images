@@ -26,6 +26,7 @@ import consulo.images.svg.SVGFileType;
 import consulo.images.svg.internal.SVGFileProcessor;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
@@ -38,7 +39,7 @@ import java.io.File;
 @ActionImpl(id = "Images.Convert.Svg.To.Png", parents = {
     @ActionParentRef(value = @ActionRef(id = "ProjectViewPopupMenu"), anchor = ActionRefAnchor.AFTER, relatedToAction = @ActionRef(id = "EditSource"))
 })
-public class ConvertSvgToPngAction extends DumbAwareAction {
+public class ConvertSvgToPngAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     private final Application myApplication;
 
     @Inject

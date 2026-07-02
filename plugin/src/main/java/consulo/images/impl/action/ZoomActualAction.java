@@ -21,6 +21,7 @@ import consulo.images.localize.ImagesLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
 import org.intellij.images.editor.ImageEditor;
@@ -37,7 +38,7 @@ import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
 @ActionImpl(id = "Images.Editor.Zoom.Actual")
 // TODO <keyboard-shortcut first-keystroke="control DIVIDE" keymap="$default"/>
 // TODO <keyboard-shortcut first-keystroke="control SLASH"keymap="$default"/>
-public final class ZoomActualAction extends DumbAwareAction {
+public final class ZoomActualAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     public ZoomActualAction() {
         super(
             ImagesLocalize.actionImagesEditorZoomActualText(),

@@ -20,6 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import org.intellij.images.thumbnail.ThumbnailManager;
@@ -30,7 +31,7 @@ import org.intellij.images.thumbnail.ThumbnailView;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public final class ShowThumbnailsAction extends AnAction {
+public final class ShowThumbnailsAction extends AnAction implements AnActionWithSyncUpdate {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
@@ -48,7 +49,6 @@ public final class ShowThumbnailsAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        super.update(e);
         VirtualFile file = e.getData(VirtualFile.KEY);
         boolean isEnabled = file != null && file.isDirectory();
         if (e.getPlace().equals(ActionPlaces.PROJECT_VIEW_POPUP)) {

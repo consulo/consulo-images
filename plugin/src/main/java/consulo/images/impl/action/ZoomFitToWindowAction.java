@@ -6,6 +6,7 @@ import consulo.images.localize.ImagesLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
 import org.intellij.images.editor.ImageZoomModel;
@@ -16,7 +17,7 @@ import org.intellij.images.editor.actionSystem.ImageEditorActionUtil;
  * @since 2025-03-31
  */
 @ActionImpl(id = "Images.Editor.Zoom.Fit.To.Window")
-public class ZoomFitToWindowAction extends DumbAwareAction {
+public class ZoomFitToWindowAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     public ZoomFitToWindowAction() {
         super(
             ImagesLocalize.actionImagesEditorZoomFitToWindowText(),

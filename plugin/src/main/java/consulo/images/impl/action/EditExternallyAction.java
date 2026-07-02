@@ -28,6 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -48,7 +49,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public final class EditExternallyAction extends AnAction {
+public final class EditExternallyAction extends AnAction implements AnActionWithSyncUpdate {
     @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {

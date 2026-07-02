@@ -20,6 +20,7 @@ package org.intellij.images.thumbnail.actions;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.action.AnAction;
 import jakarta.annotation.Nonnull;
@@ -31,7 +32,7 @@ import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActionUtil;
  *
  * @author <a href="mailto:aefimov.box@gmail.com">Alexey Efimov</a>
  */
-public final class UpFolderAction extends AnAction {
+public final class UpFolderAction extends AnAction implements AnActionWithSyncUpdate {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -48,9 +49,7 @@ public final class UpFolderAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        super.update(e);
         if (ThumbnailViewActionUtil.setEnabled(e)) {
             ThumbnailView view = ThumbnailViewActionUtil.getVisibleThumbnailView(e);
             VirtualFile root = view.getRoot();
