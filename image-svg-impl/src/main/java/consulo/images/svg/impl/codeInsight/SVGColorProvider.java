@@ -215,7 +215,7 @@ public class SVGColorProvider implements ElementColorProvider {
         }
     }
 
-    // @override
+    @Override
     public Language getLanguage() {
       return SVGLanguage.INSTANCE;
     }
