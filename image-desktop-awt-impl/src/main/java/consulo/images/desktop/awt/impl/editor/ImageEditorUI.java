@@ -57,7 +57,6 @@ import org.intellij.images.editor.ImageEditor;
 import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.editor.actionSystem.ImageEditorActions;
 import org.intellij.images.options.*;
-import org.intellij.images.thumbnail.actionSystem.ThumbnailViewActions;
 import org.intellij.images.ui.ImageComponentDecorator;
 
 import javax.swing.*;
@@ -257,8 +256,7 @@ final class ImageEditorUI extends JPanel implements DataProvider, CopyProvider, 
 
     @Override
     public boolean isEnabledForActionPlace(String place) {
-        // Disable for thumbnails action
-        return !ThumbnailViewActions.ACTION_PLACE.equals(place);
+        return true;
     }
 
     @Override

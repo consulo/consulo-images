@@ -19,9 +19,6 @@ module com.intellij.images_image.api {
     exports org.intellij.images.editor.actionSystem;
     exports org.intellij.images.fileTypes;
     exports org.intellij.images.options;
-    exports org.intellij.images.thumbnail.actionSystem;
-    exports org.intellij.images.thumbnail;
-    exports org.intellij.images.thumbnail.actions;
     exports org.intellij.images.util;
     exports org.intellij.images.ui;
 }
