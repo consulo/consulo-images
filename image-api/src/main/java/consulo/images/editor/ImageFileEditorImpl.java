@@ -20,6 +20,8 @@ import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;
 import consulo.project.Project;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
 import kava.beans.PropertyChangeListener;
@@ -56,6 +58,11 @@ public final class ImageFileEditorImpl extends UserDataHolderBase implements Ima
         imageEditor.setTransparencyChessboardVisible(transparencyChessboardOptions.isShowDefault());
 
         imageEditor.addPropertyChangeListener(myDispatcher.getMulticaster());
+    }
+
+    @Override
+    public Component getUIComponent() {
+        return TargetAWT.wrap(getComponent());
     }
 
     @Override
