@@ -18,10 +18,9 @@ import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.Indenter;
 import consulo.ui.util.LabeledBuilder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -58,7 +57,7 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
         TransparencyChessboardOptions chessboardOptions = editorOptions.getTransparencyChessboardOptions();
         ZoomOptions zoomOptions = editorOptions.getZoomOptions();
 
-        VerticalLayout root = VerticalLayout.create(0);
+        VerticalLayout root = VerticalLayout.create();
 
         VerticalLayout imagesLayout = VerticalLayout.create();
         root.add(LabeledLayout.create(ImagesLocalize.mainPageBorderTitle(), imagesLayout));
@@ -67,8 +66,8 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
         imagesLayout.add(showGridLines);
         propertyBuilder.add(showGridLines, gridOptions::isShowDefault, it -> gridOptions.setOption(GridOptions.ATTR_SHOW_DEFAULT, it));
 
-        VerticalLayout gridOptionsPanel = VerticalLayout.create(0);
-        gridOptionsPanel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 24);
+        VerticalLayout gridOptionsPanel = VerticalLayout.create();
+        Indenter.indent(gridOptionsPanel);
         imagesLayout.add(gridOptionsPanel);
 
         IntBox gridLineZoomLimit = IntBox.create(2).withRange(2, 8);
@@ -91,8 +90,8 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
             it -> chessboardOptions.setOption(TransparencyChessboardOptions.ATTR_SHOW_DEFAULT, it)
         );
 
-        VerticalLayout chessboardPanel = VerticalLayout.create(0);
-        chessboardPanel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 24);
+        VerticalLayout chessboardPanel = VerticalLayout.create();
+        Indenter.indent(chessboardPanel);
         imagesLayout.add(chessboardPanel);
 
         IntBox chessboardSize = IntBox.create(1).withRange(1, 100);
@@ -113,8 +112,8 @@ public class ImagesOptionsConfigurable extends SimpleConfigurableByProperties im
         imagesLayout.add(smartWheel);
         propertyBuilder.add(smartWheel, zoomOptions::isSmartZooming, it -> zoomOptions.setOption(ZoomOptions.ATTR_SMART_ZOOMING, it));
 
-        VerticalLayout smartWheelPanel = VerticalLayout.create(0);
-        smartWheelPanel.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 24);
+        VerticalLayout smartWheelPanel = VerticalLayout.create();
+        Indenter.indent(smartWheelPanel);
         imagesLayout.add(smartWheelPanel);
 
         IntBox smartZoomingWidth = IntBox.create(1).withRange(1, 9999);
