@@ -11,6 +11,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.ElementColorProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.util.ColorValueUtil;
@@ -302,7 +303,7 @@ public class SVGColorProvider implements ElementColorProvider {
         if (type == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN
             && element.getParent().getParent() instanceof XmlAttribute attr
             && SVG_COLOR_ATTRS.contains(attr.getName())) {
-            WriteAction.run(() -> attr.setValue(ColorValueUtil.toHtmlColor(color)));
+            WriteAction.run(() -> attr.setValue(ColorValueUtil.toCssColor(color)));
         }
     }
 }
