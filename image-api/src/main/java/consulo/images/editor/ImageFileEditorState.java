@@ -22,6 +22,7 @@ import consulo.fileEditor.TransferableFileEditorState;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Konstantin Bulenkov
@@ -108,5 +109,25 @@ public class ImageFileEditorState implements TransferableFileEditorState, Serial
         if (o != null) {
             zoomFactorChanged = Boolean.valueOf(o);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ImageFileEditorState that = (ImageFileEditorState) o;
+        return backgroundVisible == that.backgroundVisible &&
+            gridVisible == that.gridVisible &&
+            Double.compare(that.zoomFactor, zoomFactor) == 0 &&
+            zoomFactorChanged == that.zoomFactorChanged;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(backgroundVisible, gridVisible, zoomFactor, zoomFactorChanged);
     }
 }
